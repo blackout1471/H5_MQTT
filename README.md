@@ -11,13 +11,13 @@ Double click the file called GenerateSolution_win.bat
 Open in visual studio and compile like any other projects
 
 ### Linux
-Make GenerateSolution_linux.sh & Premake/premake5 to executables 'hint: sudo chmod +x --filepath'
+Make GenerateSolution_linux.sh & Premake/premake5 to executables -hint: ```Shell sudo chmod +x --filepath```
 
-Run the GenerateSolution_linux.sh 'hint: ./GenerateSolution_linux.sh from root path'
+Run the GenerateSolution_linux.sh -hint: ```Shell ./GenerateSolution_linux.sh from root path```
 
 run make
 
-options can be added to make for whichever config is wanted 'hint: make help'
+options can be added to make for whichever config is wanted -hint: ```Shell make help```
 
 ### Tests
  -- TODO:
