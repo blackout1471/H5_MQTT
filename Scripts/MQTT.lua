@@ -1,5 +1,7 @@
+solLoc = "../"
+
 workspace "H5MQTT"
-	location "../"
+	location(solLoc)
 	
 	startproject "MQTT"
 
@@ -17,45 +19,11 @@ workspace "H5MQTT"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
-project "MQTT"
-	location "../"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++20"
-	staticruntime "on"
+group "Test"
+	include "MQTT_UnitTest.lua"
+group ""
 
-	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
-	
-	pchheader "mqttpch.h"
-	pchsource "../Source/mqttpch.cpp"
+include "MQTT_Project.lua"
 
-	files
-	{
-		"../Source/**.h",	
-		"../Source/**.cpp"
-	}
 
-	includedirs
-	{
-		"../Source"
-	}
-	
 
-	filter "system:windows"
-		systemversion "latest"
-		
-	filter "configurations:Debug"
-		defines "_DEBUG"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		defines "_RELEASE"
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Dist"
-		defines "_DIST"
-		runtime "Release"
-		optimize "on"
