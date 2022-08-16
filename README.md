@@ -25,4 +25,5 @@ options can be added to make for whichever config is wanted -hint:```make help``
 Tests will be generated as executables in the same folder as the project.
 
 ## Dependencies
-* Premake 
+* Premake
+
