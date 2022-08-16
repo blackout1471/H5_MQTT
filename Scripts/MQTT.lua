@@ -30,7 +30,7 @@ project "MQTT"
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 	
-	pchheader "mqttpch.h"
+	pchheader "../Source/mqttpch.h"
 	pchsource "../Source/mqttpch.cpp"
 
 	files
