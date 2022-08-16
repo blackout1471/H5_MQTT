@@ -7,10 +7,7 @@ workspace "H5MQTT"
 	{
 		"Debug",
 		"Release",
-		"Distribution",
-		"Debug_ARM64",
-		"Release_ARM64",
-		"Distribution_ARM64"
+		"Distribution"
 	}
 
 	flags
@@ -18,7 +15,7 @@ workspace "H5MQTT"
 		"MultiProcessorCompile"
 	}
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
 project "MQTT"
 	location "../"
@@ -30,7 +27,7 @@ project "MQTT"
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 	
-	pchheader "../Source/mqttpch.h"
+	pchheader "mqttpch.h"
 	pchsource "../Source/mqttpch.cpp"
 
 	files
@@ -38,14 +35,15 @@ project "MQTT"
 		"../Source/**.h",	
 		"../Source/**.cpp"
 	}
+
+	includedirs
+	{
+		"../Source"
+	}
 	
 
 	filter "system:windows"
 		systemversion "latest"
-		architecture "x86_64"
-
-	filter "configurations:*ARM"
-		architecture "ARM64"
 		
 	filter "configurations:Debug"
 		defines "_DEBUG"
