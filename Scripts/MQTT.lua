@@ -1,6 +1,8 @@
+solLoc = "../"
+
 workspace "H5MQTT"
-	location "..\\"
-	architecture "x86_64"
+	location(solLoc)
+	
 	startproject "MQTT"
 
 	configurations
@@ -15,42 +17,13 @@ workspace "H5MQTT"
 		"MultiProcessorCompile"
 	}
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
-project "MQTT"
-	location "..\\"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++20"
-	staticruntime "on"
+group "Test"
+	include "MQTT_UnitTest.lua"
+group ""
 
-	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
-	
-	pchheader "mqttpch.h"
-	pchsource "../source/mqttpch.cpp"
+include "MQTT_Project.lua"
 
-	files
-	{
-		"../source/**.h",	
-		"../source/**.cpp"
-	}
-	
 
-	filter "system:windows"
-		systemversion "latest"
-		
-	filter "configurations:Debug"
-		defines "_DEBUG"
-		runtime "Debug"
-		symbols "on"
 
-	filter "configurations:Release"
-		defines "_RELEASE"
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Dist"
-		defines "_DIST"
-		runtime "Release"
-		optimize "on"

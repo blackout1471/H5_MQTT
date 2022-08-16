@@ -357,3 +357,5 @@ MigrationBackup/
 *.csproj
 *.vcxproj*
 bin-int/
+*.make
+*Makefile
