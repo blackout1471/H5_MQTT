@@ -1,13 +1,16 @@
 workspace "H5MQTT"
-	location "..\\"
-	architecture "x86_64"
+	location "../"
+	
 	startproject "MQTT"
 
 	configurations
 	{
 		"Debug",
 		"Release",
-		"Distribution"
+		"Distribution",
+		"Debug_ARM64",
+		"Release_ARM64",
+		"Distribution_ARM64"
 	}
 
 	flags
@@ -18,7 +21,7 @@ workspace "H5MQTT"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "MQTT"
-	location "..\\"
+	location "../"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++20"
@@ -28,17 +31,21 @@ project "MQTT"
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 	
 	pchheader "mqttpch.h"
-	pchsource "../source/mqttpch.cpp"
+	pchsource "../Source/mqttpch.cpp"
 
 	files
 	{
-		"../source/**.h",	
-		"../source/**.cpp"
+		"../Source/**.h",	
+		"../Source/**.cpp"
 	}
 	
 
 	filter "system:windows"
 		systemversion "latest"
+		architecture "x86_64"
+
+	filter "configurations:*ARM"
+		architecture "ARM64"
 		
 	filter "configurations:Debug"
 		defines "_DEBUG"
