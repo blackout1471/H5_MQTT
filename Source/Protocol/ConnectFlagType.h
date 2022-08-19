@@ -6,7 +6,7 @@ namespace MQTT
 	{
 		enum ConnectFlagType : unsigned char
 		{
-			UserName = 128,
+			Username = 128,
 			Password = 64,
 			Will_Remain = 32,
 			Will_QoS_MSB = 16,
