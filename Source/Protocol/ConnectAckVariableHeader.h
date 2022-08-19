@@ -4,7 +4,7 @@
 namespace MQTT {
 	namespace Protocol {
 		struct ConnectAckVariableHeader {
-			unsigned char SessionPressentFlag;
+			unsigned char SessionPresentFlag;
 			ConnectActReturnCodeType ConnectActReturnCode;
 		};
 	}
