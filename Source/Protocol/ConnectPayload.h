@@ -2,10 +2,9 @@
 #include <cstdint>
 #include <vector>
 
-namespace MQTT
-{
-	namespace Models
-	{
+namespace MQTT {
+	namespace Protocol {
+
 		struct ConnectPayload
 		{
 			int16_t ClientIDLength;

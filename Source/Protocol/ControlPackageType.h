@@ -1,10 +1,8 @@
 #pragma once
 
-namespace MQTT
-{
-	namespace Models
-	{
-		enum ControlPackageType : int
+namespace MQTT {
+	namespace Protocol {
+		enum ControlPackageType : unsigned char
 		{
 			Connect = 1,
 			ConnectAck,

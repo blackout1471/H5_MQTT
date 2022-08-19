@@ -3,10 +3,9 @@
 
 namespace MQTT
 {
-	namespace Models
+	namespace Protocol
 	{
 		struct ControlHeader {
-		public:
 			ControlPackageType m_PackageType;
 		};
 	}

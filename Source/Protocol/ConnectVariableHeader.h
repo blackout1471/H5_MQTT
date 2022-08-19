@@ -3,17 +3,16 @@
 #include <vector>
 #include "ConnectFlagType.h"
 
-namespace MQTT
-{
-	namespace Models
-	{
+namespace MQTT {
+	namespace Protocol {
 		struct ConnectVariableHeader
 		{
-		public:
 			int16_t NameLength;
 			std::vector<unsigned char> ProtocolName;
+
 			unsigned char Level;
 			ConnectFlagType VariableLevel;
+
 			int16_t KeepAlive;
 		};
 	}

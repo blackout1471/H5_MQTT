@@ -2,9 +2,9 @@
 
 namespace MQTT
 {
-	namespace Models
+	namespace Protocol
 	{
-		enum ConnectFlagType : int
+		enum ConnectFlagType : unsigned char
 		{
 			UserName = 128,
 			Password = 64,
