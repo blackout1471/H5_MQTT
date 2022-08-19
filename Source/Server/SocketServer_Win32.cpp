@@ -12,7 +12,7 @@ namespace MQTT {
 		void SocketServer::Disconnect(const Client& client)
 		{
 		}
-		void SocketServer::SendMessage(const Client& client, const std::vector<unsigned char>& data)
+		void SocketServer::Send(const Client& client, const std::vector<unsigned char>& data)
 		{
 		}
 	}
