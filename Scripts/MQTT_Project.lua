@@ -27,6 +27,7 @@ project "MQTT"
 
 	filter "system:windows"
 		systemversion "latest"
+		links {"Ws2_32"}
 		
 	filter "configurations:Debug"
 		defines "_DEBUG"
