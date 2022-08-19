@@ -16,7 +16,7 @@ namespace MQTT {
 		public:
 
 			inline const ControlHeader& GetConnectControlHeader() const { return m_ControlHeader; }
-			inline void SetConnectControlHeader(const ControlHeader& _controllHeader) { m_ControlHeader = _controllHeader; }
+			inline void SetConnectControlHeader(const ControlHeader& _controlHeader) { m_ControlHeader = _controlHeader; }
 
 			inline const ConnectVariableHeader& GetConnectVariableHeader() const { return m_ConnectVariableHeader; }
 			inline void SetConnectVariableHeader(const ConnectVariableHeader& _variableHeader) { m_ConnectVariableHeader = _variableHeader; }
