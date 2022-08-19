@@ -4,7 +4,7 @@ namespace MQTT {
 	namespace Server {
 		void SocketServer::Start() 
 		{
-
+            
 		}
 		void SocketServer::Stop()
 		{

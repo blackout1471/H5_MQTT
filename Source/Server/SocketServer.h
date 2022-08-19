@@ -5,7 +5,7 @@ namespace MQTT {
 		class SocketServer : IServer
 		{
 		public:
-			SocketServer(const int& port) : m_Port(port) {};
+			SocketServer(int port) : m_Port(port) {};
 			~SocketServer() {};
 			// Inherited via IServer
 			virtual void Start() override;
