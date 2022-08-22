@@ -13,6 +13,12 @@ namespace MQTT {
 			virtual void Disconnect(const Client& client) override;
 			virtual void Send(const Client& client, const std::vector<unsigned char>& data) override;
 		private:
+			virtual void ConfigureAddressInfo(int port);
+			virtual void CreateSocket();
+			virtual void SetupTCP();
+			virtual void Listen();
+			virtual void Accept();
+		private:
 			int m_Port;
 			std::vector<Client> m_Clients;
 		};

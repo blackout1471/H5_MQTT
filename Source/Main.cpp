@@ -1,10 +1,12 @@
 #include "mqttpch.h"
 
 #include <iostream>
+#include "Server/SocketServer.h"
+using namespace MQTT::Server;
 
 int main() {
 
-	std::cout << "hej" << std::endl;
+	SocketServer a(1883);
+	a.Start();
 
-	return 0;
 }
