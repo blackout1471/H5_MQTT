@@ -22,6 +22,8 @@ namespace MQTT {
 
 			static void ReadClientData(const Client& client, const SocketServer& server);
 		private:
+			static void ReadClientData(const Client& client, const SocketServer& server);
+		private:
 			int m_Port;
 			int m_Socket;
 			std::vector<Client> m_Clients;
