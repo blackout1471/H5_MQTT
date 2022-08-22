@@ -14,6 +14,11 @@ namespace MQTT {
 		static struct addrinfo* result = NULL;
 		auto s_ReadThreads = std::vector<std::thread>();
 
+		SocketServer::~SocketServer()
+		{
+			for (auto client : m_Clients)
+				delete client;
+		}
 
 		void SocketServer::Start()
 		{
@@ -52,7 +57,7 @@ namespace MQTT {
 		void SocketServer::Stop()
 		{
 			for (const auto& client : m_Clients)
-				Disconnect(client);
+				Disconnect(*client);
 
 			freeaddrinfo(result);
 			closesocket(ListenSocket);
@@ -60,7 +65,7 @@ namespace MQTT {
 		}
 		void SocketServer::Disconnect(const Client& client)
 		{
-			//closesocket(client.GetConnection());
+			closesocket(client.GetConnection());
 		}
 		void SocketServer::Send(const Client& client, const std::vector<unsigned char>& data)
 		{
@@ -139,8 +144,8 @@ namespace MQTT {
 			int clientSocket = accept(ListenSocket, (struct sockaddr*)NULL, NULL);
 
 			if (clientSocket > 0) {
-				m_Clients.push_back(Client("123", "1", clientSocket));
-				s_ReadThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(m_Clients[m_Clients.size() - 1]), std::cref(*this)));
+				m_Clients.push_back(new Client("123", "1", clientSocket));
+				s_ReadThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(*m_Clients[m_Clients.size() - 1]), std::cref(*this)));
 			}
 			else
 			{

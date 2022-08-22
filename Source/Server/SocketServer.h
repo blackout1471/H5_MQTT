@@ -6,7 +6,7 @@ namespace MQTT {
 		{
 		public:
 			SocketServer(int port) : m_Port(port) {};
-			~SocketServer() {};
+			~SocketServer();
 			// Inherited via IServer
 			virtual void Start() override;
 			virtual void Stop() override;
@@ -21,7 +21,7 @@ namespace MQTT {
 			static void ReadClientData(const Client& client, const SocketServer& server);
 		private:
 			int m_Port;
-			std::vector<Client> m_Clients;
+			std::vector<Client*> m_Clients;
 		};
 	}
 }
