@@ -2,7 +2,7 @@
 #include "IServer.h"
 namespace MQTT {
 	namespace Server {
-		class SocketServer : IServer
+		class SocketServer : public IServer
 		{
 		public:
 			SocketServer(int port) : m_Port(port) {};
@@ -18,6 +18,7 @@ namespace MQTT {
 			virtual void SetupTCP();
 			virtual void Listen();
 			virtual void Accept();
+			static void ReadClientData(const Client& client, const SocketServer& server);
 		private:
 			int m_Port;
 			std::vector<Client> m_Clients;
