@@ -1,12 +1,11 @@
 #include "mqttpch.h"
 #include "SocketServer.h"
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-#include <thread>
 
 namespace MQTT {
 	namespace Server {
@@ -29,47 +28,79 @@ namespace MQTT {
 			}
 		}
 
-		auto s_ReadThreads = std::vector<std::thread>();
+		struct sockaddr_in serv_addr = {0};
 
 		SocketServer::SocketServer(int port) 
-				: m_Port(port), m_Socket(0), m_Clients() {};
+				: m_Port(port), m_Socket(0), m_Clients() , m_ClientReaderThreads(), m_IsRunning(false) {};
 
         SocketServer::~SocketServer() 
         {
-            Stop();  
+            shutdown(m_Socket, SHUT_RDWR);  
         };
+
+		void SocketServer::ConfigureAddressInfo(int port) 
+		{
+			serv_addr.sin_family = AF_INET;
+            serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+            serv_addr.sin_port = htons(port);
+		}
+
+		void SocketServer::CreateSocket() 
+		{
+			m_Socket = socket(AF_INET, SOCK_STREAM, 0);
+		}
+
+		void SocketServer::SetupTCP() 
+		{
+			bind(m_Socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+		}
+
+		void SocketServer::Listen() 
+		{
+			listen(m_Socket, 10);
+		}
+
+		void SocketServer::Accept() 
+		{
+			int connfd = accept(m_Socket, (struct sockaddr*)NULL, NULL);
+			if (connfd > 0)
+			{
+				m_Clients.push_back(Client("123", "1", connfd));
+				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(m_Clients[m_Clients.size()-1]), std::cref(*this)));
+			}
+		}
 
     	void SocketServer::Start()
 		{
-            struct sockaddr_in serv_addr = {0};
+			m_IsRunning = true;
 
-            m_Socket = socket(AF_INET, SOCK_STREAM, 0);
+			//Configuration
+			ConfigureAddressInfo(m_Port);
 
-            serv_addr.sin_family = AF_INET;
-            serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-            serv_addr.sin_port = htons(m_Port);
+			//Creates a listening socket
+			CreateSocket();
 
-            bind(m_Socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+			//Sets up TCP for listening socket
+			SetupTCP();
 
-            listen(m_Socket, 10);
+			//Starts listening for a client
+			Listen();
 
-            while (1)
+            while (m_IsRunning)
             {
-				int connfd = accept(m_Socket, (struct sockaddr*)NULL, NULL);
-				if (connfd > 0)
-				{
-                	m_Clients.push_back(Client("123", "1", connfd));
-					s_ReadThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(m_Clients[m_Clients.size()-1]), std::cref(*this)));
-				}
+				Accept();
             }
+
+			m_ClientReaderThreads.clear();
+			for(const auto& client : m_Clients)
+                Disconnect(client);
+
+			m_Clients.clear();
 		}
 
 		void SocketServer::Stop()
 		{
-            for(const auto& client : m_Clients)
-                Disconnect(client);
-
-            shutdown(m_Socket, SHUT_RDWR);
+			m_IsRunning = false;
 		}
 
 		void SocketServer::Disconnect(const Client& client)
