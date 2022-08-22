@@ -12,7 +12,7 @@ namespace MQTT {
 
 		void SocketServer::ReadClientData(const Client& client, const SocketServer& server)
 		{
-			unsigned char sendBuff[64] = {0};
+			unsigned char sendBuff[64] = { 0 };
 
 			while (1)
 			{
@@ -28,49 +28,49 @@ namespace MQTT {
 			}
 		}
 
-		struct sockaddr_in serv_addr = {0};
+		struct sockaddr_in serv_addr = { 0 };
 
-		SocketServer::SocketServer(int port) 
-				: m_Port(port), m_Socket(0), m_Clients() , m_ClientReaderThreads(), m_IsRunning(false) {};
+		SocketServer::SocketServer(int port)
+			: m_Port(port), m_Socket(0), m_Clients(), m_ClientReaderThreads(), m_IsRunning(false) {};
 
-        SocketServer::~SocketServer() 
-        {
-            shutdown(m_Socket, SHUT_RDWR);  
-        };
+		SocketServer::~SocketServer()
+		{
+			shutdown(m_Socket, SHUT_RDWR);
+		};
 
-		void SocketServer::ConfigureAddressInfo(int port) 
+		void SocketServer::ConfigureAddressInfo(int port)
 		{
 			serv_addr.sin_family = AF_INET;
-            serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-            serv_addr.sin_port = htons(port);
+			serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+			serv_addr.sin_port = htons(port);
 		}
 
-		void SocketServer::CreateSocket() 
+		void SocketServer::CreateSocket()
 		{
 			m_Socket = socket(AF_INET, SOCK_STREAM, 0);
 		}
 
-		void SocketServer::SetupTCP() 
+		void SocketServer::SetupTCP()
 		{
 			bind(m_Socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 		}
 
-		void SocketServer::Listen() 
+		void SocketServer::Listen()
 		{
 			listen(m_Socket, 10);
 		}
 
-		void SocketServer::Accept() 
+		void SocketServer::Accept()
 		{
 			int connfd = accept(m_Socket, (struct sockaddr*)NULL, NULL);
 			if (connfd > 0)
 			{
 				m_Clients.push_back(Client("123", "1", connfd));
-				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(m_Clients[m_Clients.size()-1]), std::cref(*this)));
+				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(m_Clients[m_Clients.size() - 1]), std::cref(*this)));
 			}
 		}
 
-    	void SocketServer::Start()
+		void SocketServer::Start()
 		{
 			m_IsRunning = true;
 
@@ -86,14 +86,14 @@ namespace MQTT {
 			//Starts listening for a client
 			Listen();
 
-            while (m_IsRunning)
-            {
+			while (m_IsRunning)
+			{
 				Accept();
-            }
+			}
 
 			m_ClientReaderThreads.clear();
-			for(const auto& client : m_Clients)
-                Disconnect(client);
+			for (const auto& client : m_Clients)
+				Disconnect(client);
 
 			m_Clients.clear();
 		}
@@ -105,13 +105,13 @@ namespace MQTT {
 
 		void SocketServer::Disconnect(const Client& client)
 		{
-            // TODO: Delete client from list
-            close(client.GetConnection());
+			// TODO: Delete client from list
+			close(client.GetConnection());
 		}
 
 		void SocketServer::Send(const Client& client, const std::vector<unsigned char>& data)
 		{
-            send(client.GetConnection(), data.data(), data.size(), 0);
+			send(client.GetConnection(), data.data(), data.size(), 0);
 		}
 	}
 }
