@@ -1,6 +1,7 @@
 #pragma once
 #include "Protocol/Converter/ConnectConverter.h"
 #include "SocketServer.h"
+#include "MqttClient.h"
 
 namespace MQTT {
 	namespace Server {
@@ -20,7 +21,7 @@ namespace MQTT {
 
 		private:
 			IServer* m_Server;
-
+			std::vector<MqttClient*> m_ClientStates;
 		};
 	}
 }
