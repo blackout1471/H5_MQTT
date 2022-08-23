@@ -7,8 +7,8 @@ namespace MQTT {
 
 		struct ConnectPayload
 		{
-			int16_t ClientIDLength;
-			std::vector<unsigned char> ClientID;
+			int16_t ClientIdLength;
+			std::vector<unsigned char> ClientId;
 
 			int16_t UsernameLength;
 			std::vector<unsigned char> Username;
