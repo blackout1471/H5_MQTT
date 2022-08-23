@@ -1,6 +1,7 @@
 #pragma once
 #include "ControlHeader.h"
 #include "ConnectAckVariableHeader.h"
+#include "mqttpch.h"
 
 namespace MQTT {
 	namespace Protocol {

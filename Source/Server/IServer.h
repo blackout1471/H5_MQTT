@@ -6,7 +6,6 @@ namespace MQTT {
 	namespace Server {
 		class IServer {
 		public:
-			
 			virtual void Start() = 0;
 			virtual void Stop() = 0;
 			virtual void Disconnect(const Client& client) = 0;
