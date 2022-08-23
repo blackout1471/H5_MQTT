@@ -19,48 +19,18 @@ namespace MQTT {
 				return (byte1 << 8) | byte2;
 			}
 
-			template<>
-			bool Converter::Convert<std::vector<unsigned char>, ConnectPackage>(const std::vector<unsigned char>& from, ConnectPackage& to)
+			int Converter::IntermiadateConvert(const unsigned char* dataPtr, const ConnectVariableHeader& headerPackage, ConnectPayload& package)
 			{
-				if (from.size() < 3)
-					return false;
+				const unsigned char* data = dataPtr;
 
-				const unsigned char* data = from.data();
-
-
-				to.ControlHeader.PackageType = GetPackageType(*data);
-				data++;
-
-				unsigned char remainLength = *data;
-				data++;
-
-				to.ConnectVariableHeader.NameLength = ByteToInt(*data, data[1]);
+				package.ClientIdLength = ByteToInt(*data, data[1]);
 				data += 2;
 
-				to.ConnectVariableHeader.ProtocolName.assign(data, data + to.ConnectVariableHeader.NameLength);
-				data += to.ConnectVariableHeader.NameLength;
-
-				to.ConnectVariableHeader.Level = *data;
-				data++;
-
-				to.ConnectVariableHeader.VariableLevel = ConnectFlagType(*data);
-				data++;
-
-				to.ConnectVariableHeader.KeepAlive = ByteToInt(*data, data[1]);
-				data += 2;
-
-				bool hasPayload = (from.data() + remainLength + 2) != data;
-				if (!hasPayload)
-					return true;
-
-				to.ConnectPayload.ClientIdLength = ByteToInt(*data, data[1]);
-				data += 2;
-
-				to.ConnectPayload.ClientId.assign(data, data + to.ConnectPayload.ClientIdLength);
-				data += to.ConnectPayload.ClientIdLength;
+				package.ClientId.assign(data, data + package.ClientIdLength);
+				data += package.ClientIdLength;
 
 
-				if (to.ConnectVariableHeader.VariableLevel & ConnectFlagType::Will_Flag)
+				if (headerPackage.VariableLevel & ConnectFlagType::Will_Flag)
 				{
 					int willLength = ByteToInt(*data, data[1]);
 					data += 2;
@@ -77,24 +47,71 @@ namespace MQTT {
 					data += willMessageLength;
 				}
 				
-				if (to.ConnectVariableHeader.VariableLevel & ConnectFlagType::Username)
+				if (headerPackage.VariableLevel & ConnectFlagType::Username)
 				{
-					to.ConnectPayload.UsernameLength = ByteToInt(*data, data[1]);
+					package.UsernameLength = ByteToInt(*data, data[1]);
 					data += 2;
 
-					to.ConnectPayload.Username.assign(data, data + to.ConnectPayload.UsernameLength);
-					data += to.ConnectPayload.UsernameLength;
+					package.Username.assign(data, data + package.UsernameLength);
+					data += package.UsernameLength;
 				}
 
 
-				if (to.ConnectVariableHeader.VariableLevel & ConnectFlagType::Password)
+				if (headerPackage.VariableLevel & ConnectFlagType::Password)
 				{
-					to.ConnectPayload.PasswordLength = ByteToInt(*data, data[1]);
+					package.PasswordLength = ByteToInt(*data, data[1]);
 					data += 2;
 
-					to.ConnectPayload.Password.assign(data, data + to.ConnectPayload.PasswordLength);
-					data += to.ConnectPayload.PasswordLength;
+					package.Password.assign(data, data + package.PasswordLength);
+					data += package.PasswordLength;
 				}
+
+				return data - dataPtr;
+			}
+
+			int Converter::IntermiadateConvert(const unsigned char* dataPtr, ConnectVariableHeader& package)
+			{
+				const unsigned char* data = dataPtr;
+
+				package.NameLength = ByteToInt(*data, data[1]);
+				data += 2;
+
+				package.ProtocolName.assign(data, data + package.NameLength);
+				data += package.NameLength;
+
+				package.Level = *data;
+				data++;
+
+				package.VariableLevel = ConnectFlagType(*data);
+				data++;
+
+				package.KeepAlive = ByteToInt(*data, data[1]);
+				data += 2;
+
+				return data - dataPtr;
+			}
+
+			template<>
+			bool Converter::Convert<std::vector<unsigned char>, ConnectPackage>(const std::vector<unsigned char>& from, ConnectPackage& to)
+			{
+				if (from.size() < 3)
+					return false;
+
+				const unsigned char* data = from.data();
+
+				to.ControlHeader.PackageType = GetPackageType(*data);
+				data++;
+
+				unsigned char remainLength = *data;
+				data++;
+
+				data += IntermiadateConvert(data, to.ConnectVariableHeader);
+
+				bool hasPayload = (from.data() + remainLength + 2) != data;
+				if (!hasPayload)
+					return true;
+
+				int payloadSize = IntermiadateConvert(data, to.ConnectVariableHeader, to.ConnectPayload);
 
 				return true;
 			}
