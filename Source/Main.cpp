@@ -1,8 +1,11 @@
 #include "mqttpch.h"
 
 #include "Server/SocketServer.h"
+#include "Protocol/Converter/Converter.h"
+#include "Protocol/ConnectPackage.h"
 
 static MQTT::Server::SocketServer* server;
+static auto* conv = new MQTT::Protocol::Converter::Converter();
 
 static const std::vector<unsigned char> acceptBuffer = {
 	0x20, 0x02, 0x01, 0x0
@@ -10,10 +13,13 @@ static const std::vector<unsigned char> acceptBuffer = {
 
 static void t(const MQTT::Server::Client& c, const std::vector<unsigned char>& d)
 {
+	auto p = MQTT::Protocol::ConnectPackage();
+
 	switch (d[0])
 	{
 	case 0x10:
 		printf("Connect received");
+		conv->Convert(d, p);
 		server->Send(c, acceptBuffer);
 		break;
 
@@ -27,6 +33,8 @@ static void t(const MQTT::Server::Client& c, const std::vector<unsigned char>& d
 
 	printf("\n");
 }
+
+#include <iostream>
 
 int main() {
 
