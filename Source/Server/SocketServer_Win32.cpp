@@ -16,7 +16,7 @@ namespace MQTT {
 		auto s_ReadThreads = std::vector<std::thread>();
 
 		SocketServer::SocketServer(int port)
-			: m_Port(port), m_Socket(0), m_Clients(), m_ClientReaderThreads(), m_IsRunning(false) {};
+			: m_Port(port), m_IsRunning(false) {};
 		SocketServer::~SocketServer()
 		{
 			for (auto client : m_Clients)
@@ -170,7 +170,6 @@ namespace MQTT {
 				{
 					if (amount < 0)
 						printf("error: %d\n", WSAGetLastError());
-
 
 					if (server.OnReceivedData)
 					{

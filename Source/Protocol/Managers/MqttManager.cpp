@@ -18,6 +18,8 @@ namespace MQTT {
 
 				return true;
 			}
+
+			return true;
 		}
 
 		std::vector<unsigned char> MqttManager::GenerateConnectAckMessage(Protocol::ConnectActReturnCodeType _returnCode)
