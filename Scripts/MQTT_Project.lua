@@ -36,7 +36,7 @@ project "MQTT"
 	filter "system:linux"
 		excludes
 		{
-			projLoc .. "Source/**Win32"
+			projLoc .. "Source/**_Win32.cpp"
 		}
 		
 	filter "configurations:Debug"
