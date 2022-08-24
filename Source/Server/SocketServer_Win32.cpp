@@ -15,7 +15,13 @@ namespace MQTT {
 		static struct addrinfo* result = NULL;
 		auto s_ReadThreads = std::vector<std::thread>();
 
+		SocketServer::SocketServer(int port)
+			: m_Port(port), m_Socket(0), m_Clients(), m_ClientReaderThreads(), m_IsRunning(false) {};
 
+		SocketServer::~SocketServer()
+		{
+			Stop();
+		};
 		void SocketServer::Start()
 		{
 			//Initialization of WSA

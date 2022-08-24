@@ -1,3 +1,4 @@
+#include "mqttpch.h"
 #include "MqttManager.h"
 
 

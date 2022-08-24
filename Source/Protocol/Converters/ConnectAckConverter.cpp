@@ -1,3 +1,4 @@
+#include "mqttpch.h"
 #include "ConnectAckConverter.h"
 
 namespace MQTT {
