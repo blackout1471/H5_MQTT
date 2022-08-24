@@ -37,10 +37,7 @@ namespace MQTT {
 		private:
 			bool m_IsRunning;
 			int m_Port;
-			int m_Socket;
-			// TODO: Create struct where both clients and threads are in it.
-			std::vector<Client> m_Clients;
-			std::vector<std::thread> m_ClientReaderThreads;
+			std::vector<Client*> m_Clients;
 		};
 	}
 };
