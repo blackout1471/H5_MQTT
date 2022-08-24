@@ -11,10 +11,10 @@ namespace MQTT {
 				return false;
 
 			if (_message[0] == MQTT::Protocol::Connect) {
-				// convert here
 
+				// convert package here here
 
-				// protocol validator here
+				// protocol validator / rule engine here
 
 				return true;
 			}
@@ -27,7 +27,8 @@ namespace MQTT {
 
 			Protocol::ConnectAckVariableHeader ackVariableHeader;
 			ackVariableHeader.ConnectActReturnCode = _returnCode;
-			// TODO:
+
+			// TODO: change this according to connect package or saved client state otherwise set to 0x00
 			ackVariableHeader.SessionPresentFlag = 0x01;
 
 			Protocol::ConnectAckPackage ackPackage(controlHeader, ackVariableHeader);

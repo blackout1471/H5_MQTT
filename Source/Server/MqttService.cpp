@@ -15,7 +15,7 @@ namespace MQTT
 				m_Server->Disconnect(_client);
 			}
 
-			// TODO:
+			// TODO: Change response message to match the package received
 			// Right now it always response with accept
 
 			// create ack package

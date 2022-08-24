@@ -1,5 +1,5 @@
 #pragma once
-#include "BasePackageConverter.h"
+#include "IPackageConverter.h"
 #include "Protocol/ConnectAckPackage.h"
 
 
@@ -11,7 +11,7 @@ namespace MQTT {
 
 		namespace Converters
 		{
-			class ConnectAckConverter : BasePackageConverter<ConnectAckPackage>
+			class ConnectAckConverter : IPackageConverter<ConnectAckPackage>
 			{
 			public:
 				virtual ConnectAckPackage ConvertToPackage(std::vector<unsigned char> _message) override;

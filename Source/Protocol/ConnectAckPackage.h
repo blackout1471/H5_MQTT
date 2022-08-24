@@ -1,5 +1,4 @@
 #pragma once
-#include "mqttpch.h"
 #include "ControlHeader.h"
 #include "ConnectAckVariableHeader.h"
 
