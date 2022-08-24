@@ -14,7 +14,7 @@ namespace MQTT {
 		static struct addrinfo hints;
 		static struct addrinfo* result = NULL;
 		auto s_ReadThreads = std::vector<std::thread>();
-	
+
 
 		void SocketServer::Start()
 		{
@@ -71,7 +71,7 @@ namespace MQTT {
 				closesocket(client.GetConnection());
 				WSACleanup();
 				//throw error
-			}
+		}
 		}
 
 		//Configures ip address and port for server.
