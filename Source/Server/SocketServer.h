@@ -37,6 +37,8 @@ namespace MQTT {
 		private:
 			bool m_IsRunning;
 			int m_Port;
+			int m_Socket;
+			std::vector<std::thread> m_ClientReaderThreads;
 			std::vector<Client*> m_Clients;
 		};
 	}
