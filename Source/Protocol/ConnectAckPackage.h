@@ -10,8 +10,7 @@ namespace MQTT {
 			ConnectAckPackage(const ControlHeader& controlHeader, const ConnectAckVariableHeader& variableHeader)
 				: m_ControlHeader(controlHeader), m_ConnectAckVariableHeader(variableHeader) {};
 
-			virtual ~ConnectAckPackage() = 0;
-
+			virtual ~ConnectAckPackage() {};
 		public:
 
 			inline const ControlHeader& GetConnectControlHeader() const { return m_ControlHeader; }

@@ -26,13 +26,17 @@ project "MQTT"
 	
 
 	filter "system:windows"
+		excludes
+			{
+				projLoc .. "Source/**_Linux.cpp"
+			}
 		systemversion "latest"
 		links {"Ws2_32"}
 
 	filter "system:linux"
 		excludes
 		{
-			projLoc .. "Source/**Win32"
+			projLoc .. "Source/**_Win32.cpp"
 		}
 		
 	filter "configurations:Debug"
