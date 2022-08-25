@@ -6,7 +6,7 @@
 
 namespace MQTT {
     namespace Protocol {
-        namespace Converter {
+        namespace Converters {
 
             ConnectConverter::ConnectConverter() {}
 

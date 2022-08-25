@@ -2,7 +2,7 @@
 
 #include "mqttpch.h"
 #include "MqttService.h"
-#include "Protocol/Converter/ConverterUtility.h"
+#include "Protocol/Converters/ConverterUtility.h"
 
 #include <algorithm>
 
@@ -28,13 +28,13 @@ namespace MQTT {
 
 		void MqttService::OnReceivedData(const Client& client, const std::vector<unsigned char>& buffer)
 		{
-			auto type = Protocol::Converter::ConverterUtility::GetPackageType(buffer[0]);
+			auto type = Protocol::Converters::ConverterUtility::GetPackageType(buffer[0]);
 
 			// TODO :: do validation
 			switch (type)
 			{
 			case MQTT::Protocol::Connect:
-				OnClientConnect(client, Protocol::Converter::ConnectConverter().ToPackage(buffer));
+				OnClientConnect(client, Protocol::Converters::ConnectConverter().ToPackage(buffer));
 				break;
 			case MQTT::Protocol::ConnectAck:
 				break;

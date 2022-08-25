@@ -9,14 +9,13 @@ namespace MQTT {
 
 		static WSADATA s_WsaData;
 		static bool s_Initialized = false;
-		static int ListenSocket;
 		struct sockaddr_in serv_addr = { 0 };
 		static struct addrinfo hints;
 		static struct addrinfo* result = NULL;
-		auto s_ReadThreads = std::vector<std::thread>();
 
 		SocketServer::SocketServer(int port)
-			: m_Port(port), m_IsRunning(false) {};
+			: m_Port(port), m_IsRunning(false), m_Socket(0) {};
+
 		SocketServer::~SocketServer()
 		{
 			for (auto client : m_Clients)
@@ -63,13 +62,14 @@ namespace MQTT {
 				Disconnect(*client);
 
 			freeaddrinfo(result);
-			closesocket(ListenSocket);
+			closesocket(m_Socket);
 			WSACleanup();
 		}
 		void SocketServer::Disconnect(const Client& client)
 		{
 			closesocket(client.GetConnection());
 		}
+
 		void SocketServer::Send(const Client& client, const std::vector<unsigned char>& data)
 		{
 			int iSendResult = send(client.GetConnection(), (const char*)(data.data()), data.size(), 0);
@@ -101,9 +101,9 @@ namespace MQTT {
 		// Create a SOCKET for the server to listen for client connections.
 		void SocketServer::CreateSocket() {
 
-			ListenSocket = socket(AF_INET, SOCK_STREAM, 0);
+			m_Socket = socket(AF_INET, SOCK_STREAM, 0);
 
-			if (ListenSocket == INVALID_SOCKET) {
+			if (m_Socket == INVALID_SOCKET) {
 				//Logging here instead of printf
 				printf("socket failed with error: %ld\n", WSAGetLastError());
 				freeaddrinfo(result);
@@ -115,14 +115,14 @@ namespace MQTT {
 		//Setup the TCP listening socket
 		void SocketServer::SetupTCP() {
 
-			int iResult = bind(ListenSocket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+			int iResult = bind(m_Socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
 			if (iResult == SOCKET_ERROR) {
 
 				//Logging here
 				printf("bind failed with error: %d\n", WSAGetLastError());
 				freeaddrinfo(result);
-				closesocket(ListenSocket);
+				closesocket(m_Socket);
 				WSACleanup();
 				//Throw error here
 			}
@@ -131,11 +131,11 @@ namespace MQTT {
 		}
 
 		void SocketServer::Listen() {
-			int iResult = listen(ListenSocket, 10);
+			int iResult = listen(m_Socket, 10);
 			if (iResult == SOCKET_ERROR) {
 				//logging here
 				printf("listen failed with error: %d\n", WSAGetLastError());
-				closesocket(ListenSocket);
+				closesocket(m_Socket);
 				WSACleanup();
 				//throw error here
 			}
@@ -144,17 +144,17 @@ namespace MQTT {
 		void SocketServer::Accept()
 		{
 
-			int clientSocket = accept(ListenSocket, (struct sockaddr*)NULL, NULL);
+			int clientSocket = accept(m_Socket, (struct sockaddr*)NULL, NULL);
 
 			if (clientSocket > 0) {
 				m_Clients.push_back(new Client("123", "1", clientSocket));
-				s_ReadThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(*m_Clients[m_Clients.size() - 1]), std::cref(*this)));
+				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(*m_Clients[m_Clients.size() - 1]), std::cref(*this)));
 			}
 			else
 			{
 				//logging here
 				printf("accept failed with error: %d\n", WSAGetLastError());
-				closesocket(ListenSocket);
+				closesocket(m_Socket);
 				WSACleanup();
 				//throw error
 			}

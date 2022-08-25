@@ -4,18 +4,14 @@
 
 
 namespace MQTT {
-
-
 	namespace Protocol {
-
-
 		namespace Converters
 		{
 			class ConnectAckConverter : IPackageConverter<ConnectAckPackage>
 			{
 			public:
-				virtual ConnectAckPackage ConvertToPackage(std::vector<unsigned char> _message) override;
-				virtual std::vector<unsigned char> ConvertFromPackage(ConnectAckPackage _package) override;
+				virtual const ConnectAckPackage ToPackage(const std::vector<unsigned char>& buffer) override;
+				virtual const std::vector<unsigned char> ToBuffer(const ConnectAckPackage& package) override;
 			};
 		}
 	}
