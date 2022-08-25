@@ -1,5 +1,6 @@
 #include "mqttpch.h"
 #include "SocketServer.h"
+#include "Server/MqttService.h"
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <thread>
@@ -14,6 +15,8 @@ namespace MQTT {
 		static struct addrinfo* result = NULL;
 		auto s_ReadThreads = std::vector<std::thread>();
 
+		SocketServer::SocketServer(int port)
+			: m_Port(port), m_IsRunning(false) {};
 		SocketServer::~SocketServer()
 		{
 			for (auto client : m_Clients)
@@ -167,6 +170,7 @@ namespace MQTT {
 				{
 					if (amount < 0)
 						printf("error: %d\n", WSAGetLastError());
+
 					if (server.OnReceivedData)
 					{
 						auto data = std::vector<unsigned char>();

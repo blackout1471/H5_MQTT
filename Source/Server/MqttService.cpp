@@ -1,3 +1,5 @@
+#pragma once
+
 #include "mqttpch.h"
 #include "MqttService.h"
 #include "Protocol/Converter/ConverterUtility.h"
@@ -6,7 +8,7 @@
 
 namespace MQTT {
 	namespace Server {
-		MqttService::MqttService(IServer* server) : m_Server(server), m_ClientStates()
+		MqttService::MqttService(IServer* server) : m_Server(server), m_ClientStates(), m_Manager()
 		{
 			InitialiseServer();
 		}
@@ -73,14 +75,14 @@ namespace MQTT {
 			auto packageClientId = std::string(package.ConnectPayload.ClientId.begin(), package.ConnectPayload.ClientId.end());
 
 			auto position = std::find_if(m_ClientStates.begin(), m_ClientStates.end(), [&](const MqttClient* c)
-			{
+{
 					return c->ClientId == packageClientId;
 			});
 
 			if (position != m_ClientStates.end())
-			{
+		{
 				if ((*position)->IsConnected)
-				{
+			{
 					m_Server->Disconnect(client);
 					(*position)->IsConnected = false;
 					return;
@@ -93,7 +95,9 @@ namespace MQTT {
 
 			m_ClientStates.push_back(clientState);
 
-			m_Server->Send(client, { 0x20, 0x02, 0x01, 0x0 });
+			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
+
+			m_Server->Send(client, ackMessage);
 		}
 
 		void MqttService::InitialiseServer()

@@ -1,16 +1,20 @@
 #include "mqttpch.h"
-
 #include "Server/MqttService.h"
+#include "Server/SocketServer.h"
+
+#include <iostream>
 
 using namespace MQTT::Server;
 
-static MqttService* service;
 
-int main() 
-{
-	auto server = new SocketServer(1883);
-	service = new MqttService(server);
-	service->Start();
+int main() {
+	try {
 
+		MqttService mqttService = MqttService(new SocketServer(1883));
+		mqttService.Start();
+	}
+	catch (const std::exception& e) {
+		std::cout << "Error: " << e.what() << std::endl;
+	}
 	return 0;
 }
