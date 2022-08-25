@@ -75,18 +75,18 @@ namespace MQTT {
 			auto packageClientId = std::string(package.ConnectPayload.ClientId.begin(), package.ConnectPayload.ClientId.end());
 
 			auto position = std::find_if(m_ClientStates.begin(), m_ClientStates.end(), [&](const MqttClient* c)
-{
+				{
 					return c->ClientId == packageClientId;
-			});
+				});
 
 			if (position != m_ClientStates.end())
-		{
-				if ((*position)->IsConnected)
 			{
+				if ((*position)->IsConnected)
+				{
 					m_Server->Disconnect(client);
 					(*position)->IsConnected = false;
 					return;
-				}	
+				}
 			}
 
 			auto clientState = new MqttClient();
