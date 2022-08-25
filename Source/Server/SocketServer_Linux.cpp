@@ -65,8 +65,8 @@ namespace MQTT {
 			int connfd = accept(m_Socket, (struct sockaddr*)NULL, NULL);
 			if (connfd > 0)
 			{
-				m_Clients.push_back(Client("123", "1", connfd));
-				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(m_Clients[m_Clients.size() - 1]), std::cref(*this)));
+				m_Clients.push_back(new Client("123", "1", connfd));
+				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(*m_Clients[m_Clients.size() - 1]), std::cref(*this)));
 			}
 		}
 
@@ -93,7 +93,7 @@ namespace MQTT {
 
 			m_ClientReaderThreads.clear();
 			for (const auto& client : m_Clients)
-				Disconnect(client);
+				Disconnect(*client);
 
 			m_Clients.clear();
 		}
