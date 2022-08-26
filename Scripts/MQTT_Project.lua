@@ -24,6 +24,10 @@ project "MQTT"
 		projLoc .. "Source"
 	}
 	
+	links
+	{
+		"pthread"
+	}
 
 	filter "system:windows"
 		excludes
