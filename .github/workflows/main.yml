@@ -28,6 +28,10 @@ jobs:
   # Runs a single command using the runners shell
       - name: Start process
         run: echo Starting Unit test
+      - name: Get premake
+        run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-linux.tar.gz Premake/
+      - name: Unpack
+        run: tar -xf Premake/premake-5.0.0-beta1-linux.tar.gz
       - name: Update generate permission
         run: chmod +x GenerateSolution_linux.sh
       - name: Update premake permission
