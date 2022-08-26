@@ -88,6 +88,7 @@ namespace MQTT {
 				new ClientNotConnectedRule(packageClientId, m_ClientStates),
 				new CorrectProtocolNameRule(protocolName),
 				new Protocol311Rule(package.ConnectVariableHeader.Level),
+				new ConnectReservedFlagNotSetRule(package.ConnectVariableHeader.VariableLevel)
 			}).Run();
 
 			auto clientState = new MqttClient();

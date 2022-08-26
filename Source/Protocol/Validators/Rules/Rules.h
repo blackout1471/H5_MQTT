@@ -4,3 +4,4 @@
 #include "ClientNotConnectedRule.h"
 #include "CorrectProtocolNameRule.h"
 #include "Protocol311Rule.h"
+#include "ConnectReservedFlagNotSetRule.h"
