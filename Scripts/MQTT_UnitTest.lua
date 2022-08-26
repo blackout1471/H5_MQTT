@@ -6,7 +6,7 @@ project "UnitTest"
 	language "C++"
 	cppdialect "C++20"
 	staticruntime "on"
-
+	
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -16,11 +16,19 @@ project "UnitTest"
 		projLoc .. "/**.cpp"
 	}
 
+	IncludeDir = {}
+	IncludeDir["gtest"] = "../vendor/googletest/googletest/include/"
+
 	includedirs
 	{
-		projLoc
+		projLoc,
+		"%{IncludeDir.gtest}",
 	}
-	
+
+	links
+	{
+		"gtest"
+	}
 
 	filter "system:windows"
 		systemversion "latest"
