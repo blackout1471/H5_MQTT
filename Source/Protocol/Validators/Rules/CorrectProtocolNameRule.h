@@ -17,7 +17,7 @@ namespace MQTT {
 				* Returns: true if matches false if not.
 				*/
 				inline virtual bool Validate() override {
-					return m_ProtocolName == "mqtt";
+					return m_ProtocolName == "MQTT";
 				}
 
 			private:

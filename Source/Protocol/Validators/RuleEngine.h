@@ -15,7 +15,7 @@ namespace MQTT {
 				virtual ~RuleEngine();
 
 				/*
-				* Runs the.
+				* Runs the rules linear.
 				* Return: True if all validations are Ok, false if not.
 				*/
 				bool Run();

@@ -4,6 +4,11 @@
 #include "MqttService.h"
 #include "Protocol/Converters/ConverterUtility.h"
 
+// Todo :: Remove after testing
+#include "Protocol/Validators/RuleEngine.h"
+#include "Protocol/Validators/Rules/Rules.h"
+using namespace MQTT::Protocol::Validators;
+
 #include <algorithm>
 
 namespace MQTT {
@@ -73,24 +78,17 @@ namespace MQTT {
 			}
 		}
 
+
 		void MqttService::OnClientConnect(const Client& client, const Protocol::ConnectPackage& package)
 		{
 			auto packageClientId = std::string(package.ConnectPayload.ClientId.begin(), package.ConnectPayload.ClientId.end());
+			auto protocolName = std::string(package.ConnectVariableHeader.ProtocolName.begin(), package.ConnectVariableHeader.ProtocolName.end());
 
-			auto position = std::find_if(m_ClientStates.begin(), m_ClientStates.end(), [&](const MqttClient* c)
-				{
-					return c->ClientId == packageClientId;
-				});
-
-			if (position != m_ClientStates.end())
-			{
-				if ((*position)->IsConnected)
-				{
-					m_Server->Disconnect(client);
-					(*position)->IsConnected = false;
-					return;
-				}
-			}
+			auto shouldNotDisconnectClient = RuleEngine({
+				new ClientNotConnectedRule(packageClientId, m_ClientStates),
+				new CorrectProtocolNameRule(protocolName),
+				new Protocol311Rule(package.ConnectVariableHeader.Level),
+			}).Run();
 
 			auto clientState = new MqttClient();
 			clientState->IsConnected = true;
