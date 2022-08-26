@@ -8,7 +8,10 @@ project "gtest"
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
-
+    links
+    {
+	"pthread"
+    }
 
     files
     {
