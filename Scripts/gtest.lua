@@ -4,7 +4,8 @@ project "gtest"
 	language "C++"
 	staticruntime "on"
 	runtime "Debug"
-
+    cppdialect "C++20"
+    
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
