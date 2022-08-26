@@ -28,7 +28,7 @@ jobs:
            submodules: recursive
            
       - name: Set up GCC
-        run: apt install build-essential
+        run: sudo apt install build-essential
 # temp
       - name: Start process
         run: echo Starting Unit test
