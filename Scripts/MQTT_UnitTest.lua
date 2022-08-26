@@ -27,7 +27,8 @@ project "UnitTest"
 
 	links
 	{
-		"gtest"
+		"gtest",
+		"pthread"
 	}
 
 	filter "system:windows"
