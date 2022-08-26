@@ -4,7 +4,7 @@ project "UnitTest"
 	location(projLoc)
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++20"
+	cppdialect "C++17"
 	staticruntime "on"
 	
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
@@ -27,7 +27,8 @@ project "UnitTest"
 
 	links
 	{
-		"gtest"
+		"gtest",
+		"pthread"
 	}
 
 	filter "system:windows"
