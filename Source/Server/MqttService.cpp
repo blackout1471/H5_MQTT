@@ -34,7 +34,10 @@ namespace MQTT {
 			switch (type)
 			{
 			case MQTT::Protocol::Connect:
-				OnClientConnect(client, Protocol::Converters::ConnectConverter().ToPackage(buffer));
+				OnClientConnect(
+					client, 
+					Protocol::Converters::ConnectConverter().ToPackage(buffer)
+				);
 				break;
 			case MQTT::Protocol::ConnectAck:
 				break;

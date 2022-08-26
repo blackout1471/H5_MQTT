@@ -1,5 +1,5 @@
 #pragma once
-#include "Protocol/Packages.h"
+#include "Protocol/Packages/Packages.h"
 
 #include <cstdint>
 

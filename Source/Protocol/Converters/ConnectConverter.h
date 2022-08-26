@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IPackageConverter.h"
-#include "Protocol/Packages.h"
+#include "Protocol/Packages/Packages.h"
 
 namespace MQTT {
 	namespace Protocol {

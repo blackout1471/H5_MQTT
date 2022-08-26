@@ -1,6 +1,6 @@
 #pragma once
 #include "mqttpch.h"
-#include "Protocol/ConnectAckPackage.h"
+#include "Protocol/Packages/ConnectAckPackage.h"
 #include "Protocol/Converters/ConnectAckConverter.h"
 
 #include <vector>

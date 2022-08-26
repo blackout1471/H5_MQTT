@@ -1,6 +1,6 @@
 #pragma once
 #include "IPackageConverter.h"
-#include "Protocol/ConnectAckPackage.h"
+#include "Protocol/Packages/ConnectAckPackage.h"
 
 
 namespace MQTT {

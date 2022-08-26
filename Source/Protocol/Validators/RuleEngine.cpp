@@ -1,3 +1,4 @@
+#include "mqttpch.h"
 #include "RuleEngine.h"
 #pragma once
 
