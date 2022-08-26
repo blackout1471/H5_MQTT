@@ -31,7 +31,7 @@ jobs:
       - name: Update generate permission
         run: chmod +x GenerateSolution_linux.sh
       - name: Update premake permission
-        run: chomod +x Premake/premake5
+        run: chmod +x Premake/premake5
       - name: Generate solution
         run: ./GenerateSolution_linux.sh
       - name: Make files
