@@ -3,7 +3,7 @@ project "gtest"
 	kind "StaticLib"
 	language "C++"
 	staticruntime "on"
-    cppdialect "C++20"
+        cppdialect "C++20"
 
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
@@ -19,8 +19,8 @@ project "gtest"
 
     includedirs
     {
-		"../vendor/googletest/googletest/include",
-		"../vendor/googletest/googletest/"
+	"../vendor/googletest/googletest/include",
+	"../vendor/googletest/googletest/"
     }
 
     filter "configurations:Debug"
