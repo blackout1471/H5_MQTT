@@ -1,5 +1,5 @@
 project "gtest"
-	location "../vendor/googletest"
+	location "../vendor/googletest/googletest"
 	kind "StaticLib"
 	language "C++"
 	staticruntime "on"
