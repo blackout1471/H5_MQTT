@@ -29,7 +29,7 @@ jobs:
       - name: Start process
         run: echo Starting Unit test
       - name: Get premake
-        run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-linux.tar.gz Premake/
+        run: wget -O Premake/ https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-linux.tar.gz 
       - name: Unpack
         run: tar -xf Premake/premake-5.0.0-beta1-linux.tar.gz
       - name: Update generate permission
