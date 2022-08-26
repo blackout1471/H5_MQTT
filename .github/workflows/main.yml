@@ -29,9 +29,9 @@ jobs:
       - name: Start process
         run: echo Starting Unit test
       - name: Get premake
-        run: wget -O Premake/ https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-linux.tar.gz 
+        run: wget -O Premake/premake.tar.gz https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-linux.tar.gz 
       - name: Unpack
-        run: tar -xf Premake/premake-5.0.0-beta1-linux.tar.gz
+        run: tar -xf Premake/premake.tar.gz
       - name: Update generate permission
         run: chmod +x GenerateSolution_linux.sh
       - name: Update premake permission
