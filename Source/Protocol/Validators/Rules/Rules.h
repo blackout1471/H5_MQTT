@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BufferValidRule.h"
-#include "ClientNotConnectedRule.h"
+#include "ClientConnectedRule.h"
 #include "CorrectProtocolNameRule.h"
 #include "Protocol311Rule.h"
-#include "ConnectReservedFlagNotSetRule.h"
+#include "ConnectReservedFlagSetRule.h"

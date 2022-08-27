@@ -6,12 +6,24 @@
 namespace MQTT {
 	namespace Protocol {
 		namespace Validators {
+			struct EngineRule {
+				/*
+				* The rule to run
+				*/
+				IRule* Rule;
+
+				/*
+				* When the rule should fail.
+				*/
+				bool PassOn = false;
+			};
+
 			class RuleEngine {
 			public:
 				/*
 				* Creates the rule engines with the specified rules
 				*/
-				RuleEngine(const std::vector<IRule*>& rules);
+				RuleEngine(const std::vector<EngineRule>& rules);
 				virtual ~RuleEngine();
 
 				/*
@@ -20,7 +32,7 @@ namespace MQTT {
 				*/
 				bool Run();
 			private:
-				std::vector<IRule*> m_Rules;
+				std::vector<EngineRule> m_Rules;
 			};
 		}
 	}

@@ -84,12 +84,16 @@ namespace MQTT {
 			auto packageClientId = std::string(package.ConnectPayload.ClientId.begin(), package.ConnectPayload.ClientId.end());
 			auto protocolName = std::string(package.ConnectVariableHeader.ProtocolName.begin(), package.ConnectVariableHeader.ProtocolName.end());
 
-			auto shouldNotDisconnectClient = RuleEngine({
-				new ClientNotConnectedRule(packageClientId, m_ClientStates),
-				new CorrectProtocolNameRule(protocolName),
-				new Protocol311Rule(package.ConnectVariableHeader.Level),
-				new ConnectReservedFlagNotSetRule(package.ConnectVariableHeader.VariableLevel)
-			}).Run();
+			auto shouldDisconnectClient = !(RuleEngine({
+				{new ClientConnectedRule(packageClientId, m_ClientStates), false},
+				{new CorrectProtocolNameRule(protocolName), true},
+				{new Protocol311Rule(package.ConnectVariableHeader.Level), true},
+				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false}
+			}).Run());
+
+			if (shouldDisconnectClient)
+				m_Server->Disconnect(client);
+
 
 			auto clientState = new MqttClient();
 			clientState->IsConnected = true;

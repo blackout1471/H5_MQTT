@@ -5,19 +5,19 @@
 namespace MQTT {
 	namespace Protocol {
 		namespace Validators {
-			RuleEngine::RuleEngine(const std::vector<IRule*>& rules) : m_Rules(rules)
+			RuleEngine::RuleEngine(const std::vector<EngineRule>& rules) : m_Rules(rules)
 			{}
 
 			RuleEngine::~RuleEngine()
 			{
-				for (auto* rule : m_Rules)
-					delete rule;
+				for (auto rule : m_Rules)
+					delete rule.Rule;
 			}
 
 			bool RuleEngine::Run()
 			{
-				for (auto* rule : m_Rules)
-					if (!rule->Validate())
+				for (auto rule : m_Rules)
+					if (rule.PassOn != rule.Rule->Validate())
 						return false;
 
 				return true;
