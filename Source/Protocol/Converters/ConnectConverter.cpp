@@ -16,19 +16,23 @@ namespace MQTT {
             {
                 auto package = ConnectPackage();
 
+                // Check if the buffer has the minimum requirements
                 if (buffer.size() < 3)
                     return package;
 
                 const unsigned char* data = buffer.data();
 
+                // Get package type. Should always be Connect :)
                 package.ControlHeader.PackageType = ConverterUtility::GetPackageType(*data);
                 data++;
 
                 unsigned char remainLength = *data;
                 data++;
 
+                // Convert the variable header.
                 data += ConvertToVariableHeader(data, package.ConnectVariableHeader);
 
+                // If we have payload then convert.
                 bool hasPayload = (buffer.data() + remainLength + 2) != data;
                 if (!hasPayload)
                     return package;
@@ -47,11 +51,11 @@ namespace MQTT {
             {
                 const unsigned char* data = dataPtr;
 
-                package.NameLength = ConverterUtility::ByteToInt(*data, data[1]);
+                auto nameLength = ConverterUtility::ByteToInt(*data, data[1]);
                 data += 2;
 
-                package.ProtocolName.assign(data, data + package.NameLength);
-                data += package.NameLength;
+                package.ProtocolName = std::string(data, data + nameLength);
+                data += nameLength;
 
                 package.Level = *data;
                 data++;
@@ -69,47 +73,45 @@ namespace MQTT {
             {
                 const unsigned char* data = dataPtr;
 
-                package.ClientIdLength = ConverterUtility::ByteToInt(*data, data[1]);
+                auto clientIdLength = ConverterUtility::ByteToInt(*data, data[1]);
                 data += 2;
 
-                package.ClientId.assign(data, data + package.ClientIdLength);
-                data += package.ClientIdLength;
+                package.ClientId = std::string(data, data + clientIdLength);
+                data += clientIdLength;
 
 
                 if (headerPackage.VariableLevel & ConnectFlagType::Will_Flag)
                 {
-                    int willLength = ConverterUtility::ByteToInt(*data, data[1]);
+                    auto willLength = ConverterUtility::ByteToInt(*data, data[1]);
                     data += 2;
 
-                    auto willTopic = std::string();
-                    willTopic.assign(data, data + willLength);
+                    package.WillTopic = std::string(data, data + willLength);
                     data += willLength;
 
                     auto willMessageLength = ConverterUtility::ByteToInt(*data, data[1]);
                     data += 2;
 
-                    auto willMessage = std::string();
-                    willMessage.assign(data, data + willMessageLength);
+                    package.WillMessage = std::string(data, data + willMessageLength);
                     data += willMessageLength;
                 }
 
                 if (headerPackage.VariableLevel & ConnectFlagType::Username)
                 {
-                    package.UsernameLength = ConverterUtility::ByteToInt(*data, data[1]);
+                    auto usernameLength = ConverterUtility::ByteToInt(*data, data[1]);
                     data += 2;
 
-                    package.Username.assign(data, data + package.UsernameLength);
-                    data += package.UsernameLength;
+                    package.Username = std::string(data, data + usernameLength);
+                    data += usernameLength;
                 }
 
 
                 if (headerPackage.VariableLevel & ConnectFlagType::Password)
                 {
-                    package.PasswordLength = ConverterUtility::ByteToInt(*data, data[1]);
+                    auto passwordLength = ConverterUtility::ByteToInt(*data, data[1]);
                     data += 2;
 
-                    package.Password.assign(data, data + package.PasswordLength);
-                    data += package.PasswordLength;
+                    package.Password = std::string(data, data + passwordLength);
+                    data += passwordLength;
                 }
 
                 return data - dataPtr;

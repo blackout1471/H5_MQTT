@@ -12,10 +12,10 @@ namespace MQTT {
 				ConnectConverter();
 				~ConnectConverter();
 
-				// <inheritDoc />
+				/// <inheritdoc/>
 				virtual const ConnectPackage ToPackage(const std::vector<unsigned char>& buffer) override;
 
-				// <inheritDoc />
+				/// <inheritdoc />
 				virtual const std::vector<unsigned char> ToBuffer(const ConnectPackage& to) override;
 
 			private:

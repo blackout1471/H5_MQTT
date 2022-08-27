@@ -1,5 +1,5 @@
 #pragma once
-#include <cstdint>
+#include <string>
 #include <vector>
 
 namespace MQTT {
@@ -7,14 +7,11 @@ namespace MQTT {
 
 		struct ConnectPayload
 		{
-			int16_t ClientIdLength;
-			std::vector<unsigned char> ClientId;
-
-			int16_t UsernameLength;
-			std::vector<unsigned char> Username;
-
-			int16_t PasswordLength;
-			std::vector<unsigned char> Password;
+			std::string ClientId;
+			std::string WillTopic;
+			std::string WillMessage;
+			std::string Username;
+			std::string Password;
 		};
 	}
 }

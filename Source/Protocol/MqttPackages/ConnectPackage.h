@@ -12,7 +12,5 @@ namespace MQTT {
 			ConnectVariableHeader ConnectVariableHeader;
 			ConnectPayload ConnectPayload;
 		};
-
 	}
-
 };

@@ -6,3 +6,4 @@
 #include "Protocol311Rule.h"
 #include "ConnectReservedFlagSetRule.h"
 #include "IsCredentialFlagIncorrectRule.h"
+#include "ConnectWillRule.h"
