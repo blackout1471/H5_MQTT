@@ -88,11 +88,14 @@ namespace MQTT {
 				{new ClientConnectedRule(packageClientId, m_ClientStates), false},
 				{new CorrectProtocolNameRule(protocolName), true},
 				{new Protocol311Rule(package.ConnectVariableHeader.Level), true},
-				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false}
+				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false},
+				{new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false}
 			}).Run());
 
 			if (shouldDisconnectClient)
 				m_Server->Disconnect(client);
+
+
 
 
 			auto clientState = new MqttClient();

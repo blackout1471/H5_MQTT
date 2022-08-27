@@ -2,7 +2,7 @@
 namespace MQTT {
 	namespace Protocol {
 	
-		enum ConnectActReturnCodeType : unsigned char
+		enum ConnectAckReturnCodeType : unsigned char
 		{
 			Accepted = 0, // Connection accepted
 			Refused_Unacceptable_Protocol_Version, // The Server does not support the level of the MQTT protocol requested by the Client

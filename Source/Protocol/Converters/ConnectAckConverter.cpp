@@ -17,7 +17,7 @@ namespace MQTT {
 				if (packageSize > 0)
 				{
 					connnectAckVariableHeader.SessionPresentFlag = buffer[2];
-					connnectAckVariableHeader.ConnectAckReturnCode = (ConnectActReturnCodeType)buffer[3];
+					connnectAckVariableHeader.ConnectAckReturnCode = (ConnectAckReturnCodeType)buffer[3];
 				}
 
 				ConnectAckPackage connectAckPackage(controlHeader, connnectAckVariableHeader);

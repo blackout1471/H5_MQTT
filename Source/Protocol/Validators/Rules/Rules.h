@@ -5,3 +5,4 @@
 #include "CorrectProtocolNameRule.h"
 #include "Protocol311Rule.h"
 #include "ConnectReservedFlagSetRule.h"
+#include "IsCredentialFlagIncorrectRule.h"

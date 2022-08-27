@@ -11,7 +11,7 @@ namespace MQTT {
 
 		public:
 			bool ValidMessage(std::vector<unsigned char> _message);
-			std::vector<unsigned char> GenerateConnectAckMessage(Protocol::ConnectActReturnCodeType _returnCode);
+			std::vector<unsigned char> GenerateConnectAckMessage(Protocol::ConnectAckReturnCodeType _returnCode);
 		};
 	}
 }
