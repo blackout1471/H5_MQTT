@@ -1,6 +1,7 @@
 #pragma once
 #include "IRule.h"
 #include "Server/MqttClient.h"
+#include "Protocol/Managers/MqttManager.h"
 
 #include <vector>
 #include <string>
@@ -12,7 +13,7 @@ namespace MQTT {
 			{
 			public:
 				GenerateSessionMessageRule(const std::string& clientId, const Server::MqttClient* clientState, std::vector<unsigned char>& message) 
-					:  m_ClientId(clientId), m_ClientState(clientState), m_Message(message) {};
+					:  m_ClientId(clientId), m_ClientState(clientState), m_Message(message), m_Manager() {};
 				virtual ~GenerateSessionMessageRule() {};
 
 				/*
@@ -24,14 +25,24 @@ namespace MQTT {
 				virtual bool Validate() override {
 
 					if (m_ClientId.size() == 0 || !m_ClientState)
+					{
+						m_Message = m_Manager.GenerateConnectAckMessage(Protocol::Refused_Identifier_Rejected);
+						return false;
+					}
+					else
+					{
+						m_Message = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
+						return true;
+					}
 
+					return false;
 				};
 
 			private:
 				const std::string& m_ClientId;
 				const Server::MqttClient* m_ClientState;
 				std::vector<unsigned char>& m_Message;
-
+				MqttManager m_Manager;
 
 			};
 		}
