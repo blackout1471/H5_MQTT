@@ -61,6 +61,7 @@ namespace MQTT {
 			case MQTT::Protocol::PingResp:
 				break;
 			case MQTT::Protocol::Disconnect:
+				OnClientDisconnect(client, Protocol::Converters::)
 				break;
 			default:
 				for (int i = 0; i < buffer.size(); i++)
@@ -98,6 +99,10 @@ namespace MQTT {
 			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
 
 			m_Server->Send(client, ackMessage);
+		}
+
+		void MqttService::OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package)
+		{
 		}
 
 		void MqttService::InitialiseServer()

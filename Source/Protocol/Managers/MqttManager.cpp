@@ -10,7 +10,10 @@ namespace MQTT {
 			// Message is whack
 			if (_message.size() == 0)
 				return false;
+			if (_message[0] == MQTT::Protocol::Disconnect) {
 
+				return true;
+			}
 			if (_message[0] == MQTT::Protocol::Connect) {
 
 				// convert package here here

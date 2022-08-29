@@ -1,9 +1,9 @@
 #pragma once
 #include "Protocol/Managers/MqttManager.h"
-#include "Protocol/Converters/ConnectConverter.h"
+#include "Protocol/Converter/ConnectConverter.h"
 #include "IServer.h"
 #include "MqttClient.h"
-
+#include "Packages.h"
 namespace MQTT {
 	namespace Server {
 		class MqttService {
@@ -19,6 +19,7 @@ namespace MQTT {
 			void OnReceivedData(const Client& client, const std::vector<unsigned char>& buffer);
 
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
+			void OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package);
 
 		private:
 			IServer* m_Server;
