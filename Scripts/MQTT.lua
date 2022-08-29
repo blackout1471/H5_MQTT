@@ -20,6 +20,7 @@ workspace "H5MQTT"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
 group "Test"
+	include "gtest.lua"
 	include "MQTT_UnitTest.lua"
 group ""
 

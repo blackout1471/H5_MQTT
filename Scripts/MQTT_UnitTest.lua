@@ -4,9 +4,9 @@ project "UnitTest"
 	location(projLoc)
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++20"
+	cppdialect "C++17"
 	staticruntime "on"
-
+	
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -16,11 +16,20 @@ project "UnitTest"
 		projLoc .. "/**.cpp"
 	}
 
+	IncludeDir = {}
+	IncludeDir["gtest"] = "../vendor/googletest/googletest/include/"
+
 	includedirs
 	{
-		projLoc
+		projLoc,
+		"%{IncludeDir.gtest}",
 	}
-	
+
+	links
+	{
+		"gtest",
+		"pthread"
+	}
 
 	filter "system:windows"
 		systemversion "latest"
