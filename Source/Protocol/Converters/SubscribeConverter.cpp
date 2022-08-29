@@ -20,26 +20,48 @@ namespace MQTT {
 
 				int offset = 6;
 
-				int topicsCount = 1;
+				bool readAllTopics = false;
+				while (!readAllTopics) {
 
-				/*	for (int i = 0; i < (packageSize - sp.TopicLength) - 1; i++)
+					SubscribeTopic st;
+					if (offset != 6) {
+						sp.TopicLength = ConverterUtility::ByteToInt(buffer[offset], buffer[offset + 1]);
+						offset += 2;
+					}
+
+					for (int i = 0; i < sp.TopicLength; i++)
 					{
-						if (buffer[i + offset] == '/')
-							topicsCount++;
-					}*/
+						st.Topic.push_back(buffer[i + offset]);
 
-				SubscribeTopic st;
-				for (int i = 0; i < sp.TopicLength - 2; i++)
-				{
-					st.Topic.push_back(buffer[i + offset]);
+						if (buffer[i + offset] == '#') // check for other wild cards
+						{
+							// There is a wild card
+							st.Wildcard = (SubscribeTopicWildcardType)buffer[i + offset];
+							st.HaveChild = true;
+						}
+						else if (buffer[i + offset] == '/')
+						{
+							st.HaveChild = true;
+						}
+					}
+					st.QoS = buffer[sp.TopicLength + offset];
+					sp.Topics.push_back(st);
+
+					if ((packageSize - (sp.TopicLength + offset)) <= 2) {
+						// there no more packages
+						readAllTopics = true;
+					}
+					else {
+						offset += sp.TopicLength + 1;
+					}
 				}
-				st.Wildcard = (SubscribeTopicWildcardType)buffer[sp.TopicLength + offset - 1];
-				
-				st.QoS = buffer[sp.TopicLength + offset];
 
-				sp.Topics.push_back(st);
+				SubscribePackage subPackage;
+				subPackage.ControlHeader = ch;
+				subPackage.SubscribePayload = sp;
+				subPackage.SubscribeVariableHeader = vh;
 
-				return SubscribePackage();
+				return subPackage;
 			}
 
 			const std::vector<unsigned char> SubscribeConverter::ToBuffer(const SubscribePackage& to)

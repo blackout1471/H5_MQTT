@@ -2,7 +2,8 @@
 namespace MQTT {
 	namespace Protocol {
 		enum SubscribeTopicWildcardType : unsigned char {
-			Hashtag = 38,
+			NoWildcard = 0,
+			Hashtag = 35,
 			Dollar,
 			Plus
 		};
