@@ -3,6 +3,9 @@
 #include "mqttpch.h"
 #include "MqttService.h"
 #include "Protocol/Converters/ConverterUtility.h"
+#include "Protocol/Converters/ConnectConverter.h"
+#include "Protocol/Converters/DisconnectConverter.h"
+
 
 // Todo :: Remove after testing
 #include "Protocol/Validators/RuleEngine.h"
@@ -69,7 +72,10 @@ namespace MQTT {
 			case MQTT::Protocol::PingResp:
 				break;
 			case MQTT::Protocol::Disconnect:
-				OnClientDisconnect(client, Protocol::Converters::)
+				OnClientDisconnect(
+					client, 
+					Protocol::Converters::DisconnectConverter().ToPackage(buffer)
+				);
 				break;
 			default:
 				for (int i = 0; i < buffer.size(); i++)
@@ -101,6 +107,7 @@ namespace MQTT {
 
 			clientState->IsConnected = true;
 			clientState->ClientId = packageClientId;
+			clientState->ConnectionIdentifier = client.GetIdentifier();
 
 			m_ClientStates.push_back(clientState);
 
@@ -111,6 +118,13 @@ namespace MQTT {
 
 		void MqttService::OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package)
 		{
+			//TODO: Remove will message when storage of it is implemented.
+			for (auto& arr_client : m_ClientStates)
+			{
+				if (arr_client->ConnectionIdentifier == client.GetIdentifier())
+					arr_client->IsConnected = false;
+			}
+			m_Server->Disconnect(client);
 		}
 
 		void MqttService::InitialiseServer()

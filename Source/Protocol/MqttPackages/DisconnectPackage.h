@@ -1,6 +1,6 @@
 #pragma once
-#include <Protocol/ControlHeader.h>
-#include <Protocol/ConnectVariableHeader.h>
+#include <Protocol/MqttPackages/ControlHeader.h>
+#include <Protocol/MqttPackages/ConnectVariableHeader.h>
 namespace MQTT {
 	namespace Protocol {
 		struct DisconnectPackage

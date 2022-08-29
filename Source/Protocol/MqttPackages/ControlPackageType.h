@@ -17,7 +17,7 @@ namespace MQTT {
 			UnsubAck,
 			PingReq,
 			PingResp,
-			Disconnect = 0
+			Disconnect = 14
 		};
 	}
 }
