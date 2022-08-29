@@ -95,17 +95,69 @@ namespace MQTT {
 			}).Run());
 
 			if (shouldDisconnectClient)
+			{
 				m_Server->Disconnect(client);
+				return;
+			}
+
+			auto shouldContinueSession = (RuleEngine({
+				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
+			}).Run());
+
+			if (shouldContinueSession)
+			{
+				delete clientState;
+
+				clientState = GetClientState(packageClientId);
+				if (!clientState)
+				{
+					m_Server->Disconnect(client);
+					return;
+				}
+
+				if (packageClientId.size() == 0)
+				{
+					auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
+					m_Server->Send(client, ackMessage);
+					m_Server->Disconnect(client);
+				}
+				else
+				{
+					auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
+					m_Server->Send(client, ackMessage);
+				}
+
+				return;
+			}
 
 
-			clientState->IsConnected = true;
-			clientState->ClientId = packageClientId;
+			if (packageClientId == "")
+				clientState->ClientId = GenerateUniqueId();
+			else
+				clientState->ClientId = packageClientId;
+
 
 			m_ClientStates.push_back(clientState);
+			
+			clientState->IsConnected = true;
 
 			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
-
 			m_Server->Send(client, ackMessage);
+		}
+
+		MqttClient* MqttService::GetClientState(const std::string& clientId)
+		{
+			for (auto* clientState : m_ClientStates)
+				if (clientState->ClientId == clientId)
+					return clientState;
+
+			return nullptr;
+		}
+
+		std::string MqttService::GenerateUniqueId()
+		{
+			// TODO: Create unique id
+			return "1";
 		}
 
 		void MqttService::InitialiseServer()
