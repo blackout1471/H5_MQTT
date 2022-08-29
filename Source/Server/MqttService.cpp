@@ -100,8 +100,10 @@ namespace MQTT {
 				return;
 			}
 
+			std::vector<unsigned char> message;
 			auto shouldContinueSession = (RuleEngine({
-				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
+				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true},
+				{new GenerateSessionMessageRule(packageClientId, clientState, message), }
 			}).Run());
 
 			// Todo :: Move 
@@ -110,15 +112,10 @@ namespace MQTT {
 				delete clientState;
 
 				clientState = GetClientState(packageClientId);
-				if (!clientState)
-				{
-					m_Server->Disconnect(client);
-					return;
-				}
 
-				if (packageClientId.size() == 0)
+				if (packageClientId.size() == 0 || !clientState)
 				{
-					auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
+					auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Refused_Identifier_Rejected);
 					m_Server->Send(client, ackMessage);
 					m_Server->Disconnect(client);
 				}
