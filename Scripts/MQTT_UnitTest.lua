@@ -18,21 +18,29 @@ project "UnitTest"
 
 	IncludeDir = {}
 	IncludeDir["gtest"] = "../vendor/googletest/googletest/include/"
+	IncludeDir["Source"] = "../Source/"
 
 	includedirs
 	{
 		projLoc,
 		"%{IncludeDir.gtest}",
+		"%{IncludeDir.Source}"
 	}
 
 	links
 	{
 		"gtest",
-		"pthread"
+		"MQTT"
 	}
 
 	filter "system:windows"
 		systemversion "latest"
+
+	filter "system:linux"
+		links
+		{
+			"pthread"
+		}
 		
 	filter "configurations:Debug"
 		defines "_DEBUG"

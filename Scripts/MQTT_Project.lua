@@ -23,11 +23,6 @@ project "MQTT"
 	{
 		projLoc .. "Source"
 	}
-	
-	links
-	{
-		"pthread"
-	}
 
 	filter "system:windows"
 		excludes
@@ -41,6 +36,10 @@ project "MQTT"
 		excludes
 		{
 			projLoc .. "Source/**_Win32.cpp"
+		}
+		links
+		{
+			"pthread"
 		}
 		
 	filter "configurations:Debug"
