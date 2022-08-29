@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.0.0">
-  <zoom_level>12</zoom_level>
+  <zoom_level>4</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1008</x>
-      <y>588</y>
-      <w>672</w>
-      <h>156</h>
+      <x>336</x>
+      <y>196</y>
+      <w>224</w>
+      <h>52</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 IServer
@@ -24,10 +24,10 @@ group=group-2</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1008</x>
-      <y>156</y>
-      <w>552</w>
-      <h>252</h>
+      <x>336</x>
+      <y>52</y>
+      <w>184</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>SocketServer
 --
@@ -48,10 +48,10 @@ group=group-2</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1272</x>
-      <y>396</y>
-      <w>36</w>
-      <h>216</h>
+      <x>424</x>
+      <y>132</y>
+      <w>12</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-2</panel_attributes>
@@ -60,10 +60,10 @@ group=group-2</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1836</x>
-      <y>156</y>
-      <w>360</w>
-      <h>180</h>
+      <x>612</x>
+      <y>52</y>
+      <w>120</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 Client
@@ -80,10 +80,10 @@ group=group-2</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1548</x>
-      <y>264</y>
-      <w>312</w>
-      <h>36</h>
+      <x>516</x>
+      <y>88</y>
+      <w>104</w>
+      <h>12</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 group=group-2</panel_attributes>
@@ -92,10 +92,10 @@ group=group-2</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>960</x>
+      <x>320</x>
       <y>0</y>
-      <w>1272</w>
-      <h>792</h>
+      <w>424</w>
+      <h>264</h>
     </coordinates>
     <panel_attributes>Server
 --
@@ -107,9 +107,9 @@ group=group-2</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>0</x>
-      <y>1044</y>
-      <w>672</w>
-      <h>144</h>
+      <y>348</y>
+      <w>224</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>MqttService
 --
@@ -123,10 +123,10 @@ group=group-2</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3432</x>
-      <y>72</y>
-      <w>252</w>
-      <h>336</h>
+      <x>1144</x>
+      <y>24</y>
+      <w>84</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Enum&gt;&gt;
 ConrolFieldType
@@ -150,10 +150,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3768</x>
-      <y>192</y>
-      <w>252</w>
-      <h>216</h>
+      <x>1256</x>
+      <y>64</y>
+      <w>84</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Enum&gt;&gt;
 ConnectFlags
@@ -172,10 +172,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2976</x>
-      <y>192</y>
-      <w>360</w>
-      <h>216</h>
+      <x>992</x>
+      <y>64</y>
+      <w>120</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Enum&gt;&gt;
 ConnectAcknowledgementReturnCodeType
@@ -192,10 +192,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3408</x>
-      <y>600</y>
-      <w>264</w>
-      <h>84</h>
+      <x>1136</x>
+      <y>200</y>
+      <w>88</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 ControlHeader
@@ -208,10 +208,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3828</x>
-      <y>540</y>
-      <w>288</w>
-      <h>144</h>
+      <x>1276</x>
+      <y>180</y>
+      <w>96</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 ConnectVariableHeader
@@ -227,10 +227,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>4284</x>
-      <y>516</y>
-      <w>204</w>
-      <h>168</h>
+      <x>1428</x>
+      <y>172</y>
+      <w>68</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 ConnectPayload
@@ -247,10 +247,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2988</x>
-      <y>840</y>
-      <w>540</w>
-      <h>108</h>
+      <x>996</x>
+      <y>280</y>
+      <w>180</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 ConnectAcknowledgementPackage
@@ -263,10 +263,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3924</x>
-      <y>840</y>
-      <w>540</w>
-      <h>108</h>
+      <x>1308</x>
+      <y>280</y>
+      <w>180</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 ConnectPackage
@@ -280,10 +280,10 @@ group=group-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3528</x>
-      <y>396</y>
-      <w>36</w>
-      <h>228</h>
+      <x>1176</x>
+      <y>132</y>
+      <w>12</w>
+      <h>76</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 group=group-1</panel_attributes>
@@ -292,10 +292,10 @@ group=group-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3948</x>
-      <y>396</y>
-      <w>36</w>
-      <h>168</h>
+      <x>1316</x>
+      <y>132</y>
+      <w>12</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 group=group-1</panel_attributes>
@@ -304,10 +304,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2868</x>
-      <y>576</y>
-      <w>504</w>
-      <h>108</h>
+      <x>956</x>
+      <y>192</y>
+      <w>168</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 ConnectAcknowledgementVariableHeader
@@ -320,10 +320,10 @@ group=group-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3168</x>
-      <y>396</y>
-      <w>36</w>
-      <h>204</h>
+      <x>1056</x>
+      <y>132</y>
+      <w>12</w>
+      <h>68</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 group=group-1</panel_attributes>
@@ -332,10 +332,10 @@ group=group-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3480</x>
-      <y>672</y>
-      <w>36</w>
-      <h>192</h>
+      <x>1160</x>
+      <y>224</y>
+      <w>12</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 group=group-1</panel_attributes>
@@ -344,10 +344,10 @@ group=group-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3108</x>
-      <y>672</y>
-      <w>36</w>
-      <h>192</h>
+      <x>1036</x>
+      <y>224</y>
+      <w>12</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 group=group-1</panel_attributes>
@@ -356,10 +356,10 @@ group=group-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3660</x>
-      <y>672</y>
-      <w>288</w>
-      <h>192</h>
+      <x>1220</x>
+      <y>224</y>
+      <w>96</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 group=group-1</panel_attributes>
@@ -368,10 +368,10 @@ group=group-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3960</x>
-      <y>672</y>
-      <w>36</w>
-      <h>192</h>
+      <x>1320</x>
+      <y>224</y>
+      <w>12</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 group=group-1</panel_attributes>
@@ -380,10 +380,10 @@ group=group-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>4368</x>
-      <y>672</y>
-      <w>36</w>
-      <h>192</h>
+      <x>1456</x>
+      <y>224</y>
+      <w>12</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 group=group-1</panel_attributes>
@@ -392,10 +392,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>2748</x>
+      <x>916</x>
       <y>0</y>
-      <w>1860</w>
-      <h>1056</h>
+      <w>620</w>
+      <h>352</h>
     </coordinates>
     <panel_attributes>MqttPackages
 --
@@ -406,10 +406,10 @@ group=group-1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3096</x>
-      <y>1824</y>
-      <w>456</w>
-      <h>108</h>
+      <x>1032</x>
+      <y>608</y>
+      <w>152</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 IPackageConverter : &lt;T&gt;
@@ -423,10 +423,10 @@ group=group-7</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3528</x>
-      <y>1488</y>
-      <w>1092</w>
-      <h>108</h>
+      <x>1176</x>
+      <y>496</y>
+      <w>364</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>ConnectConverter : &lt;MqttPackages::ConnectPackage&gt;
 --
@@ -439,10 +439,10 @@ group=group-7</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3528</x>
-      <y>1584</y>
-      <w>36</w>
-      <h>264</h>
+      <x>1176</x>
+      <y>528</y>
+      <w>12</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-7</panel_attributes>
@@ -451,10 +451,10 @@ group=group-7</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2760</x>
-      <y>1524</y>
-      <w>708</w>
-      <h>72</h>
+      <x>920</x>
+      <y>508</y>
+      <w>236</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>ConnectAcknonverter : &lt;MqttPackages::ConnectAcknowledgementPackage&gt;
 --
@@ -465,10 +465,10 @@ group=group-7</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3324</x>
-      <y>1584</y>
-      <w>36</w>
-      <h>264</h>
+      <x>1108</x>
+      <y>528</y>
+      <w>12</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-7</panel_attributes>
@@ -477,10 +477,10 @@ group=group-7</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3132</x>
-      <y>1308</y>
-      <w>624</w>
-      <h>96</h>
+      <x>1044</x>
+      <y>436</y>
+      <w>208</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>ConverterUtility
 --
@@ -493,10 +493,10 @@ group=group-7</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>2748</x>
-      <y>1176</y>
-      <w>1908</w>
-      <h>804</h>
+      <x>916</x>
+      <y>392</y>
+      <w>636</w>
+      <h>268</h>
     </coordinates>
     <panel_attributes>Converters
 --
@@ -507,10 +507,10 @@ group=group-7</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>4272</x>
-      <y>2184</y>
-      <w>168</w>
-      <h>84</h>
+      <x>1424</x>
+      <y>728</y>
+      <w>56</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 IRule
@@ -523,10 +523,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3300</x>
-      <y>2592</y>
-      <w>504</w>
-      <h>84</h>
+      <x>1100</x>
+      <y>864</y>
+      <w>168</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>BufferValidRule
 --
@@ -539,10 +539,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3912</x>
-      <y>2556</y>
-      <w>744</w>
-      <h>120</h>
+      <x>1304</x>
+      <y>852</y>
+      <w>248</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>ClientConnectedRule
 --
@@ -556,10 +556,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>4752</x>
-      <y>2592</y>
-      <w>456</w>
-      <h>84</h>
+      <x>1584</x>
+      <y>864</y>
+      <w>152</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>ConnectReservedFlagSetRule
 --
@@ -572,10 +572,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>3636</x>
-      <y>2784</y>
-      <w>552</w>
-      <h>120</h>
+      <x>1212</x>
+      <y>928</y>
+      <w>184</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>ConnectWillRule
 --
@@ -589,10 +589,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3552</x>
-      <y>2196</y>
-      <w>744</w>
-      <h>420</h>
+      <x>1184</x>
+      <y>732</y>
+      <w>248</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-5</panel_attributes>
@@ -601,10 +601,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>4428</x>
-      <y>2196</y>
-      <w>576</w>
-      <h>420</h>
+      <x>1476</x>
+      <y>732</y>
+      <w>192</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-5</panel_attributes>
@@ -613,10 +613,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>4344</x>
-      <y>2256</y>
-      <w>36</w>
-      <h>324</h>
+      <x>1448</x>
+      <y>752</y>
+      <w>12</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-5</panel_attributes>
@@ -625,10 +625,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3840</x>
-      <y>2256</y>
-      <w>540</w>
-      <h>552</h>
+      <x>1280</x>
+      <y>752</y>
+      <w>180</w>
+      <h>184</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-5</panel_attributes>
@@ -637,10 +637,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>5292</x>
-      <y>2568</y>
-      <w>408</w>
-      <h>108</h>
+      <x>1764</x>
+      <y>856</y>
+      <w>136</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>CorrectProtocolNameRule 
 --
@@ -653,10 +653,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>4428</x>
-      <y>2196</y>
-      <w>1128</w>
-      <h>396</h>
+      <x>1476</x>
+      <y>732</y>
+      <w>376</w>
+      <h>132</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-5</panel_attributes>
@@ -665,10 +665,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2760</x>
-      <y>2556</y>
-      <w>456</w>
-      <h>120</h>
+      <x>920</x>
+      <y>852</y>
+      <w>152</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>IsCredentialFlagIncorrectRule
 --
@@ -681,10 +681,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3000</x>
-      <y>2196</y>
-      <w>1296</w>
-      <h>384</h>
+      <x>1000</x>
+      <y>732</y>
+      <w>432</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-5</panel_attributes>
@@ -693,10 +693,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>4464</x>
-      <y>2772</y>
-      <w>552</w>
-      <h>120</h>
+      <x>1488</x>
+      <y>924</y>
+      <w>184</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>Protocol311Rule
 --
@@ -709,10 +709,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>4344</x>
-      <y>2256</y>
-      <w>396</w>
-      <h>540</h>
+      <x>1448</x>
+      <y>752</y>
+      <w>132</w>
+      <h>180</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 group=group-5</panel_attributes>
@@ -721,10 +721,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2760</x>
-      <y>2328</y>
-      <w>396</w>
-      <h>108</h>
+      <x>920</x>
+      <y>776</y>
+      <w>132</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>RuleEngine
 --
@@ -738,10 +738,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2760</x>
-      <y>2136</y>
-      <w>144</w>
-      <h>96</h>
+      <x>920</x>
+      <y>712</y>
+      <w>48</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 EngineRule
@@ -754,10 +754,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2844</x>
-      <y>2220</y>
-      <w>36</w>
-      <h>132</h>
+      <x>948</x>
+      <y>740</y>
+      <w>12</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 group=group-5</panel_attributes>
@@ -766,10 +766,10 @@ group=group-5</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2892</x>
-      <y>2172</y>
-      <w>1404</w>
-      <h>36</h>
+      <x>964</x>
+      <y>724</y>
+      <w>468</w>
+      <h>12</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 group=group-5</panel_attributes>
@@ -778,10 +778,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>2748</x>
-      <y>2088</y>
-      <w>3000</w>
-      <h>876</h>
+      <x>916</x>
+      <y>696</y>
+      <w>1000</w>
+      <h>292</h>
     </coordinates>
     <panel_attributes>Rules
 --
@@ -792,10 +792,10 @@ group=group-5</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1008</x>
-      <y>1140</y>
-      <w>780</w>
-      <h>516</h>
+      <x>336</x>
+      <y>380</y>
+      <w>260</w>
+      <h>172</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 MqttProtocolHandler
@@ -807,10 +807,10 @@ MqttProtocolHandler
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1008</x>
-      <y>972</y>
-      <w>180</w>
-      <h>96</h>
+      <x>336</x>
+      <y>324</y>
+      <w>60</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Struct&gt;&gt;
 MqttClient
@@ -822,10 +822,10 @@ MqttClient
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3756</x>
-      <y>1044</y>
-      <w>72</w>
-      <h>180</h>
+      <x>1252</x>
+      <y>348</y>
+      <w>24</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;..
 uses</panel_attributes>
@@ -834,10 +834,10 @@ uses</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>564</x>
-      <y>696</y>
-      <w>420</w>
-      <h>372</h>
+      <x>188</x>
+      <y>232</y>
+      <w>140</w>
+      <h>124</h>
     </coordinates>
     <panel_attributes>lt=&lt;..
 uses</panel_attributes>
@@ -846,10 +846,10 @@ uses</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1908</x>
-      <y>1140</y>
-      <w>168</w>
-      <h>60</h>
+      <x>636</x>
+      <y>380</y>
+      <w>56</w>
+      <h>20</h>
     </coordinates>
     <panel_attributes>Mqtt311Handler
 --
@@ -859,10 +859,10 @@ uses</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1776</x>
-      <y>1152</y>
-      <w>156</w>
-      <h>36</h>
+      <x>592</x>
+      <y>384</y>
+      <w>52</w>
+      <h>12</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
@@ -870,10 +870,10 @@ uses</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>960</x>
-      <y>924</y>
-      <w>1272</w>
-      <h>828</h>
+      <x>320</x>
+      <y>308</y>
+      <w>424</w>
+      <h>276</h>
     </coordinates>
     <panel_attributes>Protocol
 --
@@ -883,10 +883,10 @@ bg=white</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>660</x>
-      <y>1068</y>
-      <w>324</w>
-      <h>48</h>
+      <x>220</x>
+      <y>356</y>
+      <w>108</w>
+      <h>16</h>
     </coordinates>
     <panel_attributes>lt=&lt;..
 uses</panel_attributes>
@@ -895,10 +895,10 @@ uses</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2220</x>
-      <y>936</y>
-      <w>552</w>
-      <h>48</h>
+      <x>740</x>
+      <y>312</y>
+      <w>184</w>
+      <h>16</h>
     </coordinates>
     <panel_attributes>lt=&lt;..
 uses POD</panel_attributes>
@@ -907,10 +907,10 @@ uses POD</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1932</x>
-      <y>780</y>
-      <w>72</w>
-      <h>192</h>
+      <x>644</x>
+      <y>260</y>
+      <w>24</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;..
 uses</panel_attributes>
@@ -919,10 +919,10 @@ uses</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>5580</x>
-      <y>1140</y>
-      <w>492</w>
-      <h>228</h>
+      <x>1860</x>
+      <y>380</y>
+      <w>164</w>
+      <h>76</h>
     </coordinates>
     <panel_attributes>ConnectAckTest
 --
