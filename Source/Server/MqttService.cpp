@@ -57,6 +57,10 @@ namespace MQTT {
 			case MQTT::Protocol::PubComp:
 				break;
 			case MQTT::Protocol::Subscribe:
+				OnClientSubscribed(
+					client,
+					Protocol::Converters::SubscribeConverter().ToPackage(buffer)
+				);
 				break;
 			case MQTT::Protocol::SubAck:
 				break;
@@ -102,6 +106,35 @@ namespace MQTT {
 			clientState->ClientId = packageClientId;
 
 			m_ClientStates.push_back(clientState);
+
+			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
+
+			m_Server->Send(client, ackMessage);
+		}
+
+		void MqttService::OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package)
+		{
+			/*auto& packageClientId = package.ConnectPayload.ClientId;
+			auto& protocolName = package.ConnectVariableHeader.ProtocolName;
+			auto* clientState = new MqttClient();*/
+
+			/*auto shouldDisconnectClient = !(RuleEngine({
+				{new ClientConnectedRule(packageClientId, m_ClientStates), false},
+				{new CorrectProtocolNameRule(protocolName), true},
+				{new Protocol311Rule(package.ConnectVariableHeader.Level), true},
+				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false},
+				{new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false},
+				{new ConnectWillRule(clientState, package.ConnectVariableHeader.VariableLevel), true}
+				}).Run());
+
+			if (shouldDisconnectClient)
+				m_Server->Disconnect(client);
+
+
+			clientState->IsConnected = true;
+			clientState->ClientId = packageClientId;
+
+			m_ClientStates.push_back(clientState);*/
 
 			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
 
