@@ -1,14 +1,14 @@
 #pragma once
-#include <cstdint>
-#include <vector>
 #include "ConnectFlagType.h"
+
+#include <string>
+#include <vector>
 
 namespace MQTT {
 	namespace Protocol {
 		struct ConnectVariableHeader
 		{
-			int16_t NameLength;
-			std::vector<unsigned char> ProtocolName;
+			std::string ProtocolName;
 
 			unsigned char Level;
 			ConnectFlagType VariableLevel;

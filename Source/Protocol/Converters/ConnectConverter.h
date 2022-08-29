@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IPackageConverter.h"
-#include "Protocol/Packages.h"
+#include "Protocol/MqttPackages/Packages.h"
 
 namespace MQTT {
 	namespace Protocol {
@@ -12,10 +12,10 @@ namespace MQTT {
 				ConnectConverter();
 				~ConnectConverter();
 
-				// <inheritDoc />
+				/// <inheritdoc/>
 				virtual const ConnectPackage ToPackage(const std::vector<unsigned char>& buffer) override;
 
-				// <inheritDoc />
+				/// <inheritdoc />
 				virtual const std::vector<unsigned char> ToBuffer(const ConnectPackage& to) override;
 
 			private:

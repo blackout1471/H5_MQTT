@@ -1,11 +1,11 @@
 #pragma once
-#include "ConnectActReturnCodeType.h"
+#include "ConnectAckReturnCodeType.h"
 
 namespace MQTT {
 	namespace Protocol {
 		struct ConnectAckVariableHeader {
 			unsigned char SessionPresentFlag;
-			ConnectActReturnCodeType ConnectAckReturnCode;
+			ConnectAckReturnCodeType ConnectAckReturnCode;
 		};
 	}
 }

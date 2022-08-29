@@ -26,7 +26,7 @@ namespace MQTT {
 			return true;
 		}
 
-		std::vector<unsigned char> MqttManager::GenerateConnectAckMessage(Protocol::ConnectActReturnCodeType _returnCode)
+		std::vector<unsigned char> MqttManager::GenerateConnectAckMessage(Protocol::ConnectAckReturnCodeType _returnCode)
 		{
 			Protocol::ControlHeader controlHeader;
 			controlHeader.PackageType = ConnectAck;

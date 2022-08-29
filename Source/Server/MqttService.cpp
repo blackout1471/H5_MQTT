@@ -4,6 +4,11 @@
 #include "MqttService.h"
 #include "Protocol/Converters/ConverterUtility.h"
 
+// Todo :: Remove after testing
+#include "Protocol/Validators/RuleEngine.h"
+#include "Protocol/Validators/Rules/Rules.h"
+using namespace MQTT::Protocol::Validators;
+
 #include <algorithm>
 
 namespace MQTT {
@@ -34,7 +39,10 @@ namespace MQTT {
 			switch (type)
 			{
 			case MQTT::Protocol::Connect:
-				OnClientConnect(client, Protocol::Converters::ConnectConverter().ToPackage(buffer));
+				OnClientConnect(
+					client, 
+					Protocol::Converters::ConnectConverter().ToPackage(buffer)
+				);
 				break;
 			case MQTT::Protocol::ConnectAck:
 				break;
@@ -71,26 +79,26 @@ namespace MQTT {
 			}
 		}
 
+
 		void MqttService::OnClientConnect(const Client& client, const Protocol::ConnectPackage& package)
 		{
-			auto packageClientId = std::string(package.ConnectPayload.ClientId.begin(), package.ConnectPayload.ClientId.end());
+			auto& packageClientId = package.ConnectPayload.ClientId;
+			auto& protocolName = package.ConnectVariableHeader.ProtocolName;
+			auto* clientState = new MqttClient();
 
-			auto position = std::find_if(m_ClientStates.begin(), m_ClientStates.end(), [&](const MqttClient* c)
-{
-					return c->ClientId == packageClientId;
-			});
+			auto shouldDisconnectClient = !(RuleEngine({
+				{new ClientConnectedRule(packageClientId, m_ClientStates), false},
+				{new CorrectProtocolNameRule(protocolName), true},
+				{new Protocol311Rule(package.ConnectVariableHeader.Level), true},
+				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false},
+				{new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false},
+				{new ConnectWillRule(clientState, package.ConnectVariableHeader.VariableLevel), true}
+			}).Run());
 
-			if (position != m_ClientStates.end())
-		{
-				if ((*position)->IsConnected)
-			{
-					m_Server->Disconnect(client);
-					(*position)->IsConnected = false;
-					return;
-				}	
-			}
+			if (shouldDisconnectClient)
+				m_Server->Disconnect(client);
 
-			auto clientState = new MqttClient();
+
 			clientState->IsConnected = true;
 			clientState->ClientId = packageClientId;
 

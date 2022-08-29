@@ -1,6 +1,6 @@
 #pragma once
 #include "mqttpch.h"
-#include "Protocol/ConnectAckPackage.h"
+#include "Protocol/MqttPackages/ConnectAckPackage.h"
 #include "Protocol/Converters/ConnectAckConverter.h"
 
 #include <vector>
@@ -11,7 +11,7 @@ namespace MQTT {
 
 		public:
 			bool ValidMessage(std::vector<unsigned char> _message);
-			std::vector<unsigned char> GenerateConnectAckMessage(Protocol::ConnectActReturnCodeType _returnCode);
+			std::vector<unsigned char> GenerateConnectAckMessage(Protocol::ConnectAckReturnCodeType _returnCode);
 		};
 	}
 }
