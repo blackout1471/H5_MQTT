@@ -85,6 +85,16 @@ namespace MQTT {
 			}
 		}
 
+		void MqttService::DisconnectClientState(const Client& client)
+		{
+			for (auto& arr_client : m_ClientStates)
+			{
+				if (arr_client->ConnectionIdentifier == client.GetIdentifier())
+					arr_client->IsConnected = false;
+			}
+			m_Server->Disconnect(client);
+		}
+
 
 		void MqttService::OnClientConnect(const Client& client, const Protocol::ConnectPackage& package)
 		{
@@ -119,14 +129,8 @@ namespace MQTT {
 		void MqttService::OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package)
 		{
 			//TODO: Remove will message when storage of it is implemented.
-			for (auto& arr_client : m_ClientStates)
-			{
-				if (arr_client->ConnectionIdentifier == client.GetIdentifier())
-					arr_client->IsConnected = false;
-			}
-			m_Server->Disconnect(client);
+			DisconnectClientState(client);
 		}
-
 		void MqttService::InitialiseServer()
 		{
 			m_Server->OnReceivedData = std::bind(&MqttService::OnReceivedData, this, std::placeholders::_1, std::placeholders::_2);
