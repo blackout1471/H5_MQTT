@@ -7,3 +7,4 @@
 #include "ConnectReservedFlagSetRule.h"
 #include "IsCredentialFlagIncorrectRule.h"
 #include "ConnectWillRule.h"
+#include "ContinueSessionRule.h"
