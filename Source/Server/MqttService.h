@@ -20,6 +20,7 @@ namespace MQTT {
 
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
 
+
 			MqttClient* GetClientState(const std::string& clientId);
 			std::string GenerateUniqueId();
 		private:

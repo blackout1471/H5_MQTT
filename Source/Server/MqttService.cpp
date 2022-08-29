@@ -104,6 +104,7 @@ namespace MQTT {
 				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
 			}).Run());
 
+			// Todo :: Move 
 			if (shouldContinueSession)
 			{
 				delete clientState;
