@@ -101,22 +101,22 @@ namespace MQTT {
 			std::vector<unsigned char> message;
 			auto shouldContinueSession = (RuleEngine({
 				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
-			}).Run());
+			}).Run());	
 
 			if (shouldContinueSession)
 			{
 				delete clientState;
 				clientState = GetClientState(packageClientId);
 
-				auto canContinueSession = (RuleEngine({ 
-					{new GenerateSessionMessageRule(packageClientId, clientState, message), true }
-				}).Run());
+				/*auto canContinueSession = (RuleEngine({ 
+					{new CanClientContinueSession(packageClientId, clientState, message), true }
+				}).Run());*/
 
 				m_Server->Send(client, message);
 
 				// TODO :: Use member function to disconnect
-				if (!canContinueSession)
-					m_Server->Disconnect(client);
+				/*if (!canContinueSession)
+					m_Server->Disconnect(client);*/
 
 				return;
 			}
