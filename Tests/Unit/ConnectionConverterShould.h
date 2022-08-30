@@ -7,12 +7,25 @@
 using namespace MQTT::Protocol;
 
 #pragma region Utility
-ConnectPackage Generate()
+static ConnectPackage Generate(ConnectFlagType flags)
 {
 	auto package = ConnectPackage();
 	package.ControlHeader.PackageType = ControlPackageType::Connect;
-	package.ConnectVariableHeader = { "mqtt", (unsigned char)4, ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password), int16_t(60) };
-	package.ConnectPayload = { "c", "wt", "wm", "u", "p" };
+	package.ConnectVariableHeader = { "mqtt", (unsigned char)4, flags, int16_t(60) };
+
+	package.ConnectPayload.ClientId = "c";
+
+	if (flags & ConnectFlagType::Username)
+		package.ConnectPayload.Username = "u";
+
+	if (flags & ConnectFlagType::Password)
+		package.ConnectPayload.Password = "p";
+
+	if (flags & ConnectFlagType::Will_Flag)
+	{
+		package.ConnectPayload.WillTopic = "wt";
+		package.ConnectPayload.WillMessage = "wm";
+	}
 
 	return package;
 }
@@ -23,7 +36,7 @@ std::vector<unsigned char> ToBuffer(const ConnectPackage& package)
 	int remainLength = 0;
 
 	// Control package
-	v.push_back(package.ControlHeader.PackageType);
+	v.push_back(package.ControlHeader.PackageType << 4);
 
 	// protocol name
 	v.push_back(0); v.push_back(package.ConnectVariableHeader.ProtocolName.size());
@@ -52,39 +65,51 @@ std::vector<unsigned char> ToBuffer(const ConnectPackage& package)
 	remainLength += package.ConnectPayload.ClientId.size();
 
 	// will topic
-	v.push_back(0); v.push_back(package.ConnectPayload.WillTopic.size());
-	for (int i = 0; i < package.ConnectPayload.WillTopic.size(); i++)
-		v.push_back(package.ConnectPayload.WillTopic[i]);
-	remainLength += 2;
-	remainLength += package.ConnectPayload.WillTopic.size();
+	if (package.ConnectPayload.WillTopic.size() > 0)
+	{
+		v.push_back(0); v.push_back(package.ConnectPayload.WillTopic.size());
+		for (int i = 0; i < package.ConnectPayload.WillTopic.size(); i++)
+			v.push_back(package.ConnectPayload.WillTopic[i]);
+		remainLength += 2;
+		remainLength += package.ConnectPayload.WillTopic.size();
+	}
 
 	// will message
-	v.push_back(0); v.push_back(package.ConnectPayload.WillMessage.size());
-	for (int i = 0; i < package.ConnectPayload.WillMessage.size(); i++)
-		v.push_back(package.ConnectPayload.WillMessage[i]);
-	remainLength += 2;
-	remainLength += package.ConnectPayload.WillMessage.size();
+	if (package.ConnectPayload.WillMessage.size() > 0)
+	{
+		v.push_back(0); v.push_back(package.ConnectPayload.WillMessage.size());
+		for (int i = 0; i < package.ConnectPayload.WillMessage.size(); i++)
+			v.push_back(package.ConnectPayload.WillMessage[i]);
+		remainLength += 2;
+		remainLength += package.ConnectPayload.WillMessage.size();
+	}
 
 	// will username
-	v.push_back(0); v.push_back(package.ConnectPayload.Username.size());
-	for (int i = 0; i < package.ConnectPayload.Username.size(); i++)
-		v.push_back(package.ConnectPayload.Username[i]);
-	remainLength += 2;
-	remainLength += package.ConnectPayload.Username.size();
+	if (package.ConnectPayload.Username.size() > 0)
+	{
+		v.push_back(0); v.push_back(package.ConnectPayload.Username.size());
+		for (int i = 0; i < package.ConnectPayload.Username.size(); i++)
+			v.push_back(package.ConnectPayload.Username[i]);
+		remainLength += 2;
+		remainLength += package.ConnectPayload.Username.size();
+	}
 
 	// will password
-	v.push_back(0); v.push_back(package.ConnectPayload.Password.size());
-	for (int i = 0; i < package.ConnectPayload.Password.size(); i++)
-		v.push_back(package.ConnectPayload.Password[i]);
-	remainLength += 2;
-	remainLength += package.ConnectPayload.Password.size();
+	if (package.ConnectPayload.Password.size() > 0)
+	{
+		v.push_back(0); v.push_back(package.ConnectPayload.Password.size());
+		for (int i = 0; i < package.ConnectPayload.Password.size(); i++)
+			v.push_back(package.ConnectPayload.Password[i]);
+		remainLength += 2;
+		remainLength += package.ConnectPayload.Password.size();
+	}
 
 	v.insert(v.begin() + 1, remainLength);
 
 	return v;
 }
 
-bool operator==(const ConnectPackage& p1, const ConnectPackage& p2)
+static bool operator==(const ConnectPackage& p1, const ConnectPackage& p2)
 {
 	return (
 		p1.ControlHeader.PackageType == p2.ControlHeader.PackageType &&
@@ -104,14 +129,46 @@ bool operator==(const ConnectPackage& p1, const ConnectPackage& p2)
 #pragma endregion
 
 
-TEST(ConnectionPackageConverterShould, GiveUsernameAndPassword)
+TEST(ConnectionPackageConverterShould, ReturnTrue_WhenUsernameAndPasswordIsDefined)
 {
 	// Arrange
-	auto expected = Generate();
+	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password));
 	ConnectPackage actual;
 	auto converter = Converters::ConnectConverter();
 
 	// Act
+	auto byffer = ToBuffer(expected);
+	actual = converter.ToPackage(ToBuffer(expected));
+
+	// Assert
+	EXPECT_TRUE(expected == actual);
+}
+
+TEST(ConnectionPackageConverterShould, ReturnTrue_WhenClientIdIsNotGiven)
+{
+	// Arrange
+	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password));
+	expected.ConnectPayload.ClientId = "";
+	ConnectPackage actual;
+	auto converter = Converters::ConnectConverter();
+
+	// Act
+	auto byffer = ToBuffer(expected);
+	actual = converter.ToPackage(ToBuffer(expected));
+
+	// Assert
+	EXPECT_TRUE(expected == actual);
+}
+
+TEST(ConnectionPackageConverterShould, ReturnTrue_WhenWillFlagIsSet)
+{
+	// Arrange
+	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password | ConnectFlagType::Will_Flag));
+	ConnectPackage actual;
+	auto converter = Converters::ConnectConverter();
+
+	// Act
+	auto byffer = ToBuffer(expected);
 	actual = converter.ToPackage(ToBuffer(expected));
 
 	// Assert

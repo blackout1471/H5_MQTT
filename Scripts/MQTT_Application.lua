@@ -1,42 +1,34 @@
-projLoc = "../"
+projLoc = "../Application/"
 
-project "MQTT"
+project "MQTTApplication"
 	location(projLoc)
-	kind "StaticLib"
+	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
 
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
-	
-	pchheader "mqttpch.h"
-	pchsource(projLoc .. "Source/mqttpch.cpp")
 
 	files
 	{
-		projLoc .. "Source/**.h",	
-		projLoc .. "Source/**.cpp"
+		projLoc .. "**.cpp"
 	}
 
 	includedirs
 	{
-		projLoc .. "Source"
+		projLoc .. "../Source"
+	}
+
+	links
+	{
+		"MQTT"
 	}
 
 	filter "system:windows"
-		excludes
-			{
-				projLoc .. "Source/**_Linux.cpp"
-			}
-		systemversion "latest"
 		links {"Ws2_32"}
 
 	filter "system:linux"
-		excludes
-		{
-			projLoc .. "Source/**_Win32.cpp"
-		}
 		links
 		{
 			"pthread"
