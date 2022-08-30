@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <uuid/uuid.h>
 
 namespace MQTT {
 	namespace Server {
