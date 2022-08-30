@@ -1,27 +1,34 @@
 #pragma once
-#include "Server/SocketServer.h"
 #include "Protocol/Managers/MqttManager.h"
-
-namespace MQTT
-{
-	namespace Server
-	{
+#include "Protocol/Converters/ConnectConverter.h"
+#include "IServer.h"
+#include "MqttClient.h"
+#include "Protocol/MqttPackages/Packages.h"
+namespace MQTT {
+	namespace Server {
 		class MqttService {
 
 		public:
-			MqttService(){
-				m_Server = new Server::SocketServer(1883);
-				m_Server->OnReceivedData = std::bind(&MqttService::PackageReceived, this, std::placeholders::_1, std::placeholders::_2);
-				m_Server->Start();
-			}
+			MqttService(IServer* server);
+			~MqttService();
 
-			void PackageReceived(const MQTT::Server::Client& _client, const std::vector<unsigned char>& _message);
-
-
+			void Start();
 
 		private:
-			Protocol::MqttManager m_MqttManager;
-			Server::IServer* m_Server;
+			void InitialiseServer();
+			void OnReceivedData(const Client& client, const std::vector<unsigned char>& buffer);
+			//Sets mqtt client state to diconnected and diconnects socket client.
+			void DisconnectClientState(const Client& client);
+
+			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
+			void OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package);
+
+
+			MqttClient* GetClientState(const std::string& clientId);
+		private:
+			IServer* m_Server;
+			Protocol::MqttManager m_Manager;
+			std::vector<MqttClient*> m_ClientStates;
 		};
 	}
 }

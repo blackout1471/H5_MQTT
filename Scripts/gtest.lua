@@ -8,11 +8,6 @@ project "gtest"
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
-    links
-    {
-	"pthread"
-    }
-
     files
     {
         "../vendor/googletest/googletest/**.h",
@@ -25,6 +20,12 @@ project "gtest"
 	"../vendor/googletest/googletest/include",
 	"../vendor/googletest/googletest/"
     }
+
+    filter "system:linux"
+		links
+		{
+			"pthread"
+		}
 
     filter "configurations:Debug"
         defines "_DEBUG"
