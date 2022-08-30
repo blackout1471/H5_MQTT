@@ -21,17 +21,14 @@ namespace MQTT {
 				ConnectValidator();
 				virtual ~ConnectValidator();
 
+				// Validates the current connect package and the current client, which action is the most properiate to take
+				// Returns: The action to take.
 				Action ValidateClient(const Protocol::ConnectPackage& package, 
 					const std::vector<Server::MqttClient*>& clientStates,
 					Server::MqttClient* currentClient);
 
 			private:
-
 				void SetCurrentClientId(const std::string& packageClientId, MQTT::Server::MqttClient* currentClient);
-
-				ConnectValidator::Action CalculateClientSessionState(Server::MqttClient*& currentClient, 
-					const std::string& packageClientId, 
-					const std::vector<Server::MqttClient*>& clientStates);
 
 				bool ShouldDisconnectClient(const std::string& packageClientId, 
 					const std::vector<Server::MqttClient*>& clientStates, 

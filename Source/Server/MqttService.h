@@ -12,6 +12,7 @@ namespace MQTT {
 			MqttService(IServer* server);
 			~MqttService();
 
+			// Starts the server and begin goes in a loop to listen for incoming clients.
 			void Start();
 
 		private:

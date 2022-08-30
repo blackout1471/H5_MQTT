@@ -53,21 +53,6 @@ namespace MQTT {
 					currentClient->ClientId = packageClientId;
 			}
 
-			ConnectValidator::Action ConnectValidator::CalculateClientSessionState(Server::MqttClient*& currentClient, const std::string& packageClientId, const std::vector<Server::MqttClient*>& clientStates)
-			{
-				delete currentClient;
-				currentClient = Server::FindClient(packageClientId, clientStates);
-
-				auto canContinueSession = (RuleEngine({
-					{ new CanClientContinueSession(packageClientId, currentClient), true }
-				}).Run());
-
-				if (canContinueSession)
-					return ContinueState;
-				else
-					return RejectUserIdentifier;
-			}
-
 			bool ConnectValidator::ShouldDisconnectClient(const std::string& packageClientId, const std::vector<Server::MqttClient*>& clientStates, const std::string& protocolName, const ConnectPackage& package, Server::MqttClient* currentClient)
 			{
 				return !(RuleEngine({
