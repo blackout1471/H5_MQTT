@@ -6,7 +6,6 @@ namespace MQTT {
 	namespace Protocol {
 		struct SubscribePayload {
 		public:
-			unsigned char TopicLength;
 			std::vector<SubscribeTopic> Topics;
 		};
 	}

@@ -16,26 +16,26 @@ namespace MQTT {
 				vh.PacketIdentifier = ConverterUtility::ByteToInt(buffer[2], buffer[3]);
 
 				SubscribePayload sp;
-				sp.TopicLength = ConverterUtility::ByteToInt(buffer[4], buffer[5]);
 
-				int offset = 6;
+				// offset already read bytes
+				int offset = 4;
 
-				bool readAllTopics = false;
-				while (!readAllTopics) {
+				do
+				{
+					// Get size of the topic
+					int topicLength = ConverterUtility::ByteToInt(buffer[offset], buffer[offset + 1]);
+
+					// offset the length of the topic bytes
+					offset += 2;
 
 					SubscribeTopic st;
-					if (offset != 6) {
-						sp.TopicLength = ConverterUtility::ByteToInt(buffer[offset], buffer[offset + 1]);
-						offset += 2;
-					}
 
-					for (int i = 0; i < sp.TopicLength; i++)
+					for (int i = 0; i < topicLength; i++)
 					{
 						st.Topic.push_back(buffer[i + offset]);
 
-						if (buffer[i + offset] == '#') // check for other wild cards
+						if (buffer[i + offset] == '#') // TODO: check for other wild cards
 						{
-							// There is a wild card
 							st.Wildcard = (SubscribeTopicWildcardType)buffer[i + offset];
 							st.HaveChild = true;
 						}
@@ -44,17 +44,14 @@ namespace MQTT {
 							st.HaveChild = true;
 						}
 					}
-					st.QoS = buffer[sp.TopicLength + offset];
+					// The last byte of the topic 
+					st.QoS = buffer[topicLength + offset];
 					sp.Topics.push_back(st);
 
-					if ((packageSize - (sp.TopicLength + offset)) <= 2) {
-						// there no more packages
-						readAllTopics = true;
-					}
-					else {
-						offset += sp.TopicLength + 1;
-					}
-				}
+					offset += topicLength + 1;
+
+					// check if all the topics have been read
+				} while ((packageSize - offset) > 0);
 
 				SubscribePackage subPackage;
 				subPackage.ControlHeader = ch;
