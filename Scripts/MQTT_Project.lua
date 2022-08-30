@@ -39,7 +39,8 @@ project "MQTT"
 		}
 		links
 		{
-			"pthread"
+			"pthread",
+			"uuid"
 		}
 		
 	filter "configurations:Debug"

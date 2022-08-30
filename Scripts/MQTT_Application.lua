@@ -31,7 +31,8 @@ project "MQTTApplication"
 	filter "system:linux"
 		links
 		{
-			"pthread"
+			"pthread",
+			"uuid"
 		}
 		
 	filter "configurations:Debug"

@@ -2,10 +2,10 @@
 
 #include "mqttpch.h"
 #include "MqttService.h"
+#include "ClientUtility.h"
 #include "Protocol/Converters/ConverterUtility.h"
 #include "Protocol/Converters/ConnectConverter.h"
 #include "Protocol/Converters/DisconnectConverter.h"
-
 
 // Todo :: Remove after testing
 #include "Protocol/Validators/RuleEngine.h"
@@ -142,7 +142,7 @@ namespace MQTT {
 			}
 
 			if (packageClientId == "")
-				clientState->ClientId = GenerateUniqueId();
+				clientState->ClientId = ClientUtility::GenerateUniqueId();
 			else
 				clientState->ClientId = packageClientId;
 
@@ -165,11 +165,6 @@ namespace MQTT {
 			return nullptr;
 		}
 
-		std::string MqttService::GenerateUniqueId()
-		{
-			// TODO: Create unique id
-			return "1";
-		}
 
 		void MqttService::OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package)
 		{
