@@ -65,11 +65,19 @@ namespace MQTT {
 			int connfd = accept(m_Socket, (struct sockaddr*)NULL, NULL);
 			if (connfd > 0)
 			{
-				m_Clients.push_back(new Client("123", "1", connfd));
+				m_Clients.push_back(new Client("123", GenerateUniqueId(), connfd));
 				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(*m_Clients[m_Clients.size() - 1]), std::cref(*this)));
 			}
 		}
+		std::string SocketServer::GenerateUniqueId()
+		{
+			uuid_t uuid;
+			uuid_generate_random(uuid);
+			char s[37];
+			uuid_unparse(uuid, s);
 
+			return s;
+		}
 		void SocketServer::Start()
 		{
 			m_IsRunning = true;
