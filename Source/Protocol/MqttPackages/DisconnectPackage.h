@@ -6,7 +6,7 @@ namespace MQTT {
 		struct DisconnectPackage
 		{
 		public:
-			ControlHeader ControlHeader;
+			ControlHeader Header;
 		};
 
 	}

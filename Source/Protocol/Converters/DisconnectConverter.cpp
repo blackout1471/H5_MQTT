@@ -7,7 +7,7 @@ namespace MQTT {
 			const DisconnectPackage DisconnectConverter::ToPackage(const std::vector<unsigned char>& buffer)
 			{
 				auto package = DisconnectPackage();
-				package.ControlHeader.PackageType = ConverterUtility::GetPackageType(buffer[0]);
+				package.Header.PackageType = ConverterUtility::GetPackageType(buffer[0]);
 				return package;
 			}
 			const std::vector<unsigned char> DisconnectConverter::ToBuffer(const DisconnectPackage& to)
