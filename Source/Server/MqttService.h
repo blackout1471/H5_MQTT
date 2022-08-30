@@ -25,7 +25,6 @@ namespace MQTT {
 
 
 			MqttClient* GetClientState(const std::string& clientId);
-			std::string GenerateUniqueId();
 		private:
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;
