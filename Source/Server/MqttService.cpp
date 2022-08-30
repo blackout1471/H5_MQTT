@@ -22,8 +22,6 @@ namespace MQTT {
 		{
 			for (auto clientStates : m_ClientStates)
 				delete clientStates;
-
-			delete m_Server;
 		}
 
 		void MqttService::Start()
@@ -76,7 +74,6 @@ namespace MQTT {
 				}
 			}
 		}
-
 
 		void MqttService::OnClientConnect(const Client& client, const Protocol::ConnectPackage& package)
 		{
