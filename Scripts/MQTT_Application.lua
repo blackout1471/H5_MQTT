@@ -1,40 +1,32 @@
-projLoc = "../Tests/Unit"
+projLoc = "../Application/"
 
-project "UnitTest"
+project "MQTTApplication"
 	location(projLoc)
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
-	
+
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
-		projLoc .. "/**.h",	
-		projLoc .. "/**.cpp"
+		projLoc .. "**.cpp"
 	}
-
-	IncludeDir = {}
-	IncludeDir["gtest"] = "../vendor/googletest/googletest/include/"
-	IncludeDir["Source"] = "../Source/"
 
 	includedirs
 	{
-		projLoc,
-		"%{IncludeDir.gtest}",
-		"%{IncludeDir.Source}"
+		projLoc .. "../Source"
 	}
 
 	links
 	{
-		"gtest",
 		"MQTT"
 	}
 
 	filter "system:windows"
-		systemversion "latest"
+		links {"Ws2_32"}
 
 	filter "system:linux"
 		links

@@ -9,6 +9,8 @@ namespace MQTT {
 			class IPackageConverter
 			{
 			public:
+				IPackageConverter() {};
+				virtual ~IPackageConverter() {};
 
 				/*
 				* Converts between the templated class and the buffer
