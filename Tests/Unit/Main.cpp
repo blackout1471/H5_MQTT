@@ -2,6 +2,7 @@
 #include "ConnectionConverterShould.h"
 #include "ConnectionAcknowledgementConverterShould.h"
 #include "MqttServiceShould.h"
+#include "ConnectionValidationShould.h"
 
 
 

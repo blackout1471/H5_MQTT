@@ -87,8 +87,11 @@ namespace MQTT {
 			case MQTT::Protocol::Validators::ConnectValidator::Disconnect:
 				m_Server->Disconnect(client);
 				break;
-			case MQTT::Protocol::Validators::ConnectValidator::RejectUser:
+			case MQTT::Protocol::Validators::ConnectValidator::RejectUserIdentifier:
 				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Refused_Identifier_Rejected));
+				break;
+			case MQTT::Protocol::Validators::ConnectValidator::RejectProtocolLevel:
+				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Refused_Unacceptable_Protocol_Version));
 				break;
 			case MQTT::Protocol::Validators::ConnectValidator::ContinueState:
 				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Accepted));

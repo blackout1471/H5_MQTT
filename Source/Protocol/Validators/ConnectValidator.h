@@ -12,7 +12,8 @@ namespace MQTT {
 			public:
 				enum Action {
 					Disconnect,
-					RejectUser,
+					RejectUserIdentifier,
+					RejectProtocolLevel,
 					ContinueState,
 					CreateNewState
 				};

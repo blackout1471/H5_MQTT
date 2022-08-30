@@ -9,3 +9,4 @@
 #include "ConnectWillRule.h"
 #include "ContinueSessionRule.h"
 #include "GenerateSessionMessageRule.h"
+#include "ConnectClientIdentifierValidRule.h"
