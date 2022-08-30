@@ -33,15 +33,3 @@ TEST(MqttServiceShould, CallServerStart_WhenServiceCallsStart)
 	// Act & Assert
 	service.Start();
 }
-
-TEST(MqttServiceShould, CallServerStart_WhenServiceCallsStart)
-{
-	// Arrange
-	MockServer a;
-	
-	EXPECT_CALL(a, Start());
-	auto service = MqttService(&a);
-
-	// Act & Assert
-	service.Start();
-}

@@ -3,11 +3,7 @@
 #include "mqttpch.h"
 #include "MqttService.h"
 #include "Protocol/Converters/ConverterUtility.h"
-
-// Todo :: Remove after testing
-#include "Protocol/Validators/RuleEngine.h"
-#include "Protocol/Validators/Rules/Rules.h"
-using namespace MQTT::Protocol::Validators;
+#include "Protocol/Validators/ConnectValidator.h"
 
 #include <algorithm>
 
@@ -83,56 +79,27 @@ namespace MQTT {
 			
 			clientState->ConnectionFlags = package.ConnectVariableHeader.VariableLevel;
 
-			auto shouldDisconnectClient = !(RuleEngine({
-				{new ClientConnectedRule(packageClientId, m_ClientStates), false},
-				{new CorrectProtocolNameRule(protocolName), true},
-				{new Protocol311Rule(package.ConnectVariableHeader.Level), true},
-				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false},
-				{new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false},
-				{new ConnectWillRule(clientState, package.ConnectVariableHeader.VariableLevel, package.ConnectPayload.WillMessage), true}
-			}).Run());
+			auto action = Protocol::Validators::ConnectValidator()
+				.ValidateClient(package, m_ClientStates, clientState);
 
-			if (shouldDisconnectClient)
+			switch (action)
 			{
+			case MQTT::Protocol::Validators::ConnectValidator::Disconnect:
 				m_Server->Disconnect(client);
-				return;
+				break;
+			case MQTT::Protocol::Validators::ConnectValidator::RejectUser:
+				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Refused_Identifier_Rejected));
+				break;
+			case MQTT::Protocol::Validators::ConnectValidator::ContinueState:
+				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Accepted));
+				clientState->IsConnected = true;
+				break;
+			case MQTT::Protocol::Validators::ConnectValidator::CreateNewState:
+				m_ClientStates.push_back(clientState);
+				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Accepted));
+				clientState->IsConnected = true;
+				break;
 			}
-
-			std::vector<unsigned char> message;
-			auto shouldContinueSession = (RuleEngine({
-				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
-			}).Run());	
-
-			if (shouldContinueSession)
-			{
-				delete clientState;
-				clientState = GetClientState(packageClientId);
-
-				/*auto canContinueSession = (RuleEngine({ 
-					{new CanClientContinueSession(packageClientId, clientState, message), true }
-				}).Run());*/
-
-				m_Server->Send(client, message);
-
-				// TODO :: Use member function to disconnect
-				/*if (!canContinueSession)
-					m_Server->Disconnect(client);*/
-
-				return;
-			}
-
-			if (packageClientId == "")
-				clientState->ClientId = GenerateUniqueId();
-			else
-				clientState->ClientId = packageClientId;
-
-
-			m_ClientStates.push_back(clientState);
-			
-			clientState->IsConnected = true;
-
-			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
-			m_Server->Send(client, ackMessage);
 		}
 
 		MqttClient* MqttService::GetClientState(const std::string& clientId)

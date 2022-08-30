@@ -24,6 +24,8 @@ namespace MQTT {
 					const std::vector<Server::MqttClient*>& clientStates,
 					Server::MqttClient* currentClient);
 
+			private:
+
 				void SetCurrentClientId(const std::string& packageClientId, MQTT::Server::MqttClient* currentClient);
 
 				ConnectValidator::Action CalculateClientSessionState(Server::MqttClient*& currentClient, 
