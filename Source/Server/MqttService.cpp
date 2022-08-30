@@ -97,19 +97,19 @@ namespace MQTT {
 
 		void MqttService::OnClientConnect(const Client& client, const Protocol::ConnectPackage& package)
 		{
-			auto& packageClientId = package.ConnectPayload.ClientId;
-			auto& protocolName = package.ConnectVariableHeader.ProtocolName;
+			auto& packageClientId = package.Payload.ClientId;
+			auto& protocolName = package.VariableHeader.ProtocolName;
 			auto* clientState = new MqttClient();
 			
-			clientState->ConnectionFlags = package.ConnectVariableHeader.VariableLevel;
+			clientState->ConnectionFlags = package.VariableHeader.VariableLevel;
 
 			auto shouldDisconnectClient = !(RuleEngine({
 				{new ClientConnectedRule(packageClientId, m_ClientStates), false},
 				{new CorrectProtocolNameRule(protocolName), true},
-				{new Protocol311Rule(package.ConnectVariableHeader.Level), true},
-				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false},
-				{new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false},
-				{new ConnectWillRule(clientState, package.ConnectVariableHeader.VariableLevel, package.ConnectPayload.WillMessage), true}
+				{new Protocol311Rule(package.VariableHeader.Level), true},
+				{new ConnectReservedFlagSetRule(package.VariableHeader.VariableLevel), false},
+				{new IsCredentialFlagIncorrectRule(package.VariableHeader.VariableLevel), false},
+				{new ConnectWillRule(clientState, package.VariableHeader.VariableLevel, package.Payload.WillMessage), true}
 			}).Run());
 
 			if (shouldDisconnectClient)
@@ -120,7 +120,7 @@ namespace MQTT {
 
 			std::vector<unsigned char> message;
 			auto shouldContinueSession = (RuleEngine({
-				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
+				{new ContinueSessionRule(package.VariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
 			}).Run());
 
 			if (shouldContinueSession)

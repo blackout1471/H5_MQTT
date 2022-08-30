@@ -10,21 +10,21 @@ using namespace MQTT::Protocol;
 static ConnectPackage Generate(ConnectFlagType flags)
 {
 	auto package = ConnectPackage();
-	package.ControlHeader.PackageType = ControlPackageType::Connect;
-	package.ConnectVariableHeader = { "mqtt", (unsigned char)4, flags, int16_t(60) };
+	package.Header.PackageType = ControlPackageType::Connect;
+	package.VariableHeader = { "mqtt", (unsigned char)4, flags, int16_t(60) };
 
-	package.ConnectPayload.ClientId = "c";
+	package.Payload.ClientId = "c";
 
 	if (flags & ConnectFlagType::Username)
-		package.ConnectPayload.Username = "u";
+		package.Payload.Username = "u";
 
 	if (flags & ConnectFlagType::Password)
-		package.ConnectPayload.Password = "p";
+		package.Payload.Password = "p";
 
 	if (flags & ConnectFlagType::Will_Flag)
 	{
-		package.ConnectPayload.WillTopic = "wt";
-		package.ConnectPayload.WillMessage = "wm";
+		package.Payload.WillTopic = "wt";
+		package.Payload.WillMessage = "wm";
 	}
 
 	return package;
@@ -36,72 +36,72 @@ std::vector<unsigned char> ToBuffer(const ConnectPackage& package)
 	int remainLength = 0;
 
 	// Control package
-	v.push_back(package.ControlHeader.PackageType << 4);
+	v.push_back(package.Header.PackageType << 4);
 
 	// protocol name
-	v.push_back(0); v.push_back(package.ConnectVariableHeader.ProtocolName.size());
-	for (int i = 0; i < package.ConnectVariableHeader.ProtocolName.size(); i++)
-		v.push_back(package.ConnectVariableHeader.ProtocolName[i]);
+	v.push_back(0); v.push_back(package.VariableHeader.ProtocolName.size());
+	for (int i = 0; i < package.VariableHeader.ProtocolName.size(); i++)
+		v.push_back(package.VariableHeader.ProtocolName[i]);
 	remainLength += 2;
-	remainLength += package.ConnectVariableHeader.ProtocolName.size();
+	remainLength += package.VariableHeader.ProtocolName.size();
 
 	// Level
-	v.push_back(package.ConnectVariableHeader.Level);
+	v.push_back(package.VariableHeader.Level);
 	remainLength += 1;
 
 	// flags
-	v.push_back(package.ConnectVariableHeader.VariableLevel);
+	v.push_back(package.VariableHeader.VariableLevel);
 	remainLength += 1;
 
 	// keep alive
-	v.push_back(0); v.push_back(package.ConnectVariableHeader.KeepAlive);
+	v.push_back(0); v.push_back(package.VariableHeader.KeepAlive);
 	remainLength += 2;
 
 	// client identifier
-	v.push_back(0); v.push_back(package.ConnectPayload.ClientId.size());
-	for (int i = 0; i < package.ConnectPayload.ClientId.size(); i++)
-		v.push_back(package.ConnectPayload.ClientId[i]);
+	v.push_back(0); v.push_back(package.Payload.ClientId.size());
+	for (int i = 0; i < package.Payload.ClientId.size(); i++)
+		v.push_back(package.Payload.ClientId[i]);
 	remainLength += 2;
-	remainLength += package.ConnectPayload.ClientId.size();
+	remainLength += package.Payload.ClientId.size();
 
 	// will topic
-	if (package.ConnectPayload.WillTopic.size() > 0)
+	if (package.Payload.WillTopic.size() > 0)
 	{
-		v.push_back(0); v.push_back(package.ConnectPayload.WillTopic.size());
-		for (int i = 0; i < package.ConnectPayload.WillTopic.size(); i++)
-			v.push_back(package.ConnectPayload.WillTopic[i]);
+		v.push_back(0); v.push_back(package.Payload.WillTopic.size());
+		for (int i = 0; i < package.Payload.WillTopic.size(); i++)
+			v.push_back(package.Payload.WillTopic[i]);
 		remainLength += 2;
-		remainLength += package.ConnectPayload.WillTopic.size();
+		remainLength += package.Payload.WillTopic.size();
 	}
 
 	// will message
-	if (package.ConnectPayload.WillMessage.size() > 0)
+	if (package.Payload.WillMessage.size() > 0)
 	{
-		v.push_back(0); v.push_back(package.ConnectPayload.WillMessage.size());
-		for (int i = 0; i < package.ConnectPayload.WillMessage.size(); i++)
-			v.push_back(package.ConnectPayload.WillMessage[i]);
+		v.push_back(0); v.push_back(package.Payload.WillMessage.size());
+		for (int i = 0; i < package.Payload.WillMessage.size(); i++)
+			v.push_back(package.Payload.WillMessage[i]);
 		remainLength += 2;
-		remainLength += package.ConnectPayload.WillMessage.size();
+		remainLength += package.Payload.WillMessage.size();
 	}
 
 	// will username
-	if (package.ConnectPayload.Username.size() > 0)
+	if (package.Payload.Username.size() > 0)
 	{
-		v.push_back(0); v.push_back(package.ConnectPayload.Username.size());
-		for (int i = 0; i < package.ConnectPayload.Username.size(); i++)
-			v.push_back(package.ConnectPayload.Username[i]);
+		v.push_back(0); v.push_back(package.Payload.Username.size());
+		for (int i = 0; i < package.Payload.Username.size(); i++)
+			v.push_back(package.Payload.Username[i]);
 		remainLength += 2;
-		remainLength += package.ConnectPayload.Username.size();
+		remainLength += package.Payload.Username.size();
 	}
 
 	// will password
-	if (package.ConnectPayload.Password.size() > 0)
+	if (package.Payload.Password.size() > 0)
 	{
-		v.push_back(0); v.push_back(package.ConnectPayload.Password.size());
-		for (int i = 0; i < package.ConnectPayload.Password.size(); i++)
-			v.push_back(package.ConnectPayload.Password[i]);
+		v.push_back(0); v.push_back(package.Payload.Password.size());
+		for (int i = 0; i < package.Payload.Password.size(); i++)
+			v.push_back(package.Payload.Password[i]);
 		remainLength += 2;
-		remainLength += package.ConnectPayload.Password.size();
+		remainLength += package.Payload.Password.size();
 	}
 
 	v.insert(v.begin() + 1, remainLength);
@@ -112,18 +112,18 @@ std::vector<unsigned char> ToBuffer(const ConnectPackage& package)
 static bool operator==(const ConnectPackage& p1, const ConnectPackage& p2)
 {
 	return (
-		p1.ControlHeader.PackageType == p2.ControlHeader.PackageType &&
+		p1.Header.PackageType == p2.Header.PackageType &&
 
-		p1.ConnectVariableHeader.ProtocolName == p2.ConnectVariableHeader.ProtocolName &&
-		p1.ConnectVariableHeader.Level == p2.ConnectVariableHeader.Level &&
-		p1.ConnectVariableHeader.VariableLevel == p2.ConnectVariableHeader.VariableLevel &&
-		p1.ConnectVariableHeader.KeepAlive == p2.ConnectVariableHeader.KeepAlive &&
+		p1.VariableHeader.ProtocolName == p2.VariableHeader.ProtocolName &&
+		p1.VariableHeader.Level == p2.VariableHeader.Level &&
+		p1.VariableHeader.VariableLevel == p2.VariableHeader.VariableLevel &&
+		p1.VariableHeader.KeepAlive == p2.VariableHeader.KeepAlive &&
 
-		p1.ConnectPayload.ClientId == p2.ConnectPayload.ClientId &&
-		p1.ConnectPayload.WillTopic == p2.ConnectPayload.WillTopic &&
-		p1.ConnectPayload.WillMessage == p2.ConnectPayload.WillMessage &&
-		p1.ConnectPayload.Username == p2.ConnectPayload.Username &&
-		p1.ConnectPayload.Password == p2.ConnectPayload.Password
+		p1.Payload.ClientId == p2.Payload.ClientId &&
+		p1.Payload.WillTopic == p2.Payload.WillTopic &&
+		p1.Payload.WillMessage == p2.Payload.WillMessage &&
+		p1.Payload.Username == p2.Payload.Username &&
+		p1.Payload.Password == p2.Payload.Password
 	);
 }
 #pragma endregion
@@ -148,7 +148,7 @@ TEST(ConnectionPackageConverterShould, ReturnTrue_WhenClientIdIsNotGiven)
 {
 	// Arrange
 	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password));
-	expected.ConnectPayload.ClientId = "";
+	expected.Payload.ClientId = "";
 	ConnectPackage actual;
 	auto converter = Converters::ConnectConverter();
 
