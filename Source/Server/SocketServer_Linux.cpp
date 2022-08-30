@@ -19,6 +19,10 @@ namespace MQTT {
 			{
 				if (int amount = recv(client.GetConnection(), sendBuff, 64, 0))
 				{
+					if (amount < 0)
+					{
+						return;
+					}
 					if (server.OnReceivedData)
 					{
 						auto data = std::vector<unsigned char>();
@@ -66,7 +70,7 @@ namespace MQTT {
 			int connfd = accept(m_Socket, (struct sockaddr*)NULL, NULL);
 			if (connfd > 0)
 			{
-				m_Clients.push_back(new Client("123", GenerateUniqueId(), connfd));
+				m_Clients.push_back(new Client("123", ClientUtility::GenerateUniqueId(), connfd));
 				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(*m_Clients[m_Clients.size() - 1]), std::cref(*this)));
 			}
 		}

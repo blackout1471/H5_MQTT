@@ -1,4 +1,5 @@
 #pragma once
+#include "mqttpch.h"
 #include "ClientUtility.h"
 #include <uuid/uuid.h>
 namespace MQTT {
