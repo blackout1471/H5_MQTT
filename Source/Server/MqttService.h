@@ -18,8 +18,11 @@ namespace MQTT {
 		private:
 			void InitialiseServer();
 			void OnReceivedData(const Client& client, const std::vector<unsigned char>& buffer);
+			//Sets mqtt client state to diconnected and diconnects socket client.
+			void DisconnectClientState(const Client& client);
 
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
+			void OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package);
 
 
 			MqttClient* GetClientState(const std::string& clientId);

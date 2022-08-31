@@ -17,22 +17,22 @@ namespace MQTT {
 
 			ConnectValidator::Action ConnectValidator::ValidateClient(const Protocol::ConnectPackage& package, const std::vector<Server::MqttClient*>& clientStates, Server::MqttClient* currentClient)
 			{
-				auto& packageClientId = package.ConnectPayload.ClientId;
-				auto& protocolName = package.ConnectVariableHeader.ProtocolName;
+				auto& packageClientId = package.Payload.ClientId;
+				auto& protocolName = package.VariableHeader.ProtocolName;
 
 				auto shouldDisconnect = ShouldDisconnectClient(packageClientId, clientStates, protocolName, package, currentClient);
 				if (shouldDisconnect)
 					return Disconnect;
 
-				auto protocolIsCorrect = Protocol311Rule(package.ConnectVariableHeader.Level).Validate();
+				auto protocolIsCorrect = Protocol311Rule(package.VariableHeader.Level).Validate();
 				if (!protocolIsCorrect)
 					return RejectProtocolLevel;
 
-				auto clientIdentifierIsCorrect = ConnectClientIdentifierValidRule(packageClientId, package.ConnectVariableHeader.VariableLevel).Validate();
+				auto clientIdentifierIsCorrect = ConnectClientIdentifierValidRule(packageClientId, package.VariableHeader.VariableLevel).Validate();
 				if (!clientIdentifierIsCorrect)
 					return RejectUserIdentifier;
 
-				auto shouldContinueSession = ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, clientStates).Validate();
+				auto shouldContinueSession = ContinueSessionRule(package.VariableHeader.VariableLevel, packageClientId, clientStates).Validate();
 				if (shouldContinueSession)
 				{
 					delete currentClient;
@@ -58,9 +58,9 @@ namespace MQTT {
 				return !(RuleEngine({
 					{ new ClientConnectedRule(packageClientId, clientStates), false },
 					{ new CorrectProtocolNameRule(protocolName), true },
-					{ new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false },
-					{ new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false },
-					{ new ConnectWillRule(currentClient, package.ConnectVariableHeader.VariableLevel, package.ConnectPayload.WillMessage), true }
+					{ new ConnectReservedFlagSetRule(package.VariableHeader.VariableLevel), false },
+					{ new IsCredentialFlagIncorrectRule(package.VariableHeader.VariableLevel), false },
+					{ new ConnectWillRule(currentClient, package.VariableHeader.VariableLevel, package.Payload.WillMessage), true }
 				}).Run());
 			}
 

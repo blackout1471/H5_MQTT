@@ -23,21 +23,21 @@ namespace MQTT {
                 const unsigned char* data = buffer.data();
 
                 // Get package type. Should always be Connect :)
-                package.ControlHeader.PackageType = ConverterUtility::GetPackageType(*data);
+                package.Header.PackageType = ConverterUtility::GetPackageType(*data);
                 data++;
 
                 unsigned char remainLength = *data;
                 data++;
 
                 // Convert the variable header.
-                data += ConvertToVariableHeader(data, package.ConnectVariableHeader);
+                data += ConvertToVariableHeader(data, package.VariableHeader);
 
                 // If we have payload then convert.
                 bool hasPayload = (buffer.data() + remainLength + 2) != data;
                 if (!hasPayload)
                     return package;
 
-                int payloadSize = ConvertToPayload(data, package.ConnectVariableHeader, package.ConnectPayload);
+                int payloadSize = ConvertToPayload(data, package.VariableHeader, package.Payload);
 
                 return package;
             }

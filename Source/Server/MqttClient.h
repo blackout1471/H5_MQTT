@@ -7,6 +7,7 @@ namespace MQTT {
 
 		struct MqttClient
 		{
+			std::string ConnectionIdentifier;
 			bool IsConnected;
 			std::string ClientId;
 			std::string WillMessage;

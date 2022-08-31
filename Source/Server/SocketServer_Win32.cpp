@@ -1,6 +1,7 @@
 #include "mqttpch.h"
 #include "SocketServer.h"
 #include "Server/MqttService.h"
+#include "ClientUtility.h"
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <thread>
@@ -35,7 +36,6 @@ namespace MQTT {
 				}
 				s_Initialized = true;
 			}
-
 			//Configuration
 			ConfigureAddressInfo(m_Port);
 
@@ -48,8 +48,9 @@ namespace MQTT {
 			//Starts listening for a client
 			Listen();
 
+			m_IsRunning = true;
 			//While alive, listen and accept clients
-			while (1) {
+			while (m_IsRunning) {
 
 				//Accepts a client
 				Accept();
@@ -64,10 +65,18 @@ namespace MQTT {
 			freeaddrinfo(result);
 			closesocket(m_Socket);
 			WSACleanup();
+			m_IsRunning = false;
+			s_Initialized = false;
+			
 		}
 		void SocketServer::Disconnect(const Client& client)
 		{
 			closesocket(client.GetConnection());
+			auto it = std::find_if(m_Clients.begin(), m_Clients.end(), [&](Client* c) {
+				return c->GetIdentifier() == client.GetIdentifier();
+				});
+			if (it != m_Clients.end())
+				m_Clients.erase(it);
 		}
 
 		void SocketServer::Send(const Client& client, const std::vector<unsigned char>& data)
@@ -76,7 +85,6 @@ namespace MQTT {
 			if (iSendResult == SOCKET_ERROR) {
 				printf("send failed with error: %d\n", WSAGetLastError());
 				closesocket(client.GetConnection());
-				WSACleanup();
 				//throw error
 			}
 		}
@@ -94,6 +102,7 @@ namespace MQTT {
 				//Logging here
 				printf("getaddrinfo failed with error: %d\n", iResult);
 				WSACleanup();
+				s_Initialized = false;
 				//Throw error
 			}
 		}
@@ -108,6 +117,7 @@ namespace MQTT {
 				printf("socket failed with error: %ld\n", WSAGetLastError());
 				freeaddrinfo(result);
 				WSACleanup();
+				s_Initialized = false;
 				//throw error here
 			}
 		}
@@ -124,6 +134,7 @@ namespace MQTT {
 				freeaddrinfo(result);
 				closesocket(m_Socket);
 				WSACleanup();
+				s_Initialized = false;
 				//Throw error here
 			}
 
@@ -137,6 +148,7 @@ namespace MQTT {
 				printf("listen failed with error: %d\n", WSAGetLastError());
 				closesocket(m_Socket);
 				WSACleanup();
+				s_Initialized = false;
 				//throw error here
 			}
 		}
@@ -147,19 +159,18 @@ namespace MQTT {
 			int clientSocket = accept(m_Socket, (struct sockaddr*)NULL, NULL);
 
 			if (clientSocket > 0) {
-				m_Clients.push_back(new Client("123", "1", clientSocket));
+				m_Clients.push_back(new Client("123", ClientUtility::GenerateUniqueId(), clientSocket));
 				m_ClientReaderThreads.push_back(std::thread(SocketServer::ReadClientData, std::cref(*m_Clients[m_Clients.size() - 1]), std::cref(*this)));
 			}
 			else
 			{
 				//logging here
 				printf("accept failed with error: %d\n", WSAGetLastError());
-				closesocket(m_Socket);
-				WSACleanup();
 				//throw error
 			}
 
 		}
+
 		void SocketServer::ReadClientData(const Client& client, const SocketServer& server)
 		{
 			char sendBuff[64] = { 0 };
@@ -169,7 +180,10 @@ namespace MQTT {
 				if (int amount = recv(client.GetConnection(), sendBuff, 64, 0))
 				{
 					if (amount < 0)
+					{
 						printf("error: %d\n", WSAGetLastError());
+						return;
+					}
 
 					if (server.OnReceivedData)
 					{

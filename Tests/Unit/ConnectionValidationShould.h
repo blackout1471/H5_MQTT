@@ -10,16 +10,16 @@ using namespace MQTT::Server;
 static ConnectPackage GeneratePackage()
 {
 	auto p = ConnectPackage();
-	p.ControlHeader.PackageType = ControlPackageType::Connect;
+	p.Header.PackageType = ControlPackageType::Connect;
 
-	p.ConnectVariableHeader.KeepAlive = 60;
-	p.ConnectVariableHeader.Level = 4;
-	p.ConnectVariableHeader.ProtocolName = "MQTT";
-	p.ConnectVariableHeader.VariableLevel = ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password);
+	p.VariableHeader.KeepAlive = 60;
+	p.VariableHeader.Level = 4;
+	p.VariableHeader.ProtocolName = "MQTT";
+	p.VariableHeader.VariableLevel = ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password);
 
-	p.ConnectPayload.ClientId = "test";
-	p.ConnectPayload.Password = "test";
-	p.ConnectPayload.Username = "test";
+	p.Payload.ClientId = "test";
+	p.Payload.Password = "test";
+	p.Payload.Username = "test";
 
 	return p;
 }
@@ -32,7 +32,7 @@ TEST(ConnectionValidationShould, ReturnDisconnect_WhenClientIsAlreadyConnected)
 	// Arrange
 	auto expected = ConnectValidator::Disconnect;
 	auto package = GeneratePackage();
-	auto clientState = new MqttClient{ true, package.ConnectPayload.ClientId, "", ConnectFlagType::Username };
+	auto clientState = new MqttClient{ "", true, package.Payload.ClientId, "", ConnectFlagType::Username};
 	auto clientStates = std::vector<MqttClient*>{
 		clientState
 	};
@@ -50,8 +50,8 @@ TEST(ConnectionValidationShould, ReturnDisconnect_WhenProtocolNameIsIncorrect)
 	// Arrange
 	auto expected = ConnectValidator::Disconnect;
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.ProtocolName = "mttq";
-	auto clientState = new MqttClient{ true, package.ConnectPayload.ClientId, "", ConnectFlagType::Username };
+	package.VariableHeader.ProtocolName = "mttq";
+	auto clientState = new MqttClient{ "", true, package.Payload.ClientId, "", ConnectFlagType::Username};
 	auto clientStates = std::vector<MqttClient*>{};
 	auto validator = ConnectValidator();
 
@@ -67,8 +67,8 @@ TEST(ConnectionValidationShould, ReturnReject_WhenProtocolLevelIsIncorrect)
 	// Arrange
 	auto expected = ConnectValidator::RejectProtocolLevel;
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.Level = 2;
-	auto clientState = new MqttClient{ true, package.ConnectPayload.ClientId, "", ConnectFlagType::Username };
+	package.VariableHeader.Level = 2;
+	auto clientState = new MqttClient{ "", true, package.Payload.ClientId, "", ConnectFlagType::Username };
 	auto clientStates = std::vector<MqttClient*>{};
 	auto validator = ConnectValidator();
 
@@ -84,8 +84,8 @@ TEST(ConnectionValidationShould, ReturnDisconnect_WhenReservedBitIsSetInControlP
 	// Arrange
 	auto expected = ConnectValidator::Disconnect;
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.VariableLevel |= ConnectFlagType::Reserved;
-	auto clientState = new MqttClient{ true, package.ConnectPayload.ClientId, "", ConnectFlagType::Username };
+	package.VariableHeader.VariableLevel |= ConnectFlagType::Reserved;
+	auto clientState = new MqttClient{ "", true, package.Payload.ClientId, "", ConnectFlagType::Username };
 	auto clientStates = std::vector<MqttClient*>{};
 	auto validator = ConnectValidator();
 
@@ -101,8 +101,8 @@ TEST(ConnectionValidationShould, ReturnDisconnect_WhenUsernameIsNotSetAndPasswor
 	// Arrange
 	auto expected = ConnectValidator::Disconnect;
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.VariableLevel = ConnectFlagType::Password;
-	auto clientState = new MqttClient{ true, package.ConnectPayload.ClientId, "", ConnectFlagType::Username };
+	package.VariableHeader.VariableLevel = ConnectFlagType::Password;
+	auto clientState = new MqttClient{ "", true, package.Payload.ClientId, "", ConnectFlagType::Username };
 	auto clientStates = std::vector<MqttClient*>{};
 	auto validator = ConnectValidator();
 
@@ -118,9 +118,9 @@ TEST(ConnectionValidationShould, ContainClientWillMessage_WhenWillFlagIsSet)
 	// Arrange
 	auto expected = "message";
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.VariableLevel = ConnectFlagType::Will_Flag;
-	package.ConnectPayload.WillMessage = expected;
-	auto clientState = new MqttClient{ true, package.ConnectPayload.ClientId, "", ConnectFlagType::Username };
+	package.VariableHeader.VariableLevel = ConnectFlagType::Will_Flag;
+	package.Payload.WillMessage = expected;
+	auto clientState = new MqttClient{ "", true, package.Payload.ClientId, "", ConnectFlagType::Username };
 	auto clientStates = std::vector<MqttClient*>();
 	auto validator = ConnectValidator();
 
@@ -136,8 +136,8 @@ TEST(ConnectionValidationShould, ReturnDisconnect_WhenWillFlagIsSetAndQoSLevelIs
 	// Arrange
 	auto expected = ConnectValidator::Disconnect;
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.VariableLevel = ConnectFlagType::Will_Flag | ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_QoS_MSB;
-	auto clientState = new MqttClient{ false, package.ConnectPayload.ClientId, "", ConnectFlagType::Username };
+	package.VariableHeader.VariableLevel = ConnectFlagType::Will_Flag | ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_QoS_MSB;
+	auto clientState = new MqttClient{ "", false, package.Payload.ClientId, "", ConnectFlagType::Username };
 	auto clientStates = std::vector<MqttClient*>{};
 	auto validator = ConnectValidator();
 
@@ -153,8 +153,8 @@ TEST(ConnectionValidationShould, ContainRetainZeroAndWillRetainZero_WhenWillFlag
 	// Arrange
 	auto expected = 0;
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.VariableLevel = ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain;
-	auto clientState = new MqttClient{ false, package.ConnectPayload.ClientId, "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
+	package.VariableHeader.VariableLevel = ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain;
+	auto clientState = new MqttClient{ "", false, package.Payload.ClientId, "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
 	auto clientStates = std::vector<MqttClient*>{};
 	auto validator = ConnectValidator();
 
@@ -170,9 +170,9 @@ TEST(ConnectionValidationShould, ReturnReject_WhenCleanSessionIsZeroAndClientIdI
 	// Arrange
 	auto expected = ConnectValidator::RejectUserIdentifier;
 	auto package = GeneratePackage();
-	package.ConnectPayload.ClientId = "";
-	package.ConnectVariableHeader.VariableLevel = ConnectFlagType::Username | ConnectFlagType::Password;
-	auto clientState = new MqttClient{ false, "test", "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
+	package.Payload.ClientId = "";
+	package.VariableHeader.VariableLevel = ConnectFlagType::Username | ConnectFlagType::Password;
+	auto clientState = new MqttClient{ "", false, "test", "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
 	auto clientStates = std::vector<MqttClient*>{clientState};
 	auto validator = ConnectValidator();
 
@@ -188,8 +188,8 @@ TEST(ConnectionValidationShould, ReturnContinueSession_WhenClientHasSetCleanSess
 	// Arrange
 	auto expected = ConnectValidator::ContinueState;
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.VariableLevel = ConnectFlagType::Username | ConnectFlagType::Password;
-	auto clientState = new MqttClient{ false, package.ConnectPayload.ClientId, "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
+	package.VariableHeader.VariableLevel = ConnectFlagType::Username | ConnectFlagType::Password;
+	auto clientState = new MqttClient{ "", false, package.Payload.ClientId, "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
 	auto clientStates = std::vector<MqttClient*>{ clientState };
 	auto validator = ConnectValidator();
 
@@ -204,9 +204,9 @@ TEST(ConnectionValidationShould, GenerateId_WhenClientIdIsNotSet)
 {
 	// Arrange
 	auto package = GeneratePackage();
-	package.ConnectPayload.ClientId = "";
-	package.ConnectVariableHeader.VariableLevel |= ConnectFlagType::Clean_Session;
-	auto clientState = new MqttClient{ false, package.ConnectPayload.ClientId, "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
+	package.Payload.ClientId = "";
+	package.VariableHeader.VariableLevel |= ConnectFlagType::Clean_Session;
+	auto clientState = new MqttClient{ "", false, package.Payload.ClientId, "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
 	auto clientStates = std::vector<MqttClient*>{};
 	auto validator = ConnectValidator();
 
@@ -222,8 +222,8 @@ TEST(ConnectionValidationShould, ReturnNewSession_WhenPackageIsFulfilling)
 	// Arrange
 	auto expected = ConnectValidator::CreateNewState;
 	auto package = GeneratePackage();
-	package.ConnectVariableHeader.VariableLevel |= ConnectFlagType::Clean_Session;
-	auto clientState = new MqttClient{ false, package.ConnectPayload.ClientId, "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
+	package.VariableHeader.VariableLevel |= ConnectFlagType::Clean_Session;
+	auto clientState = new MqttClient{ "", false, package.Payload.ClientId, "", ConnectFlagType::Will_QoS_LSB | ConnectFlagType::Will_Remain };
 	auto clientStates = std::vector<MqttClient*>{};
 	auto validator = ConnectValidator();
 

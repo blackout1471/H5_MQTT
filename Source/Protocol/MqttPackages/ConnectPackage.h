@@ -8,9 +8,9 @@ namespace MQTT {
 		struct ConnectPackage
 		{
 		public:
-			ControlHeader ControlHeader;
-			ConnectVariableHeader ConnectVariableHeader;
-			ConnectPayload ConnectPayload;
+			ControlHeader Header;
+			ConnectVariableHeader VariableHeader;
+			ConnectPayload Payload;
 		};
 	}
 };

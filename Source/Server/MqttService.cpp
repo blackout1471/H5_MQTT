@@ -73,11 +73,11 @@ namespace MQTT {
 
 		void MqttService::OnClientConnect(const Client& client, const Protocol::ConnectPackage& package)
 		{
-			auto& packageClientId = package.ConnectPayload.ClientId;
-			auto& protocolName = package.ConnectVariableHeader.ProtocolName;
+			auto& packageClientId = package.Payload.ClientId;
+			auto& protocolName = package.VariableHeader.ProtocolName;
 			auto* clientState = new MqttClient();
 			
-			clientState->ConnectionFlags = package.ConnectVariableHeader.VariableLevel;
+			clientState->ConnectionFlags = package.VariableHeader.VariableLevel;
 
 			auto action = Protocol::Validators::ConnectValidator()
 				.ValidateClient(package, m_ClientStates, clientState);
