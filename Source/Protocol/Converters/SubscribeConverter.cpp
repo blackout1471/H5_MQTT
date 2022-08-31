@@ -29,11 +29,10 @@ namespace MQTT {
 					offset += 2;
 
 					SubscribeTopic st;
+					std::vector<unsigned char> currentTopic;
 
 					for (int i = 0; i < topicLength; i++)
 					{
-						st.Topic.push_back(buffer[i + offset]);
-
 						if (buffer[i + offset] == '#') // TODO: check for other wild cards
 						{
 							st.Wildcard = (SubscribeTopicWildcardType)buffer[i + offset];
@@ -42,8 +41,18 @@ namespace MQTT {
 						else if (buffer[i + offset] == '/')
 						{
 							st.HaveChild = true;
+							st.Topics.push_back(currentTopic);
+							currentTopic.clear();
+						}
+						else
+						{
+							currentTopic.push_back(buffer[i + offset]);
 						}
 					}
+
+					if (currentTopic.size() != 0)
+						st.Topics.push_back(currentTopic);
+
 					// The last byte of the topic 
 					st.QoS = buffer[topicLength + offset];
 					sp.Topics.push_back(st);

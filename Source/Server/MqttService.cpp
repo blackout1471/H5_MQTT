@@ -23,6 +23,8 @@ namespace MQTT {
 			for (auto clientStates : m_ClientStates)
 				delete clientStates;
 
+			m_SubscribeManager.DeleteTrees();
+
 			delete m_Server;
 		}
 
@@ -40,7 +42,7 @@ namespace MQTT {
 			{
 			case MQTT::Protocol::Connect:
 				OnClientConnect(
-					client, 
+					client,
 					Protocol::Converters::ConnectConverter().ToPackage(buffer)
 				);
 				break;
@@ -96,7 +98,7 @@ namespace MQTT {
 				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false},
 				{new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false},
 				{new ConnectWillRule(clientState, package.ConnectVariableHeader.VariableLevel), true}
-			}).Run());
+				}).Run());
 
 			if (shouldDisconnectClient)
 			{
@@ -106,7 +108,7 @@ namespace MQTT {
 
 			auto shouldContinueSession = (RuleEngine({
 				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
-			}).Run());
+				}).Run());
 
 			// Todo :: Move 
 			if (shouldContinueSession)
@@ -143,7 +145,7 @@ namespace MQTT {
 
 
 			m_ClientStates.push_back(clientState);
-			
+
 			clientState->IsConnected = true;
 
 			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
@@ -167,31 +169,97 @@ namespace MQTT {
 
 		void MqttService::OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package)
 		{
-			/*auto& packageClientId = package.ConnectPayload.ClientId;
-			auto& protocolName = package.ConnectVariableHeader.ProtocolName;
-			auto* clientState = new MqttClient();*/
+			for (int i = 0; i < package.SubscribePayload.Topics.size(); i++)
+			{
+				auto topic = package.SubscribePayload.Topics.at(i);
 
-			/*auto shouldDisconnectClient = !(RuleEngine({
-				{new ClientConnectedRule(packageClientId, m_ClientStates), false},
-				{new CorrectProtocolNameRule(protocolName), true},
-				{new Protocol311Rule(package.ConnectVariableHeader.Level), true},
-				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false},
-				{new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false},
-				{new ConnectWillRule(clientState, package.ConnectVariableHeader.VariableLevel), true}
-				}).Run());
+				Protocol::BTree* matchingTree = nullptr;
 
-			if (shouldDisconnectClient)
-				m_Server->Disconnect(client);
+				if (!topic.HaveChild)
+				{
+					matchingTree = m_SubscribeManager.GetBTree(topic.Topics[0], topic.Wildcard);
+
+					if (matchingTree == nullptr) {
+						m_SubscribeManager.AddParentTree(Protocol::BTree::NewBTree(topic.Topics[0], topic.Wildcard));
+					}
+					else {
+						matchingTree->AddClient(client.GetIdentifier());
+					}
+				}
+				else
+				{
+					Protocol::BTree* parentTree = nullptr;
 
 
-			clientState->IsConnected = true;
-			clientState->ClientId = packageClientId;
+					for (int j = 0; j < topic.Topics.size(); j++)
+					{
+						//TODO: Remove after testing
+						if (topic.Topics.at(j).size() == 7)
+						{
+							printf("Yt hit");
+						}
 
-			m_ClientStates.push_back(clientState);*/
+						matchingTree = m_SubscribeManager.GetBTree(topic.Topics.at(j), topic.Wildcard);
 
-			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
+						if (matchingTree == nullptr) {
 
-			m_Server->Send(client, ackMessage);
+							if (parentTree == nullptr) {
+
+								if ((j + 1) >= topic.Topics.size())
+								{
+									// its the last topic
+									parentTree = Protocol::BTree::NewBTree(client.GetIdentifier(), topic.Topics.at(j), topic.Wildcard);
+									m_SubscribeManager.AddParentTree(parentTree);
+								}
+								else
+								{
+									parentTree = Protocol::BTree::NewBTree(topic.Topics.at(j), Protocol::NoWildcard);
+
+									m_SubscribeManager.AddParentTree(parentTree);
+								}
+							}
+							else
+							{
+								if ((j + 1) >= topic.Topics.size())
+								{
+									// its the last topic
+									parentTree = Protocol::BTree::NewBTree(parentTree, client.GetIdentifier(), topic.Topics.at(j), topic.Wildcard);
+								}
+								else
+								{
+									parentTree = Protocol::BTree::NewBTree(parentTree, topic.Topics.at(j));
+								}
+							}
+						}
+						else {
+
+							parentTree = matchingTree;
+						}
+
+					}
+
+
+
+					/*if (matchingTree != nullptr)
+					{
+						matchingTree->AddClient(client.GetIdentifier());
+					}
+					else
+					{
+						auto newTree = Protocol::BTree::NewBTree(client.GetIdentifier(), topic.Topic, topic.Wildcard);
+						m_SubscribeManager.AddParentTree(newTree);
+					}*/
+
+				}
+				/*Protocol::BTree::NewBTree(client.GetIdentifier(), )*/
+
+				// TODO: Add rules
+
+			}
+			printf("a");
+			/*	auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
+
+				m_Server->Send(client, ackMessage);*/
 		}
 
 		void MqttService::InitialiseServer()

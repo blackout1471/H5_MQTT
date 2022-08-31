@@ -2,6 +2,7 @@
 #include "Protocol/Managers/MqttManager.h"
 #include "Protocol/Converters/ConnectConverter.h"
 #include "Protocol/Converters/SubscribeConverter.h"
+#include "Protocol/Managers/SubscribeManager.h"
 #include "IServer.h"
 #include "MqttClient.h"
 
@@ -28,6 +29,7 @@ namespace MQTT {
 		private:
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;
+			Protocol::SubscribeManager m_SubscribeManager;
 			std::vector<MqttClient*> m_ClientStates;
 		};
 	}
