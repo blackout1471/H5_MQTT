@@ -20,11 +20,12 @@ Then do ```make```
 options can be added to make for whichever config is wanted -hint:```make help```
 
 ### Tests
- -- TODO:
+The tests will be generated as a executable in the project UnitTest folder.
 
 Tests will be generated as executables in the same folder as the project.
 
 ## Dependencies
 * Premake
+* GTest
 
 
