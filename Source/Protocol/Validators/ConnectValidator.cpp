@@ -3,7 +3,7 @@
 
 #include "Protocol/Validators/RuleEngine.h"
 #include "Protocol/Validators/Rules/Rules.h"
-using namespace MQTT::Protocol::Validators;
+#include "Server/ClientUtility.h"
 
 namespace MQTT {
 	namespace Protocol {
@@ -48,7 +48,7 @@ namespace MQTT {
 			void ConnectValidator::SetCurrentClientId(const std::string& packageClientId, Server::MqttClient* currentClient)
 			{
 				if (packageClientId.size() == 0)
-					currentClient->ClientId = "1"; // TODO :: Generate unique id
+					currentClient->ClientId = Server::ClientUtility::GenerateUniqueId();
 				else
 					currentClient->ClientId = packageClientId;
 			}

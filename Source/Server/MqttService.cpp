@@ -4,6 +4,7 @@
 #include "MqttService.h"
 #include "Protocol/Converters/ConverterUtility.h"
 #include "Protocol/Validators/ConnectValidator.h"
+#include "Protocol/Converters/DisconnectConverter.h"
 
 #include <algorithm>
 
@@ -62,6 +63,10 @@ namespace MQTT {
 			case MQTT::Protocol::PingResp:
 				break;
 			case MQTT::Protocol::Disconnect:
+				OnClientDisconnect(
+					client,
+					Protocol::Converters::DisconnectConverter().ToPackage(buffer)
+				);
 				break;
 			default:
 				for (int i = 0; i < buffer.size(); i++)
@@ -81,6 +86,8 @@ namespace MQTT {
 
 			auto action = Protocol::Validators::ConnectValidator()
 				.ValidateClient(package, m_ClientStates, clientState);
+
+			clientState->ConnectionIdentifier = client.GetIdentifier();
 
 			switch (action)
 			{
@@ -103,6 +110,22 @@ namespace MQTT {
 				clientState->IsConnected = true;
 				break;
 			}
+		}
+
+		void MqttService::OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package)
+		{
+			//TODO: Remove will message when storage of it is implemented.
+			DisconnectClientState(client);
+		}
+
+		void MqttService::DisconnectClientState(const Client& client)
+		{
+			for (auto& arr_client : m_ClientStates)
+			{
+				if (arr_client->ConnectionIdentifier == client.GetIdentifier())
+					arr_client->IsConnected = false;
+			}
+			m_Server->Disconnect(client);
 		}
 
 		MqttClient* MqttService::GetClientState(const std::string& clientId)
