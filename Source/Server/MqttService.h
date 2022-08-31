@@ -22,11 +22,10 @@ namespace MQTT {
 			void DisconnectClientState(const Client& client);
 
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
-			void OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package);
+			void OnClientDisconnect(const Client& client);
 
 
 			MqttClient* GetClientState(const std::string& clientId);
-			std::string GenerateUniqueId();
 		private:
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;

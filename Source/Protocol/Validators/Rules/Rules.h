@@ -8,5 +8,5 @@
 #include "IsCredentialFlagIncorrectRule.h"
 #include "ConnectWillRule.h"
 #include "ContinueSessionRule.h"
-#include "GenerateSessionMessageRule.h"
+#include "CanClientContinueSession.h"
 #include "ConnectClientIdentifierValidRule.h"

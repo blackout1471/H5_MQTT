@@ -64,8 +64,7 @@ namespace MQTT {
 				break;
 			case MQTT::Protocol::Disconnect:
 				OnClientDisconnect(
-					client,
-					Protocol::Converters::DisconnectConverter().ToPackage(buffer)
+					client
 				);
 				break;
 			default:
@@ -112,7 +111,7 @@ namespace MQTT {
 			}
 		}
 
-		void MqttService::OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package)
+		void MqttService::OnClientDisconnect(const Client& client)
 		{
 			//TODO: Remove will message when storage of it is implemented.
 			DisconnectClientState(client);
@@ -120,10 +119,10 @@ namespace MQTT {
 
 		void MqttService::DisconnectClientState(const Client& client)
 		{
-			for (auto& arr_client : m_ClientStates)
+			for (auto& clientState : m_ClientStates)
 			{
-				if (arr_client->ConnectionIdentifier == client.GetIdentifier())
-					arr_client->IsConnected = false;
+				if (clientState->ConnectionIdentifier == client.GetIdentifier())
+					clientState->IsConnected = false;
 			}
 			m_Server->Disconnect(client);
 		}
@@ -135,12 +134,6 @@ namespace MQTT {
 					return clientState;
 
 			return nullptr;
-		}
-
-		std::string MqttService::GenerateUniqueId()
-		{
-			// TODO: Create unique id
-			return "1";
 		}
 
 		void MqttService::InitialiseServer()
