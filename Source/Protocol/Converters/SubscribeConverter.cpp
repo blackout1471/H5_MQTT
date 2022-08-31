@@ -29,7 +29,7 @@ namespace MQTT {
 					offset += 2;
 
 					SubscribeTopic st;
-					std::vector<unsigned char> currentTopic;
+					std::vector<unsigned char> currentPath;
 
 					for (int i = 0; i < topicLength; i++)
 					{
@@ -41,17 +41,17 @@ namespace MQTT {
 						else if (buffer[i + offset] == '/')
 						{
 							st.HaveChild = true;
-							st.Topics.push_back(currentTopic);
-							currentTopic.clear();
+							st.Paths.push_back(currentPath);
+							currentPath.clear();
 						}
 						else
 						{
-							currentTopic.push_back(buffer[i + offset]);
+							currentPath.push_back(buffer[i + offset]);
 						}
 					}
 
-					if (currentTopic.size() != 0)
-						st.Topics.push_back(currentTopic);
+					if (currentPath.size() != 0)
+						st.Paths.push_back(currentPath);
 
 					// The last byte of the topic 
 					st.QoS = buffer[topicLength + offset];

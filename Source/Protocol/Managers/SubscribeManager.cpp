@@ -18,18 +18,6 @@ namespace MQTT {
 			return nullptr;
 		}
 
-		BTree* SubscribeManager::GetBTreeByType(std::vector<unsigned char> topic)
-		{
-			for (int i = 0; i < m_Subscriptions.size(); i++)
-			{
-				auto tree = m_Subscriptions[i]->GetTopicMatch(topic);
-
-				if (tree != nullptr)
-					return tree;
-			}
-
-			return nullptr;
-		}
 
 		void MQTT::Protocol::SubscribeManager::AddParentTree(BTree* bTree)
 		{

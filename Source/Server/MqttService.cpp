@@ -169,97 +169,44 @@ namespace MQTT {
 
 		void MqttService::OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package)
 		{
-			for (int i = 0; i < package.SubscribePayload.Topics.size(); i++)
+			for (auto subscribeTopic : package.SubscribePayload.Topics)
 			{
-				auto topic = package.SubscribePayload.Topics.at(i);
-
 				Protocol::BTree* matchingTree = nullptr;
+				Protocol::BTree* parentTree = nullptr;
 
-				if (!topic.HaveChild)
+				for (int i = 0; i < subscribeTopic.Paths.size(); i++)
 				{
-					matchingTree = m_SubscribeManager.GetBTree(topic.Topics[0], topic.Wildcard);
+					// Check if there is any full match of the current topic
+					matchingTree = m_SubscribeManager.GetBTree(subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
 
-					if (matchingTree == nullptr) {
-						m_SubscribeManager.AddParentTree(Protocol::BTree::NewBTree(topic.Topics[0], topic.Wildcard));
-					}
-					else {
-						matchingTree->AddClient(client.GetIdentifier());
-					}
-				}
-				else
-				{
-					Protocol::BTree* parentTree = nullptr;
+					if (matchingTree != nullptr)
+						parentTree = matchingTree;
 
-
-					for (int j = 0; j < topic.Topics.size(); j++)
+					if (parentTree == nullptr)
 					{
-						//TODO: Remove after testing
-						if (topic.Topics.at(j).size() == 7)
-						{
-							printf("Yt hit");
-						}
+						// its the last topic, set the client 
+						if ((i + 1) == subscribeTopic.Paths.size())
+							parentTree = Protocol::BTree::NewBTree(client.GetIdentifier(), subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
 
-						matchingTree = m_SubscribeManager.GetBTree(topic.Topics.at(j), topic.Wildcard);
+						else
+							parentTree = Protocol::BTree::NewBTree(subscribeTopic.Paths.at(i), Protocol::NoWildcard);
 
-						if (matchingTree == nullptr) {
-
-							if (parentTree == nullptr) {
-
-								if ((j + 1) >= topic.Topics.size())
-								{
-									// its the last topic
-									parentTree = Protocol::BTree::NewBTree(client.GetIdentifier(), topic.Topics.at(j), topic.Wildcard);
-									m_SubscribeManager.AddParentTree(parentTree);
-								}
-								else
-								{
-									parentTree = Protocol::BTree::NewBTree(topic.Topics.at(j), Protocol::NoWildcard);
-
-									m_SubscribeManager.AddParentTree(parentTree);
-								}
-							}
-							else
-							{
-								if ((j + 1) >= topic.Topics.size())
-								{
-									// its the last topic
-									parentTree = Protocol::BTree::NewBTree(parentTree, client.GetIdentifier(), topic.Topics.at(j), topic.Wildcard);
-								}
-								else
-								{
-									parentTree = Protocol::BTree::NewBTree(parentTree, topic.Topics.at(j));
-								}
-							}
-						}
-						else {
-
-							parentTree = matchingTree;
-						}
-
-					}
-
-
-
-					/*if (matchingTree != nullptr)
-					{
-						matchingTree->AddClient(client.GetIdentifier());
+						m_SubscribeManager.AddParentTree(parentTree);
 					}
 					else
 					{
-						auto newTree = Protocol::BTree::NewBTree(client.GetIdentifier(), topic.Topic, topic.Wildcard);
-						m_SubscribeManager.AddParentTree(newTree);
-					}*/
-
+						// its the last topic
+						if ((i + 1) == subscribeTopic.Paths.size())
+							parentTree = Protocol::BTree::NewBTree(parentTree, client.GetIdentifier(), subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
+						else
+							parentTree = Protocol::BTree::NewBTree(parentTree, subscribeTopic.Paths.at(i));
+					}
 				}
-				/*Protocol::BTree::NewBTree(client.GetIdentifier(), )*/
-
-				// TODO: Add rules
 
 			}
 			printf("a");
-			/*	auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
 
-				m_Server->Send(client, ackMessage);*/
+			// send sub ack message here?
 		}
 
 		void MqttService::InitialiseServer()
