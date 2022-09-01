@@ -1,6 +1,7 @@
 #pragma once
 #include "Protocol/Managers/MqttManager.h"
 #include "Protocol/Converters/ConnectConverter.h"
+#include "Protocol/Converters/PublishConverter.h"
 #include "IServer.h"
 #include "MqttClient.h"
 
@@ -23,9 +24,11 @@ namespace MQTT {
 
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
 			void OnClientDisconnect(const Client& client);
+			void OnClientPublish(const Client& client, const Protocol::PublishPackage& package);
 
 
-			MqttClient* GetClientState(const std::string& clientId);
+			MqttClient* GetClientStateFromClientId(const std::string& clientId);
+			MqttClient* GetClientStateFromIdentifier(const std::string& identifier);
 		private:
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;

@@ -7,8 +7,8 @@
 namespace MQTT {
 	namespace Protocol {
 		namespace Validators {
-			PublishValidator::PublishValidator() {}
-			PublishValidator::~PublishValidator() {}
+			PublishValidator::PublishValidator() {};
+			PublishValidator::~PublishValidator() {};
 
 			PublishValidator::Action PublishValidator::ValidatePackage(PublishPackage& package, const Server::MqttClient& client)
 			{
