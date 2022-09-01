@@ -32,10 +32,7 @@ namespace MQTT {
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;
 			std::vector<MqttClient*> m_ClientStates;
-			IServer* m_Server;
-			Protocol::MqttManager m_Manager;
 			Protocol::SubscribeManager m_SubscribeManager;
-			std::vector<MqttClient*> m_ClientStates;
 		};
 	}
 }

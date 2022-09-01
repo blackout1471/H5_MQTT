@@ -6,7 +6,7 @@ namespace MQTT {
 		namespace Converters {
 			const SubscribeAcknowledgementPackage SubscribeAcknowledgementConverter::ToPackage(const std::vector<unsigned char>& buffer)
 			{
-
+				return SubscribeAcknowledgementPackage();
 			}
 			const std::vector<unsigned char> SubscribeAcknowledgementConverter::ToBuffer(const SubscribeAcknowledgementPackage& to)
 			{
