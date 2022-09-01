@@ -116,6 +116,11 @@ namespace MQTT {
 		}
 		void MqttService::OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package)
 		{
+			bool validPackage = m_SubscribeManager.ValidPackage(package);
+
+			if (!validPackage)
+				DisconnectClientState(client);
+
 			m_SubscribeManager.AddToSubscriptions(client.GetIdentifier(), package);
 
 			auto buffer = m_SubscribeManager.CreateSubAckBuffer(package);

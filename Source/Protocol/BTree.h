@@ -16,35 +16,11 @@ namespace MQTT {
 
 		public:
 
-			BTree() {
-				m_SubClients = std::vector<SubscribeClient*>();
-			}
+			~BTree();
 
-			~BTree() {
-
-				for (int i = 0; i < m_Children.size(); i++)
-					delete m_Children[i];
-
-				for (auto& sub : m_SubClients)
-					delete sub;
-			}
-
-			void AddClient(SubscribeClient* subClient) {
-
-				bool foundSubClient = false;
-
-				for (int i = 0; i < m_SubClients.size(); i++)
-				{
-					if (m_SubClients[i]->ClientID == subClient->ClientID) {
-						m_SubClients[i]->QoS = subClient->QoS;
-						foundSubClient = true;
-						break;
-					}
-				}
-
-				if (!foundSubClient)
-					m_SubClients.push_back(subClient);
-			}
+			void AddClient(SubscribeClient* subClient);
+			BTree* GetFullMatch(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
+			BTree* GetTopicMatch(std::vector<unsigned char> topic);
 
 			std::vector<unsigned char> GetTopic() {
 				return m_Topic;
@@ -56,9 +32,6 @@ namespace MQTT {
 			std::vector<SubscribeClient*>& GetSubClients() {
 				return m_SubClients;
 			}
-
-			BTree* GetFullMatch(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
-			BTree* GetTopicMatch(std::vector<unsigned char> topic);
 
 
 			static BTree* NewBTree(SubscribeClient* subClient, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard) {
@@ -89,6 +62,7 @@ namespace MQTT {
 
 				return btree;
 			}
+
 			static BTree* NewBTree(BTree* parent, std::vector<unsigned char> topic) {
 				BTree* btree = new BTree();
 				btree->m_Parent = parent;

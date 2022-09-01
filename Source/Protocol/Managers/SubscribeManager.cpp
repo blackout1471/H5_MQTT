@@ -54,16 +54,17 @@ namespace MQTT {
 				to.push_back(*f);
 		}
 
-		BTree* SubscribeManager::GetParentBTree(std::vector<unsigned char> topic)
+		bool SubscribeManager::ValidPackage(const SubscribePackage& subscribePackage)
 		{
-			for (int i = 0; i < m_Subscriptions.size(); i++)
-			{
-				if (m_Subscriptions[i]->GetTopic() == topic) {
-					return m_Subscriptions[i];
-				}
-			}
+			/*return !(RuleEngine({
+					{ new ClientConnectedRule(packageClientId, clientStates), false },
+					{ new CorrectProtocolNameRule(protocolName), true },
+					{ new ConnectReservedFlagSetRule(package.VariableHeader.VariableLevel), false },
+					{ new IsCredentialFlagIncorrectRule(package.VariableHeader.VariableLevel), false },
+					{ new ConnectWillRule(currentClient, package.VariableHeader.VariableLevel, package.Payload.WillMessage), true }
+				}).Run());*/
 
-			return nullptr;
+			return false;
 		}
 
 		BTree* SubscribeManager::GetParentBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
