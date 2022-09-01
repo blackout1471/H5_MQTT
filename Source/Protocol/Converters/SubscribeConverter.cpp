@@ -33,10 +33,9 @@ namespace MQTT {
 
 					for (int i = 0; i < topicLength; i++)
 					{
-						if (buffer[i + offset] == '#') // TODO: check for other wild cards
+						if (buffer[i + offset] == '#' || buffer[i + offset] == '+' || buffer[i + offset] == '$')
 						{
 							st.Wildcard = (SubscribeTopicWildcardType)buffer[i + offset];
-							st.HaveChild = true;
 						}
 						else if (buffer[i + offset] == '/')
 						{

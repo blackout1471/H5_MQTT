@@ -1,8 +1,10 @@
 #include "mqttpch.h"
 #include "SubscribeManager.h"
+#include "Protocol/Validators/Rules/Rules.h"
 
 namespace MQTT {
 	namespace Protocol {
+		using namespace Protocol::Validators;
 
 		void SubscribeManager::AddToSubscriptions(std::string clientID, SubscribePackage subscribePackage)
 		{
@@ -10,8 +12,13 @@ namespace MQTT {
 			{
 				auto subClient = new Protocol::SubscribeClient(clientID, subscribeTopic.QoS);
 				auto parentWildcard = subscribeTopic.HaveChild ? Protocol::NoWildcard : subscribeTopic.Wildcard;
+				Protocol::BTree* matchingTree = nullptr;
 
-				Protocol::BTree* matchingTree = GetParentBTree(subscribeTopic.Paths[0], parentWildcard);
+				if (subscribeTopic.Paths.size() == 0)
+					m_Subscriptions.push_back(Protocol::BTree::NewBTree(subClient, {}, subscribeTopic.Wildcard));
+				else
+					matchingTree = GetParentBTree(subscribeTopic.Paths[0], parentWildcard);
+
 				Protocol::BTree* parentTree = nullptr;
 
 				for (int i = 0; i < subscribeTopic.Paths.size(); i++)
@@ -56,15 +63,10 @@ namespace MQTT {
 
 		bool SubscribeManager::ValidPackage(const SubscribePackage& subscribePackage)
 		{
-			/*return !(RuleEngine({
-					{ new ClientConnectedRule(packageClientId, clientStates), false },
-					{ new CorrectProtocolNameRule(protocolName), true },
-					{ new ConnectReservedFlagSetRule(package.VariableHeader.VariableLevel), false },
-					{ new IsCredentialFlagIncorrectRule(package.VariableHeader.VariableLevel), false },
-					{ new ConnectWillRule(currentClient, package.VariableHeader.VariableLevel, package.Payload.WillMessage), true }
-				}).Run());*/
-
-			return false;
+			return !(RuleEngine({
+				{ new SubscribeWildcardRule({ Dollar, Plus }, subscribePackage.SubscribePayload.Topics), false },
+				{ new SubscribeTopicLength(subscribePackage.SubscribePayload.Topics), false }
+				}).Run());
 		}
 
 		BTree* SubscribeManager::GetParentBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
@@ -100,12 +102,13 @@ namespace MQTT {
 			Protocol::SubscribeAcknowledgementPackage ackPackage = Protocol::SubscribeAcknowledgementPackage();
 			ackPackage.Header.PackageType = Protocol::ControlPackageType::SubAck;
 			ackPackage.VariableHeader.PacketIdentifier = subPackage.SubscribeVariableHeader.PacketIdentifier;
-
-
-			for (int i = 0; i < subPackage.SubscribePayload.Topics.size(); i++)
+									
+			for (auto topic : subPackage.SubscribePayload.Topics)
 			{
-				auto q = (SubscribeAcknowledgementQoS)subPackage.SubscribePayload.Topics.at(i).QoS;
-				ackPackage.Payload.payload.push_back(q);
+				if (topic.QoS < 0 || topic.QoS > 2)
+					ackPackage.Payload.payload.push_back(SubscribeAcknowledgementQoS::Failure);
+				else
+					ackPackage.Payload.payload.push_back((SubscribeAcknowledgementQoS)topic.QoS);
 			}
 
 			return converter.ToBuffer(ackPackage);
@@ -132,9 +135,15 @@ namespace MQTT {
 			if (currentPath.size() != 0)
 				paths.push_back(currentPath);
 
+			std::vector<SubscribeClient> subscribers;
+
+			// The almighty seer of all
+			auto theSpamLover = GetParentBTree({}, Hashtag);
+
+			if (theSpamLover != nullptr)
+				AddSubscribers(subscribers, theSpamLover->GetSubClients());
 
 			auto parent = GetParentBTree(paths[0], Protocol::Hashtag);
-			std::vector<SubscribeClient> subscribers;
 
 			if (parent != nullptr)
 				AddSubscribers(subscribers, parent->GetSubClients());

@@ -4,8 +4,8 @@ namespace MQTT {
 		enum SubscribeTopicWildcardType : unsigned char {
 			NoWildcard = 0,
 			Hashtag = 35,
-			Dollar,
-			Plus
+			Dollar = 36,
+			Plus = 43
 		};
 	}
 }

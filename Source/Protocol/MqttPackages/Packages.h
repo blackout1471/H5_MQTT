@@ -5,3 +5,4 @@
 #include "SubscribeSavedTopic.h"
 #include "SubscribeClient.h"
 #include "DisconnectPackage.h"
+#include "SubscribeAcknowledgementPackage.h"

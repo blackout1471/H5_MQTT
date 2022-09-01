@@ -118,8 +118,10 @@ namespace MQTT {
 		{
 			bool validPackage = m_SubscribeManager.ValidPackage(package);
 
-			if (!validPackage)
+			if (!validPackage) {
 				DisconnectClientState(client);
+				return;
+			}
 
 			m_SubscribeManager.AddToSubscriptions(client.GetIdentifier(), package);
 
