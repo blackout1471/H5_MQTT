@@ -18,13 +18,15 @@ project "UnitTest"
 
 	IncludeDir = {}
 	IncludeDir["gtest"] = "../vendor/googletest/googletest/include/"
+	IncludeDir["gmock"] = "../vendor/googletest/googlemock/include/"
 	IncludeDir["Source"] = "../Source/"
 
 	includedirs
 	{
 		projLoc,
 		"%{IncludeDir.gtest}",
-		"%{IncludeDir.Source}"
+		"%{IncludeDir.Source}",
+		"%{IncludeDir.gmock}"
 	}
 
 	links
@@ -39,7 +41,8 @@ project "UnitTest"
 	filter "system:linux"
 		links
 		{
-			"pthread"
+			"pthread",
+			"uuid"
 		}
 		
 	filter "configurations:Debug"

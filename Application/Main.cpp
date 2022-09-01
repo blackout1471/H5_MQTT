@@ -9,8 +9,8 @@ using namespace MQTT::Server;
 
 int main() {
 	try {
-
-		MqttService mqttService = MqttService(new SocketServer(1883));
+		auto socketServer = SocketServer(1883);
+		MqttService mqttService = MqttService(&socketServer);
 		mqttService.Start();
 	}
 	catch (const std::exception& e) {

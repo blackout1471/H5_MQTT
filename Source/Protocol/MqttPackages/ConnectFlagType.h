@@ -15,5 +15,20 @@ namespace MQTT
 			Clean_Session = 2,
 			Reserved = 1
 		};
+
+		inline static ConnectFlagType operator|(ConnectFlagType a, ConnectFlagType b)
+		{
+			return static_cast<ConnectFlagType>(static_cast<int>(a) | static_cast<int>(b));
+		}
+
+		inline static ConnectFlagType& operator|=(ConnectFlagType& a, ConnectFlagType b)
+		{
+			return a = a | b;
+		}
+
+		inline static ConnectFlagType operator&(ConnectFlagType a, ConnectFlagType b)
+		{
+			return static_cast<ConnectFlagType>(static_cast<int>(a) & static_cast<int>(b));
+		}
 	}
 }
