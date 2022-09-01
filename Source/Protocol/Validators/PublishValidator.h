@@ -10,14 +10,19 @@ namespace MQTT {
 			{
 			public:
 				enum Action {
-					Reject,
-					Acknowledge
+					RejectPublish,
+					AcknowledgePublish,
+					DisconnectClient
 				};
 			public:
 				PublishValidator();
 				~PublishValidator();
 
-				Action ValidatePackage(const PublishPackage& package, const Server::MqttClient& client);
+				/*
+				* Validates the given package for the specific rules in 3.1.1.
+				* Returns: The action which should be done.
+				*/
+				Action ValidatePackage(PublishPackage& package, const Server::MqttClient& client);
 			};
 		}
 	}

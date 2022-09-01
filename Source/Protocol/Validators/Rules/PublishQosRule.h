@@ -18,7 +18,7 @@ namespace MQTT {
 				virtual bool Validate() override {
 					if ((m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb + m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb) == 0)
 					{
-						m_Package.HeaderFlag & ~PublishHeaderFlag::Dup;
+						m_Package.HeaderFlag = m_Package.HeaderFlag & ~PublishHeaderFlag::Dup;
 						return false;
 					}
 
