@@ -36,8 +36,8 @@ namespace MQTT {
 				static const std::vector<unsigned char> FromIdentifier(int identifier) 
 				{
 					return std::vector<unsigned char> {
-						unsigned char((identifier >> 8) & 0xff),
-						unsigned char(identifier & 0xff)
+						static_cast<unsigned char>((identifier >> 8) & 0xff),
+						static_cast<unsigned char>(identifier & 0xff)
 					};
 				}
 
