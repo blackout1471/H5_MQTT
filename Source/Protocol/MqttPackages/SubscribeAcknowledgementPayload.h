@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "SubscribeAcknowledgementPayloadReturnTypes.h"
+#include "SubscribeAcknowledgementPayloadQoS.h"
 namespace MQTT {
 	namespace Protocol {
 		struct SubscribeAcknowledgementPayload {

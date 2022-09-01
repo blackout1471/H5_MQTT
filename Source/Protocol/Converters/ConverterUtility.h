@@ -33,7 +33,7 @@ namespace MQTT {
 				* Converts a int to 2 bytes splitting the value at the 8th bit.
 				* Returns a vector with 2 values data[0]MSB and data[1]LSB
 				*/
-				static const std::vector<unsigned char> FromIdentifier(int identifier) 
+				static const std::vector<unsigned char> IntToBytes(int identifier) 
 				{
 					return std::vector<unsigned char> {
 						static_cast<unsigned char>((identifier >> 8) & 0xff),
