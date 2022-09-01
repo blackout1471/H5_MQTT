@@ -12,12 +12,12 @@ namespace MQTT {
 			PubRel,
 			PubComp,
 			Subscribe,
-			SubAck,
+			SubAck = 9,
 			Unsubscribe,
 			UnsubAck,
 			PingReq,
 			PingResp,
-			Disconnect = 0
+			Disconnect = 14
 		};
 	}
 }

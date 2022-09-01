@@ -8,7 +8,8 @@ namespace MQTT {
 		namespace Validators {
 			class ConnectWillRule : public IRule {
 			public:
-				ConnectWillRule(Server::MqttClient* client, const ConnectFlagType& flag) : m_Client(client), m_Flag(flag) {};
+				ConnectWillRule(Server::MqttClient* client, const ConnectFlagType& flag, const std::string& willMessage) 
+					: m_Client(client), m_Flag(flag), m_WillMessage(willMessage) {};
 				virtual ~ConnectWillRule() {};
 
 				/*
@@ -20,13 +21,16 @@ namespace MQTT {
 				virtual bool Validate() override{
 					if (m_Flag & ConnectFlagType::Will_Flag)
 					{
-						// Todo :: store will messages in client.
-
 						if (m_Flag & ConnectFlagType::Will_QoS_LSB && m_Flag & ConnectFlagType::Will_QoS_MSB)
 							return false;
+
+						m_Client->WillMessage = m_WillMessage;
+						return true;
 					}
 
-					// Todo :: Set client will qos & will retain to 0
+					m_Client->ConnectionFlags = (ConnectFlagType)(m_Client->ConnectionFlags & (~ConnectFlagType::Will_Remain));
+					m_Client->ConnectionFlags = (ConnectFlagType)(m_Client->ConnectionFlags & (~ConnectFlagType::Will_QoS_LSB));
+					m_Client->ConnectionFlags = (ConnectFlagType)(m_Client->ConnectionFlags & (~ConnectFlagType::Will_QoS_MSB));
 
 					return true;
 				}
@@ -34,6 +38,7 @@ namespace MQTT {
 			private:
 				Server::MqttClient* m_Client;
 				const ConnectFlagType& m_Flag;
+				const std::string& m_WillMessage;
 			};
 
 		}

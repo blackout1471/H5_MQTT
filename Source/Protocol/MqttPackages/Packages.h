@@ -4,3 +4,4 @@
 #include "SubscribePackage.h"
 #include "SubscribeSavedTopic.h"
 #include "SubscribeClient.h"
+#include "DisconnectPackage.h"

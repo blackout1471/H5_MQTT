@@ -5,24 +5,6 @@
 namespace MQTT {
 	namespace Protocol {
 
-		bool MqttManager::ValidMessage(std::vector<unsigned char> _message) {
-			
-			// Message is whack
-			if (_message.size() == 0)
-				return false;
-
-			if (_message[0] == MQTT::Protocol::Connect) {
-
-				// convert package here here
-
-				// protocol validator / rule engine here
-
-				return true;
-			}
-
-			return true;
-		}
-
 		std::vector<unsigned char> MqttManager::GenerateConnectAckMessage(Protocol::ConnectAckReturnCodeType _returnCode)
 		{
 			Protocol::ControlHeader controlHeader;

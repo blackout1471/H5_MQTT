@@ -2,7 +2,10 @@
 
 #include "mqttpch.h"
 #include "MqttService.h"
+#include "ClientUtility.h"
 #include "Protocol/Converters/ConverterUtility.h"
+#include "Protocol/Converters/ConnectConverter.h"
+#include "Protocol/Converters/DisconnectConverter.h"
 
 // Todo :: Remove after testing
 #include "Protocol/Validators/RuleEngine.h"
@@ -23,8 +26,6 @@ namespace MQTT {
 			for (auto clientStates : m_ClientStates)
 				delete clientStates;
 
-			m_SubscribeManager.DeleteTrees();
-
 			delete m_Server;
 		}
 
@@ -37,12 +38,11 @@ namespace MQTT {
 		{
 			auto type = Protocol::Converters::ConverterUtility::GetPackageType(buffer[0]);
 
-			// TODO :: do validation
 			switch (type)
 			{
 			case MQTT::Protocol::Connect:
 				OnClientConnect(
-					client,
+					client, 
 					Protocol::Converters::ConnectConverter().ToPackage(buffer)
 				);
 				break;
@@ -59,10 +59,6 @@ namespace MQTT {
 			case MQTT::Protocol::PubComp:
 				break;
 			case MQTT::Protocol::Subscribe:
-				OnClientSubscribed(
-					client,
-					Protocol::Converters::SubscribeConverter().ToPackage(buffer)
-				);
 				break;
 			case MQTT::Protocol::SubAck:
 				break;
@@ -75,6 +71,10 @@ namespace MQTT {
 			case MQTT::Protocol::PingResp:
 				break;
 			case MQTT::Protocol::Disconnect:
+				OnClientDisconnect(
+					client, 
+					Protocol::Converters::DisconnectConverter().ToPackage(buffer)
+				);
 				break;
 			default:
 				for (int i = 0; i < buffer.size(); i++)
@@ -84,21 +84,33 @@ namespace MQTT {
 			}
 		}
 
+		void MqttService::DisconnectClientState(const Client& client)
+		{
+			for (auto& arr_client : m_ClientStates)
+			{
+				if (arr_client->ConnectionIdentifier == client.GetIdentifier())
+					arr_client->IsConnected = false;
+			}
+			m_Server->Disconnect(client);
+		}
+
 
 		void MqttService::OnClientConnect(const Client& client, const Protocol::ConnectPackage& package)
 		{
-			auto& packageClientId = package.ConnectPayload.ClientId;
-			auto& protocolName = package.ConnectVariableHeader.ProtocolName;
+			auto& packageClientId = package.Payload.ClientId;
+			auto& protocolName = package.VariableHeader.ProtocolName;
 			auto* clientState = new MqttClient();
+			
+			clientState->ConnectionFlags = package.VariableHeader.VariableLevel;
 
 			auto shouldDisconnectClient = !(RuleEngine({
 				{new ClientConnectedRule(packageClientId, m_ClientStates), false},
 				{new CorrectProtocolNameRule(protocolName), true},
-				{new Protocol311Rule(package.ConnectVariableHeader.Level), true},
-				{new ConnectReservedFlagSetRule(package.ConnectVariableHeader.VariableLevel), false},
-				{new IsCredentialFlagIncorrectRule(package.ConnectVariableHeader.VariableLevel), false},
-				{new ConnectWillRule(clientState, package.ConnectVariableHeader.VariableLevel), true}
-				}).Run());
+				{new Protocol311Rule(package.VariableHeader.Level), true},
+				{new ConnectReservedFlagSetRule(package.VariableHeader.VariableLevel), false},
+				{new IsCredentialFlagIncorrectRule(package.VariableHeader.VariableLevel), false},
+				{new ConnectWillRule(clientState, package.VariableHeader.VariableLevel, package.Payload.WillMessage), true}
+			}).Run());
 
 			if (shouldDisconnectClient)
 			{
@@ -106,46 +118,38 @@ namespace MQTT {
 				return;
 			}
 
+			std::vector<unsigned char> message;
 			auto shouldContinueSession = (RuleEngine({
-				{new ContinueSessionRule(package.ConnectVariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
-				}).Run());
+				{new ContinueSessionRule(package.VariableHeader.VariableLevel, packageClientId, m_ClientStates), true}
+			}).Run());
 
-			// Todo :: Move 
 			if (shouldContinueSession)
 			{
 				delete clientState;
-
 				clientState = GetClientState(packageClientId);
-				if (!clientState)
-				{
-					m_Server->Disconnect(client);
-					return;
-				}
 
-				if (packageClientId.size() == 0)
-				{
-					auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
-					m_Server->Send(client, ackMessage);
+				auto canContinueSession = (RuleEngine({ 
+					{new GenerateSessionMessageRule(packageClientId, clientState, message), true }
+				}).Run());
+
+				m_Server->Send(client, message);
+
+				// TODO :: Use member function to disconnect
+				if (!canContinueSession)
 					m_Server->Disconnect(client);
-				}
-				else
-				{
-					auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
-					m_Server->Send(client, ackMessage);
-				}
 
 				return;
 			}
 
-
 			if (packageClientId == "")
-				clientState->ClientId = GenerateUniqueId();
+				clientState->ClientId = ClientUtility::GenerateUniqueId();
 			else
 				clientState->ClientId = packageClientId;
 
+			clientState->ConnectionIdentifier = client.GetIdentifier();
 
 			m_ClientStates.push_back(clientState);
-
+			
 			clientState->IsConnected = true;
 
 			auto ackMessage = m_Manager.GenerateConnectAckMessage(Protocol::Accepted);
@@ -161,59 +165,12 @@ namespace MQTT {
 			return nullptr;
 		}
 
-		std::string MqttService::GenerateUniqueId()
+
+		void MqttService::OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package)
 		{
-			// TODO: Create unique id
-			return "1";
+			//TODO: Remove will message when storage of it is implemented.
+			DisconnectClientState(client);
 		}
-
-		void MqttService::OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package)
-		{
-			for (auto subscribeTopic : package.SubscribePayload.Topics)
-			{
-				auto subClient = new Protocol::SubscribeClient(client.GetIdentifier(), subscribeTopic.QoS);
-				auto parentWildcard = subscribeTopic.HaveChild ? Protocol::NoWildcard : subscribeTopic.Wildcard;
-
-				Protocol::BTree* matchingTree = m_SubscribeManager.GetParentBTree(subscribeTopic.Paths[0], parentWildcard);
-				Protocol::BTree* parentTree = nullptr;
-
-				for (int i = 0; i < subscribeTopic.Paths.size(); i++)
-				{
-					// Check if there is any full match of the current topic
-					if (parentTree != nullptr)
-						matchingTree = parentTree->GetFullMatch(subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
-
-					if (matchingTree != nullptr) {
-						parentTree = matchingTree;
-						continue;
-					}
-
-					if (parentTree == nullptr)
-					{
-						// its the last topic, set the client 
-						if ((i + 1) >= subscribeTopic.Paths.size())
-							parentTree = Protocol::BTree::NewBTree(subClient, subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
-
-						else
-							parentTree = Protocol::BTree::NewBTree(subscribeTopic.Paths.at(i), Protocol::NoWildcard);
-
-						m_SubscribeManager.AddParentTree(parentTree);
-					}
-					else
-					{
-						// its the last topic
-						if ((i + 1) >= subscribeTopic.Paths.size())
-							parentTree = Protocol::BTree::NewBTree(parentTree, subClient, subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
-						else
-							parentTree = Protocol::BTree::NewBTree(parentTree, subscribeTopic.Paths.at(i));
-					}
-				}
-			}
-			printf("a");
-
-			// send sub ack message here?
-		}
-
 		void MqttService::InitialiseServer()
 		{
 			m_Server->OnReceivedData = std::bind(&MqttService::OnReceivedData, this, std::placeholders::_1, std::placeholders::_2);

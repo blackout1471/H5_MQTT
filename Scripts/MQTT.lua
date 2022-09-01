@@ -3,7 +3,7 @@ solLoc = "../"
 workspace "H5MQTT"
 	location(solLoc)
 	
-	startproject "MQTT"
+	startproject "MQTTApplication"
 
 	configurations
 	{
@@ -20,10 +20,10 @@ workspace "H5MQTT"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
 group "Test"
+	include "gtest.lua"
 	include "MQTT_UnitTest.lua"
 group ""
 
 include "MQTT_Project.lua"
 
-
-
+include "MQTT_Application.lua"

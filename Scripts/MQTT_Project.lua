@@ -2,9 +2,9 @@ projLoc = "../"
 
 project "MQTT"
 	location(projLoc)
-	kind "ConsoleApp"
+	kind "StaticLib"
 	language "C++"
-	cppdialect "C++20"
+	cppdialect "C++17"
 	staticruntime "on"
 
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
@@ -23,7 +23,6 @@ project "MQTT"
 	{
 		projLoc .. "Source"
 	}
-	
 
 	filter "system:windows"
 		excludes
@@ -37,6 +36,11 @@ project "MQTT"
 		excludes
 		{
 			projLoc .. "Source/**_Win32.cpp"
+		}
+		links
+		{
+			"pthread",
+			"uuid"
 		}
 		
 	filter "configurations:Debug"
