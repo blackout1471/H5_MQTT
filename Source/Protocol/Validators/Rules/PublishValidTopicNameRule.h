@@ -5,28 +5,22 @@
 namespace MQTT {
 	namespace Protocol {
 		namespace Validators {
-			class PublishStoreNonQoSMessagesRule : public IRule
+			class PublishValidTopicNameRule : public IRule
 			{
 			public:
-				PublishStoreNonQoSMessagesRule(const PublishPackage& package) : m_Package(package) {};
-				~PublishStoreNonQoSMessagesRule() {};
+				PublishValidTopicNameRule(const PublishPackage& package) : m_Package(package) {};
+				~PublishValidTopicNameRule() {};
 
 				/*
-				* Checks whether topic name in publish package is valid.
-				* Return: True if it is, false if not.
+				* Checks whether the topic name has a wildcard or not
+				* Returns: True if it doesn't have wildcard, false otherwise
 				*/
 				virtual bool Validate() override {
 
-					if (m_Package.HeaderFlag & PublishHeaderFlag::Retain &&
-						(m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb) + (m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb) == 0)
-					{
-						// Todo:: Discard last retain messages
-						// Todo:: Store package message as new.
-
+					if (m_Package.VariableHeader.TopicName.find("#") == std::string::npos)
 						return true;
-					}
-
-					return false;
+					else
+						return false;
 				}
 
 			private:
