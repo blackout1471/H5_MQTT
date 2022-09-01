@@ -3,7 +3,7 @@
 #include "Protocol/Converters/ConnectConverter.h"
 #include "IServer.h"
 #include "MqttClient.h"
-#include "Protocol/MqttPackages/Packages.h"
+
 namespace MQTT {
 	namespace Server {
 		class MqttService {
@@ -12,6 +12,7 @@ namespace MQTT {
 			MqttService(IServer* server);
 			~MqttService();
 
+			// Starts the server and begin goes in a loop to listen for incoming clients.
 			void Start();
 
 		private:
@@ -21,7 +22,7 @@ namespace MQTT {
 			void DisconnectClientState(const Client& client);
 
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
-			void OnClientDisconnect(const Client& client, const Protocol::DisconnectPackage& package);
+			void OnClientDisconnect(const Client& client);
 
 
 			MqttClient* GetClientState(const std::string& clientId);

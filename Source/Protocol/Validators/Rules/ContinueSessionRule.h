@@ -12,7 +12,7 @@ namespace MQTT {
 			class ContinueSessionRule : public IRule {
 			public:
 				ContinueSessionRule(const ConnectFlagType ConnectFlag, const std::string& clientId, const std::vector<Server::MqttClient*>& clients)
-				 : m_Flag(ConnectFlag), m_Clients(m_Clients), m_ClientId(clientId) {};
+				 : m_Flag(ConnectFlag), m_Clients(clients), m_ClientId(clientId) {};
 				virtual ~ContinueSessionRule() {};
 
 				/*
@@ -20,7 +20,7 @@ namespace MQTT {
 				* Returns: true if session should be continued false if not.
 				*/
 				virtual bool Validate() {
-					if (!m_Flag & ConnectFlagType::Clean_Session)
+					if (!(m_Flag & ConnectFlagType::Clean_Session))
 						for (auto* client : m_Clients)
 							if (client->ClientId == m_ClientId)
 								return true;

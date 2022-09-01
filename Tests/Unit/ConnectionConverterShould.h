@@ -129,7 +129,7 @@ static bool operator==(const ConnectPackage& p1, const ConnectPackage& p2)
 #pragma endregion
 
 
-TEST(ConnectionPackageConverterShould, ReturnTrue_WhenUsernameAndPasswordIsDefined)
+TEST(ConnectionPackageConverterShould, BeEqual_WhenUsernameAndPasswordIsDefined)
 {
 	// Arrange
 	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password));
@@ -144,7 +144,7 @@ TEST(ConnectionPackageConverterShould, ReturnTrue_WhenUsernameAndPasswordIsDefin
 	EXPECT_TRUE(expected == actual);
 }
 
-TEST(ConnectionPackageConverterShould, ReturnTrue_WhenClientIdIsNotGiven)
+TEST(ConnectionPackageConverterShould, BeEqual_WhenClientIdIsNotGiven)
 {
 	// Arrange
 	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password));
@@ -160,7 +160,7 @@ TEST(ConnectionPackageConverterShould, ReturnTrue_WhenClientIdIsNotGiven)
 	EXPECT_TRUE(expected == actual);
 }
 
-TEST(ConnectionPackageConverterShould, ReturnTrue_WhenWillFlagIsSet)
+TEST(ConnectionPackageConverterShould, BeEqual_WhenWillFlagIsSet)
 {
 	// Arrange
 	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password | ConnectFlagType::Will_Flag));
