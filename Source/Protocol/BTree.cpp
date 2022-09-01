@@ -12,10 +12,8 @@ namespace MQTT {
 
 			for (int i = 0; i < m_Children.size(); i++)
 			{
-				auto tree = m_Children[i]->GetFullMatch(topic, wildcard);
-
-				if (tree != nullptr)
-					return tree;
+				if(m_Children[i]->GetTopic() == topic && m_Children[i]->GetWildcard())
+					return m_Children[i];
 			}
 
 			return nullptr;

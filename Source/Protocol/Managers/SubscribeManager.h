@@ -6,7 +6,8 @@ namespace MQTT {
 		{
 			std::vector<BTree*> m_Subscriptions;
 		public:
-			BTree* GetBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
+			// Searches only in the parents
+			BTree* GetParentBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
 			void AddParentTree(BTree* bTree);
 			void DeleteTrees();
 		};

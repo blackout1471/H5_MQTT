@@ -5,7 +5,7 @@
 namespace MQTT {
 	namespace Protocol {
 
-		BTree* MQTT::Protocol::SubscribeManager::GetBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
+		/*BTree* MQTT::Protocol::SubscribeManager::GetBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
 		{
 			for (int i = 0; i < m_Subscriptions.size(); i++)
 			{
@@ -13,6 +13,18 @@ namespace MQTT {
 
 				if (tree != nullptr)
 					return tree;
+			}
+
+			return nullptr;
+		}*/
+
+		BTree* SubscribeManager::GetParentBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
+		{
+			for (int i = 0; i < m_Subscriptions.size(); i++)
+			{
+				if (m_Subscriptions[i]->GetTopic() == topic && m_Subscriptions[i]->GetWildcard() == wildcard) {
+					return m_Subscriptions[i];
+				}
 			}
 
 			return nullptr;

@@ -10,20 +10,33 @@ namespace MQTT {
 			std::vector<BTree*> m_Children;
 			BTree* m_Parent = nullptr;
 			std::vector<unsigned char> m_Topic;
-			std::vector<std::string> m_ClientsIDs;
+			std::vector<SubscribeClient*> m_SubClients;
+			std::vector<SubscribeSavedTopic> m_SubSavedTopics;
+			
+
 			SubscribeTopicWildcardType m_Wildcard = SubscribeTopicWildcardType::NoWildcard;
 
 		public:
-
-			~BTree() {
-				for (int i = 0; i < m_Children.size(); i++)
-				{
-					delete m_Children[i];
-				}
+			
+			BTree() {
+				m_SubClients =  std::vector<SubscribeClient*>();
 			}
 
-			void AddClient(std::string clientID) {
-				m_ClientsIDs.push_back(clientID);
+			~BTree() {
+
+				for (int i = 0; i < m_Children.size(); i++)
+					delete m_Children[i];
+				
+				for (auto& sub : m_SubClients)
+					delete sub;
+			}
+
+			void AddClient(SubscribeClient* subClient) {
+				m_SubClients.push_back(subClient);
+			}
+
+			std::vector<unsigned char> GetTopic() {
+				return m_Topic;
 			}
 
 			SubscribeTopicWildcardType GetWildcard() {
@@ -34,9 +47,9 @@ namespace MQTT {
 			BTree* GetTopicMatch(std::vector<unsigned char> topic);
 
 
-			static BTree* NewBTree(std::string clientID, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard) {
+			static BTree* NewBTree(SubscribeClient* subClient, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard) {
 				BTree* btree = new BTree();
-				btree->m_ClientsIDs.push_back(clientID);
+				btree->m_SubClients.push_back(subClient);
 				btree->m_Topic = topic;
 				btree->m_Wildcard = wildcard;
 				return btree;
@@ -51,10 +64,10 @@ namespace MQTT {
 			}
 
 
-			static BTree* NewBTree(BTree* parent, std::string clientID, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard) {
+			static BTree* NewBTree(BTree* parent, SubscribeClient* subClient, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard) {
 				BTree* btree = new BTree();
 				btree->m_Parent = parent;
-				btree->m_ClientsIDs.push_back(clientID);
+				btree->m_SubClients.push_back(subClient);
 				btree->m_Topic = topic;
 				btree->m_Wildcard = wildcard;
 

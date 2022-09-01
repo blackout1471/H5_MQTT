@@ -171,22 +171,28 @@ namespace MQTT {
 		{
 			for (auto subscribeTopic : package.SubscribePayload.Topics)
 			{
-				Protocol::BTree* matchingTree = nullptr;
+				auto subClient = new Protocol::SubscribeClient(client.GetIdentifier(), subscribeTopic.QoS);
+				auto parentWildcard = subscribeTopic.HaveChild ? Protocol::NoWildcard : subscribeTopic.Wildcard;
+
+				Protocol::BTree* matchingTree = m_SubscribeManager.GetParentBTree(subscribeTopic.Paths[0], parentWildcard);
 				Protocol::BTree* parentTree = nullptr;
 
 				for (int i = 0; i < subscribeTopic.Paths.size(); i++)
 				{
 					// Check if there is any full match of the current topic
-					matchingTree = m_SubscribeManager.GetBTree(subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
+					if (parentTree != nullptr)
+						matchingTree = parentTree->GetFullMatch(subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
 
-					if (matchingTree != nullptr)
+					if (matchingTree != nullptr) {
 						parentTree = matchingTree;
+						continue;
+					}
 
 					if (parentTree == nullptr)
 					{
 						// its the last topic, set the client 
-						if ((i + 1) == subscribeTopic.Paths.size())
-							parentTree = Protocol::BTree::NewBTree(client.GetIdentifier(), subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
+						if ((i + 1) >= subscribeTopic.Paths.size())
+							parentTree = Protocol::BTree::NewBTree(subClient, subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
 
 						else
 							parentTree = Protocol::BTree::NewBTree(subscribeTopic.Paths.at(i), Protocol::NoWildcard);
@@ -196,13 +202,12 @@ namespace MQTT {
 					else
 					{
 						// its the last topic
-						if ((i + 1) == subscribeTopic.Paths.size())
-							parentTree = Protocol::BTree::NewBTree(parentTree, client.GetIdentifier(), subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
+						if ((i + 1) >= subscribeTopic.Paths.size())
+							parentTree = Protocol::BTree::NewBTree(parentTree, subClient, subscribeTopic.Paths.at(i), subscribeTopic.Wildcard);
 						else
 							parentTree = Protocol::BTree::NewBTree(parentTree, subscribeTopic.Paths.at(i));
 					}
 				}
-
 			}
 			printf("a");
 
