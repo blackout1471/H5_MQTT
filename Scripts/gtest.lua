@@ -13,12 +13,17 @@ project "gtest"
         "../vendor/googletest/googletest/**.h",
         "../vendor/googletest/googletest/**.hpp",
         "../vendor/googletest/googletest/src/gtest-all.cc",
+
+        "../vendor/googletest/googlemock/include/**.h",
+        "../vendor/googletest/googlemock/src/**.cc"
     }
 
     includedirs
     {
-	"../vendor/googletest/googletest/include",
-	"../vendor/googletest/googletest/"
+	    "../vendor/googletest/googletest/include",
+	    "../vendor/googletest/googletest/",
+	    "../vendor/googletest/googlemock/include/",
+	    "../vendor/googletest/googlemock/"
     }
 
     filter "system:linux"
