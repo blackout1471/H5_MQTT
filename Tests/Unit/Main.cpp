@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "BaseMathTest.h"
 #include "ConnectionConverterShould.h"
+#include "SubscribeAcknowledgementConverterShould.h"
 
 
 

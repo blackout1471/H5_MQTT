@@ -29,6 +29,18 @@ namespace MQTT {
 				{
 					return ControlPackageType((data >> 4) & 0xff);
 				}
+				/*
+				* Converts a int to 2 bytes splitting the value at the 8th bit.
+				* Returns a vector with 2 values data[0]MSB and data[1]LSB
+				*/
+				static const std::vector<unsigned char> FromIdentifier(int identifier) 
+				{
+					return std::vector<unsigned char> {
+						unsigned char((identifier >> 8) & 0xff),
+						unsigned char(identifier & 0xff)
+					};
+				}
+
 			};
 		}
 	}
