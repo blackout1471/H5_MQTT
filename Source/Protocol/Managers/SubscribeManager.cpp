@@ -8,7 +8,7 @@ namespace MQTT {
 
 		void SubscribeManager::AddToSubscriptions(std::string clientID, SubscribePackage subscribePackage)
 		{
-			for (auto subscribeTopic : subscribePackage.SubscribePayload.Topics)
+			for (auto subscribeTopic : subscribePackage.Payload.Topics)
 			{
 				auto subClient = new Protocol::SubscribeClient(clientID, subscribeTopic.QoS);
 				auto parentWildcard = subscribeTopic.HaveChild ? Protocol::NoWildcard : subscribeTopic.Wildcard;
@@ -64,8 +64,8 @@ namespace MQTT {
 		bool SubscribeManager::ValidPackage(const SubscribePackage& subscribePackage)
 		{
 			return !(RuleEngine({
-				{ new SubscribeWildcardRule({ Dollar, Plus }, subscribePackage.SubscribePayload.Topics), false },
-				{ new SubscribeTopicLength(subscribePackage.SubscribePayload.Topics), false }
+				{ new SubscribeWildcardRule({ Dollar, Plus }, subscribePackage.Payload.Topics), false },
+				{ new SubscribeTopicLength(subscribePackage.Payload.Topics), false }
 				}).Run());
 		}
 
@@ -101,9 +101,9 @@ namespace MQTT {
 
 			Protocol::SubscribeAcknowledgementPackage ackPackage = Protocol::SubscribeAcknowledgementPackage();
 			ackPackage.Header.PackageType = Protocol::ControlPackageType::SubAck;
-			ackPackage.VariableHeader.PacketIdentifier = subPackage.SubscribeVariableHeader.PacketIdentifier;
+			ackPackage.VariableHeader.PacketIdentifier = subPackage.VariableHeader.PacketIdentifier;
 									
-			for (auto topic : subPackage.SubscribePayload.Topics)
+			for (auto topic : subPackage.Payload.Topics)
 			{
 				if (topic.QoS < 0 || topic.QoS > 2)
 					ackPackage.Payload.payload.push_back(SubscribeAcknowledgementQoS::Failure);

@@ -62,9 +62,9 @@ namespace MQTT {
 				} while ((packageSize - offset) > 0);
 
 				SubscribePackage subPackage;
-				subPackage.ControlHeader = ch;
-				subPackage.SubscribePayload = sp;
-				subPackage.SubscribeVariableHeader = vh;
+				subPackage.Header = ch;
+				subPackage.Payload = sp;
+				subPackage.VariableHeader = vh;
 
 				return subPackage;
 			}

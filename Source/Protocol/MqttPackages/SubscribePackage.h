@@ -6,9 +6,9 @@ namespace MQTT {
 	namespace Protocol {
 		struct SubscribePackage {
 		public:
-			ControlHeader ControlHeader;
-			SubscribeVariableHeader SubscribeVariableHeader;
-			SubscribePayload SubscribePayload;
+			ControlHeader Header;
+			SubscribeVariableHeader VariableHeader;
+			SubscribePayload Payload;
 		};
 	}
 }
