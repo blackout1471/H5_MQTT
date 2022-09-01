@@ -1,22 +1,8 @@
 #include "mqttpch.h"
 #include "SubscribeManager.h"
-#include "Protocol/Converters/SubscribeAcknowledgementConverter.h"
 
 namespace MQTT {
 	namespace Protocol {
-
-		/*BTree* MQTT::Protocol::SubscribeManager::GetBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
-		{
-			for (int i = 0; i < m_Subscriptions.size(); i++)
-			{
-				auto tree = m_Subscriptions[i]->GetFullMatch(topic, wildcard);
-
-				if (tree != nullptr)
-					return tree;
-			}
-
-			return nullptr;
-		}*/
 
 		void SubscribeManager::AddToSubscriptions(std::string clientID, SubscribePackage subscribePackage)
 		{
@@ -62,10 +48,23 @@ namespace MQTT {
 			}
 		}
 
-	
+		void SubscribeManager::AddSubscribers(std::vector<SubscribeClient>& to, std::vector<SubscribeClient*>& from)
+		{
+			for (auto f : from)
+				to.push_back(*f);
+		}
 
+		BTree* SubscribeManager::GetParentBTree(std::vector<unsigned char> topic)
+		{
+			for (int i = 0; i < m_Subscriptions.size(); i++)
+			{
+				if (m_Subscriptions[i]->GetTopic() == topic) {
+					return m_Subscriptions[i];
+				}
+			}
 
-
+			return nullptr;
+		}
 
 		BTree* SubscribeManager::GetParentBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
 		{
@@ -111,6 +110,52 @@ namespace MQTT {
 			return converter.ToBuffer(ackPackage);
 		}
 
+		std::vector<SubscribeClient> SubscribeManager::GetSubscribedClients(std::vector<unsigned char> topic)
+		{
+			std::vector<unsigned char> currentPath;
+			std::vector <std::vector<unsigned char>> paths;
 
+			for (int i = 0; i < topic.size(); i++)
+			{
+				if (topic[i] == '/')
+				{
+					paths.push_back(currentPath);
+					currentPath.clear();
+				}
+				else
+				{
+					currentPath.push_back(topic[i]);
+				}
+			}
+
+			if (currentPath.size() != 0)
+				paths.push_back(currentPath);
+
+
+			auto parent = GetParentBTree(paths[0], Protocol::Hashtag);
+			std::vector<SubscribeClient> subscribers;
+
+			if (parent != nullptr)
+				AddSubscribers(subscribers, parent->GetSubClients());
+
+			parent = GetParentBTree(paths[0], Protocol::NoWildcard);
+
+			if (parent == nullptr)
+				return subscribers;
+
+			for (int i = 1; i < paths.size(); i++)
+			{
+				if (parent->GetWildcard() == Protocol::Hashtag)
+					AddSubscribers(subscribers, parent->GetSubClients());
+
+				parent = parent->GetTopicMatch(paths[i]);
+			}
+
+			if (parent != nullptr)
+				if (parent->GetTopic() == paths.at(paths.size() - 1))
+					AddSubscribers(subscribers, parent->GetSubClients());
+
+			return subscribers;
+		}
 	}
 }

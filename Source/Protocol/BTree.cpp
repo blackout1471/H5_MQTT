@@ -12,7 +12,7 @@ namespace MQTT {
 
 			for (int i = 0; i < m_Children.size(); i++)
 			{
-				if(m_Children[i]->GetTopic() == topic && m_Children[i]->GetWildcard())
+				if(m_Children[i]->GetTopic() == topic && m_Children[i]->GetWildcard() == wildcard)
 					return m_Children[i];
 			}
 
@@ -25,10 +25,8 @@ namespace MQTT {
 
 			for (int i = 0; i < m_Children.size(); i++)
 			{
-				auto tree = m_Children[i]->GetTopicMatch(topic);
-
-				if (tree != nullptr)
-					return tree;
+				if (m_Children[i]->GetTopic() == topic)
+					return m_Children[i];
 			}
 
 			return nullptr;

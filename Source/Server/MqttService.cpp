@@ -51,6 +51,10 @@ namespace MQTT {
 			case MQTT::Protocol::PubComp:
 				break;
 			case MQTT::Protocol::Subscribe:
+				OnClientSubscribed(
+					client,
+					Protocol::Converters::SubscribeConverter().ToPackage(buffer)
+				);
 				break;
 			case MQTT::Protocol::SubAck:
 				break;
@@ -109,6 +113,14 @@ namespace MQTT {
 				clientState->IsConnected = true;
 				break;
 			}
+		}
+		void MqttService::OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package)
+		{
+			m_SubscribeManager.AddToSubscriptions(client.GetIdentifier(), package);
+
+			auto buffer = m_SubscribeManager.CreateSubAckBuffer(package);
+
+			m_Server->Send(client, buffer);
 		}
 
 		void MqttService::OnClientDisconnect(const Client& client)
