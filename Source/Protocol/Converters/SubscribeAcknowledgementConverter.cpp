@@ -11,7 +11,7 @@ namespace MQTT {
 			const std::vector<unsigned char> SubscribeAcknowledgementConverter::ToBuffer(const SubscribeAcknowledgementPackage& to)
 			{
 				std::vector<unsigned char> packageBuffer;
-				std::vector<unsigned char> variableHeader = ConverterUtility::FromIdentifier(to.VariableHeader.PacketIdentifier);
+				std::vector<unsigned char> variableHeader = ConverterUtility::IntToBytes(to.VariableHeader.PacketIdentifier);
 
 				packageBuffer.push_back(to.Header.PackageType << 4);
 				packageBuffer.push_back(variableHeader[0]);
