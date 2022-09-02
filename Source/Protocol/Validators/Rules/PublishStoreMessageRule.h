@@ -1,6 +1,7 @@
 #pragma once
 #include "IRule.h"
 #include "Protocol/MqttPackages/Packages.h"
+#include <Protocol/Managers/SubscribeManager.h>
 
 namespace MQTT {
 	namespace Protocol {
@@ -8,7 +9,7 @@ namespace MQTT {
 			class PublishStoreMessageRule : public IRule
 			{
 			public:
-				PublishStoreMessageRule(const PublishPackage& package) : m_Package(package) {};
+				PublishStoreMessageRule(const PublishPackage& package, SubscribeManager& manager) : m_Package(package), m_Manager(manager) {};
 				~PublishStoreMessageRule() {};
 
 				/*
@@ -28,6 +29,7 @@ namespace MQTT {
 
 			private:
 				const PublishPackage& m_Package;
+				SubscribeManager& m_Manager;
 			};
 		}
 	}
