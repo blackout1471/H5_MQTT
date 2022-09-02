@@ -17,7 +17,7 @@ namespace MQTT {
 				packageBuffer.push_back(variableHeader[0]);
 				packageBuffer.push_back(variableHeader[1]);
 
-				for (auto& returnType : to.Payload.payload)
+				for (auto& returnType : to.Payload.Payload)
 				{
 					packageBuffer.push_back(returnType);
 				}

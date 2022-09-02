@@ -8,9 +8,11 @@ namespace MQTT {
 			class SubscribeConverter : public IPackageConverter<SubscribePackage>
 			{
 			public:
-				// Inherited via IPackageConverter
 				virtual const SubscribePackage ToPackage(const std::vector<unsigned char>& buffer) override;
 				virtual const std::vector<unsigned char> ToBuffer(const SubscribePackage& to) override;
+
+			private:
+				const SubscribePayload ConvertPayload(const std::vector<unsigned char>& buffer, int packageSize, int offset);
 			};
 		}
 	}

@@ -9,10 +9,10 @@ static SubscribeAcknowledgementPackage Generate() {
 
 	package.Header.PackageType = ControlPackageType::SubAck;
 	package.VariableHeader.PacketIdentifier = 400;
-	package.Payload.payload.push_back(SubscribeAcknowledgementQoS::MaximumQoS0);
-	package.Payload.payload.push_back(SubscribeAcknowledgementQoS::MaximumQoS1);
-	package.Payload.payload.push_back(SubscribeAcknowledgementQoS::MaximumQoS2);
-	package.Payload.payload.push_back(SubscribeAcknowledgementQoS::Failure);
+	package.Payload.Payload.push_back(SubscribeAcknowledgementQoS::MaximumQoS0);
+	package.Payload.Payload.push_back(SubscribeAcknowledgementQoS::MaximumQoS1);
+	package.Payload.Payload.push_back(SubscribeAcknowledgementQoS::MaximumQoS2);
+	package.Payload.Payload.push_back(SubscribeAcknowledgementQoS::Failure);
 	return package;
 }
 

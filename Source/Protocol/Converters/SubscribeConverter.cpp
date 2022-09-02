@@ -15,11 +15,27 @@ namespace MQTT {
 				SubscribeVariableHeader vh;
 				vh.PacketIdentifier = ConverterUtility::ByteToInt(buffer[2], buffer[3]);
 
-				SubscribePayload sp;
-
 				// offset already read bytes
 				int offset = 4;
 
+				SubscribePayload sp = ConvertPayload(buffer, packageSize, offset);
+
+				SubscribePackage subPackage;
+				subPackage.Header = ch;
+				subPackage.Payload = sp;
+				subPackage.VariableHeader = vh;
+
+				return subPackage;
+			}
+
+			const std::vector<unsigned char> SubscribeConverter::ToBuffer(const SubscribePackage& to)
+			{
+				return std::vector<unsigned char>();
+			}
+
+			const SubscribePayload SubscribeConverter::ConvertPayload(const std::vector<unsigned char>& buffer, int packageSize, int offset)
+			{
+				SubscribePayload sp;
 				do
 				{
 					// Get size of the topic
@@ -61,17 +77,7 @@ namespace MQTT {
 					// check if all the topics have been read
 				} while ((packageSize - offset) > 0);
 
-				SubscribePackage subPackage;
-				subPackage.Header = ch;
-				subPackage.Payload = sp;
-				subPackage.VariableHeader = vh;
-
-				return subPackage;
-			}
-
-			const std::vector<unsigned char> SubscribeConverter::ToBuffer(const SubscribePackage& to)
-			{
-				return std::vector<unsigned char>();
+				return sp;
 			}
 
 		}

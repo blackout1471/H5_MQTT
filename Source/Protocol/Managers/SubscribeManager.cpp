@@ -4,7 +4,6 @@
 
 namespace MQTT {
 	namespace Protocol {
-		using namespace Protocol::Validators;
 
 		void SubscribeManager::AddToSubscriptions(std::string clientID, SubscribePackage subscribePackage)
 		{
@@ -63,9 +62,9 @@ namespace MQTT {
 
 		bool SubscribeManager::ValidPackage(const SubscribePackage& subscribePackage)
 		{
-			return !(RuleEngine({
-				{ new SubscribeWildcardRule({ Dollar, Plus }, subscribePackage.Payload.Topics), false },
-				{ new SubscribeTopicLength(subscribePackage.Payload.Topics), false }
+			return !(Validators::RuleEngine({
+				{ new Validators::SubscribeWildcardRule({ Dollar, Plus }, subscribePackage.Payload.Topics), false },
+				{ new Validators::SubscribeTopicLength(subscribePackage.Payload.Topics), false }
 				}).Run());
 		}
 
@@ -106,9 +105,9 @@ namespace MQTT {
 			for (auto topic : subPackage.Payload.Topics)
 			{
 				if (topic.QoS < 0 || topic.QoS > 2)
-					ackPackage.Payload.payload.push_back(SubscribeAcknowledgementQoS::Failure);
+					ackPackage.Payload.Payload.push_back(SubscribeAcknowledgementQoS::Failure);
 				else
-					ackPackage.Payload.payload.push_back((SubscribeAcknowledgementQoS)topic.QoS);
+					ackPackage.Payload.Payload.push_back((SubscribeAcknowledgementQoS)topic.QoS);
 			}
 
 			return converter.ToBuffer(ackPackage);
