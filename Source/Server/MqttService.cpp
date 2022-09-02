@@ -137,7 +137,6 @@ namespace MQTT {
 
 		void MqttService::OnClientDisconnect(const Client& client)
 		{
-			//TODO: Remove will message when storage of it is implemented.
 			DisconnectClientState(client);
 		}
 
@@ -165,12 +164,16 @@ namespace MQTT {
 			}
 		}
 
+		// If a client state with matching connection id exists, set is connected to false and remove will message.
 		void MqttService::DisconnectClientState(const Client& client)
 		{
 			for (auto& clientState : m_ClientStates)
 			{
 				if (clientState->ConnectionIdentifier == client.GetIdentifier())
+				{
 					clientState->IsConnected = false;
+					clientState->WillMessage = "";
+				}
 			}
 			m_Server->Disconnect(client);
 		}
