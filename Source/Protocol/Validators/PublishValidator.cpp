@@ -11,8 +11,11 @@ namespace MQTT {
 
 			PublishValidator::Action PublishValidator::ValidatePackage(PublishPackage& package, const Server::MqttClient& client, SubscribeManager& subscribeManager)
 			{
-				auto shouldDisconnect = !ValidateQoSBytesRule(package)
-					.Validate();
+
+				auto shouldDisconnect = !RuleEngine({
+					{new ValidateQoSBytesRule(package), true},
+					{new IsStringEmptyRule(package.VariableHeader.TopicName), false}
+					}).Run();
 				if (shouldDisconnect)
 					return DisconnectClient;
 
@@ -28,8 +31,7 @@ namespace MQTT {
 				}
 
 				auto shouldRejectPublish = RuleEngine({
-					{new PublishValidTopicNameRule(package), true},
-					{new IsStringEmptyRule(package.VariableHeader.TopicName), false}
+					{new PublishValidTopicNameRule(package), true}
 				}).Run();
 				if (!shouldRejectPublish)
 					return RejectPublish;

@@ -129,7 +129,7 @@ TEST(PublishValidatorShould, ReturnRejected_WhenTopicNameIsEmpty)
 {
 	// Arrange
 	PublishValidator::Action actual;
-	auto expected = PublishValidator::RejectPublish;
+	auto expected = PublishValidator::DisconnectClient;
 
 	auto converter = PublishValidator();
 	auto client = MqttClient();
