@@ -4,7 +4,7 @@
 namespace MQTT {
 	namespace Protocol {
 		struct SubscribeAcknowledgementPayload {
-			std::vector<SubscribeAcknowledgementQoS> payload;
+			std::vector<SubscribeAcknowledgementQoS> Payload;
 		};
 	}
 }

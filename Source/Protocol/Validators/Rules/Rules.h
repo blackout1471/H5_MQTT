@@ -10,3 +10,5 @@
 #include "ContinueSessionRule.h"
 #include "CanClientContinueSession.h"
 #include "ConnectClientIdentifierValidRule.h"
+#include "SubscribeWildcardRule.h"
+#include "SubscribeTopicLength.h"
