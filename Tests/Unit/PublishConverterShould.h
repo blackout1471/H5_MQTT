@@ -7,7 +7,7 @@ using namespace MQTT::Protocol;
 
 
 #pragma region Utility
-static PublishPackage Generate() {
+static PublishPackage pcGenerate() {
 	auto p = PublishPackage();
 
 	p.Header.PackageType = ControlPackageType::Publish;
@@ -36,7 +36,7 @@ static bool operator==(const PublishPackage& p1, const PublishPackage& p2) {
 TEST(PublishConverterShould, ReturnPackageWithNoIdentifier_WhenQoSIsZero)
 {
 	// Arrange
-	auto expected = Generate();
+	auto expected = pcGenerate();
 	PublishPackage actual;
 	auto converter = PublishConverter();
 	auto data = std::vector<unsigned char>{
@@ -56,7 +56,7 @@ TEST(PublishConverterShould, ReturnPackageWithNoIdentifier_WhenQoSIsZero)
 TEST(PublishConverterShould, ReturnPackageWithIdentifier_WhenQoSIsMsb)
 {
 	// Arrange
-	auto expected = Generate();
+	auto expected = pcGenerate();
 	expected.HeaderFlag = PublishHeaderFlag::QoSMsb;
 	expected.VariableHeader.PacketIdentifier = 400;
 	PublishPackage actual;
@@ -79,7 +79,7 @@ TEST(PublishConverterShould, ReturnPackageWithIdentifier_WhenQoSIsMsb)
 TEST(PublishConverterShould, ReturnPackageWithIdentifier_WhenQoSIsLsb)
 {
 	// Arrange
-	auto expected = Generate();
+	auto expected = pcGenerate();
 	expected.HeaderFlag = PublishHeaderFlag::QoSLsb;
 	expected.VariableHeader.PacketIdentifier = 400;
 	PublishPackage actual;

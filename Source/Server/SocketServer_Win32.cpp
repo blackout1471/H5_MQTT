@@ -173,11 +173,11 @@ namespace MQTT {
 
 		void SocketServer::ReadClientData(const Client& client, const SocketServer& server)
 		{
-			char sendBuff[64] = { 0 };
+			char sendBuff[1024] = { 0 };
 
 			while (1)
 			{
-				if (int amount = recv(client.GetConnection(), sendBuff, 64, 0))
+				if (int amount = recv(client.GetConnection(), sendBuff, 1024, 0))
 				{
 					if (amount < 0)
 					{

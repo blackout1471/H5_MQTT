@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "ConnectionConverterShould.h"
+#include "SubscribeAcknowledgementConverterShould.h"
 #include "ConnectionAcknowledgementConverterShould.h"
 #include "MqttServiceShould.h"
 #include "ConnectionValidationShould.h"

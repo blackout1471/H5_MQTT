@@ -16,3 +16,6 @@
 #include "PublishStoreMessageRule.h"
 #include "PublishStoreNonQoSMessagesRule.h"
 #include "IsStringEmptyRule.h"
+#include "ConnectClientIdentifierValidRule.h"
+#include "SubscribeWildcardRule.h"
+#include "SubscribeTopicLength.h"
