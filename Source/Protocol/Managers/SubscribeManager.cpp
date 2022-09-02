@@ -54,6 +54,31 @@ namespace MQTT {
 			}
 		}
 
+		std::vector<std::vector<unsigned char>> SubscribeManager::GetPathsFromPath(std::vector<unsigned char> path)
+		{
+			std::vector<unsigned char> currentPath;
+			std::vector <std::vector<unsigned char>> paths;
+
+			for (int i = 0; i < path.size(); i++)
+			{
+				if (path[i] == '/')
+				{
+					paths.push_back(currentPath);
+					currentPath.clear();
+				}
+				else
+				{
+					currentPath.push_back(path[i]);
+				}
+			}
+
+			if (currentPath.size() != 0)
+				paths.push_back(currentPath);
+
+
+			return paths;
+		}
+
 		void SubscribeManager::AddSubscribers(std::vector<SubscribeClient>& to, std::vector<SubscribeClient*>& from)
 		{
 			for (auto f : from)
@@ -66,6 +91,18 @@ namespace MQTT {
 				{ new Validators::SubscribeWildcardRule({ Dollar, Plus }, subscribePackage.Payload.Topics), false },
 				{ new Validators::SubscribeTopicLength(subscribePackage.Payload.Topics), false }
 				}).Run());
+		}
+
+		BTree* SubscribeManager::GetParentBTree(std::vector<unsigned char> topic)
+		{
+			for (int i = 0; i < m_Subscriptions.size(); i++)
+			{
+				if (m_Subscriptions[i]->GetTopic() == topic) {
+					return m_Subscriptions[i];
+				}
+			}
+
+			return nullptr;
 		}
 
 		BTree* SubscribeManager::GetParentBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
@@ -113,26 +150,9 @@ namespace MQTT {
 			return converter.ToBuffer(ackPackage);
 		}
 
-		std::vector<SubscribeClient> SubscribeManager::GetSubscribedClients(std::vector<unsigned char> topic)
+		std::vector<SubscribeClient> SubscribeManager::GetSubscribedClients(std::vector<unsigned char> path)
 		{
-			std::vector<unsigned char> currentPath;
-			std::vector <std::vector<unsigned char>> paths;
-
-			for (int i = 0; i < topic.size(); i++)
-			{
-				if (topic[i] == '/')
-				{
-					paths.push_back(currentPath);
-					currentPath.clear();
-				}
-				else
-				{
-					currentPath.push_back(topic[i]);
-				}
-			}
-
-			if (currentPath.size() != 0)
-				paths.push_back(currentPath);
+			std::vector <std::vector<unsigned char>> paths = GetPathsFromPath(path);
 
 			std::vector<SubscribeClient> subscribers;
 
@@ -165,6 +185,29 @@ namespace MQTT {
 					AddSubscribers(subscribers, parent->GetSubClients());
 
 			return subscribers;
+		}
+		BTree* SubscribeManager::GetMatchingBTree(std::vector<unsigned char> path)
+		{
+			auto paths = GetPathsFromPath(path);
+
+			auto parent = GetParentBTree(paths[0]);
+
+			if (parent == nullptr)
+				return nullptr;
+
+			for (int i = 1; i < paths.size(); i++)
+			{
+				if (parent == nullptr)
+					return nullptr;
+
+				parent = parent->GetTopicMatch(paths[i]);
+			}
+
+			if (parent != nullptr)
+				if (parent->GetTopic() == paths.at(paths.size() - 1))
+					return parent;
+
+			return nullptr;
 		}
 	}
 }

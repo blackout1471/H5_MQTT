@@ -3,14 +3,13 @@
 #include "Rules/Rules.h"
 #include <Protocol/Validators/RuleEngine.h>
 
-
 namespace MQTT {
 	namespace Protocol {
 		namespace Validators {
 			PublishValidator::PublishValidator() {};
 			PublishValidator::~PublishValidator() {};
 
-			PublishValidator::Action PublishValidator::ValidatePackage(PublishPackage& package, const Server::MqttClient& client)
+			PublishValidator::Action PublishValidator::ValidatePackage(PublishPackage& package, const Server::MqttClient& client, SubscribeManager& subscribeManager)
 			{
 				auto shouldDisconnect = !ValidateQoSBytesRule(package)
 					.Validate();
@@ -19,8 +18,8 @@ namespace MQTT {
 
 				auto ruleHandler = std::vector<IRule*>{
 					new PublishQosRule(package),
-					new PublishStoreMessageRule(package),
-					new PublishStoreNonQoSMessagesRule(package)
+					new PublishStoreMessageRule(package, subscribeManager),
+					new PublishStoreNonQoSMessagesRule(package, subscribeManager)
 				};
 				for (auto* rule : ruleHandler)
 				{

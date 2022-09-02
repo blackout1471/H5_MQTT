@@ -147,7 +147,7 @@ namespace MQTT {
 			auto mqttClientState = GetClientStateFromIdentifier(client.GetIdentifier());
 
 			auto action = Protocol::Validators::PublishValidator()
-				.ValidatePackage(copyPackage, *mqttClientState);
+				.ValidatePackage(copyPackage, *mqttClientState, m_SubscribeManager);
 
 			switch (action)
 			{

@@ -8,7 +8,7 @@ namespace MQTT {
 			class PublishStoreNonQoSMessagesRule : public IRule
 			{
 			public:
-				PublishStoreNonQoSMessagesRule(const PublishPackage& package) : m_Package(package) {};
+				PublishStoreNonQoSMessagesRule(const PublishPackage& package, SubscribeManager& manager) : m_Package(package), m_Manager(manager) {};
 				~PublishStoreNonQoSMessagesRule() {};
 
 				/*
@@ -21,8 +21,18 @@ namespace MQTT {
 					if (m_Package.HeaderFlag & PublishHeaderFlag::Retain &&
 						(m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb) + (m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb) == 0)
 					{
-						// Todo:: Discard last retain messages
-						// Todo:: Store package message as new.
+						std::vector<unsigned char> topic(m_Package.VariableHeader.TopicName.begin(), m_Package.VariableHeader.TopicName.end());
+
+						auto matchinTree = m_Manager.GetMatchingBTree(topic);
+
+
+						if (matchinTree != nullptr)
+						{
+							matchinTree->GetSavedMessages().clear();							
+
+							auto qos = (m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb) + (m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb);
+							matchinTree->AddSavedMessage(SubscribeSavedMessage(m_Package.Payload, qos));
+						}
 
 						return true;
 					}
@@ -32,6 +42,7 @@ namespace MQTT {
 
 			private:
 				const PublishPackage& m_Package;
+				SubscribeManager& m_Manager;
 			};
 		}
 	}

@@ -30,10 +30,11 @@ TEST(PublishValidatorShould, SetDupToZero_WhenQoSEqualsZero)
 	auto converter = PublishValidator();
 	auto client = MqttClient();
 	auto data = pGenerate();
+	auto manager = SubscribeManager();
 	data.HeaderFlag |= PublishHeaderFlag::Dup;
 
 	// Act
-	converter.ValidatePackage(data, client);
+	converter.ValidatePackage(data, client, manager);
 	actual = data.HeaderFlag;
 
 	// Assert
@@ -49,14 +50,61 @@ TEST(PublishValidatorShould, ReturnDisconnect_WhenBothQoSBitsAreSet)
 	auto converter = PublishValidator();
 	auto client = MqttClient();
 	auto data = pGenerate();
+	auto manager = SubscribeManager();
 	data.HeaderFlag |= PublishHeaderFlag::QoSLsb | PublishHeaderFlag::QoSMsb;
 
 	// Act
-	actual = converter.ValidatePackage(data, client);
+	actual = converter.ValidatePackage(data, client, manager);
 
 	// Assert
 	EXPECT_TRUE(expected == actual);
 }
+
+TEST(PublishValidatorShould, StoreQoSMessage_WhenQoSMsbBitIsSet)
+{
+	// Arrange
+	PublishHeaderFlag actual;
+	auto expected = PublishHeaderFlag::QoSMsb;
+
+	auto converter = PublishValidator();
+	auto client = MqttClient();
+	auto data = pGenerate();
+	auto manager = SubscribeManager();
+	manager.AddParentTree(BTree::NewBTree({'a'}, NoWildcard));
+	data.HeaderFlag |= PublishHeaderFlag::QoSMsb;
+	data.Payload = "message";
+
+	// Act
+	converter.ValidatePackage(data, client, manager);
+	actual = (PublishHeaderFlag)manager.GetMatchingBTree({ 'a' })->GetSavedMessages()[0].QoS;
+
+	// Assert
+	EXPECT_TRUE(expected == actual);
+}
+
+TEST(PublishValidatorShould, RemoveQoSMessage_WhenQoSMsbBitIsSet)
+{
+	// Arrange
+	int actual;
+	auto expected = 1;
+
+	auto converter = PublishValidator();
+	auto client = MqttClient();
+	auto data = pGenerate();
+	auto manager = SubscribeManager();
+	manager.AddParentTree(BTree::NewBTree({ 'a' }, NoWildcard));
+	data.HeaderFlag |= PublishHeaderFlag::Retain;
+	data.Payload = "message";
+
+	// Act
+	manager.GetMatchingBTree({ 'a' })->AddSavedMessage(SubscribeSavedMessage(data.Payload, data.HeaderFlag));
+	converter.ValidatePackage(data, client, manager);
+	actual = manager.GetMatchingBTree({ 'a' })->GetSavedMessages().size();
+
+	// Assert
+	EXPECT_TRUE(expected == actual);
+}
+
 
 TEST(PublishValidatorShould, ReturnRejectPublish_WhenTopicNameContainsWildcard)
 {
@@ -66,11 +114,12 @@ TEST(PublishValidatorShould, ReturnRejectPublish_WhenTopicNameContainsWildcard)
 
 	auto converter = PublishValidator();
 	auto client = MqttClient();
+	auto manager = SubscribeManager();
 	auto data = pGenerate();
 	data.VariableHeader.TopicName = "test#";
 
 	// Act
-	actual = converter.ValidatePackage(data, client);
+	actual = converter.ValidatePackage(data, client, manager);
 
 	// Assert
 	EXPECT_TRUE(expected == actual);
@@ -84,11 +133,12 @@ TEST(PublishValidatorShould, ReturnRejected_WhenTopicNameIsEmpty)
 
 	auto converter = PublishValidator();
 	auto client = MqttClient();
+	auto manager = SubscribeManager();
 	auto data = pGenerate();
 	data.VariableHeader.TopicName = "";
 
 	// Act
-	actual = converter.ValidatePackage(data, client);
+	actual = converter.ValidatePackage(data, client, manager);
 
 	// Assert
 	EXPECT_TRUE(expected == actual);
@@ -102,11 +152,12 @@ TEST(PublishValidatorShould, ReturnAcknowledged_WhenPackageIsDefinedAsSpecified)
 
 	auto converter = PublishValidator();
 	auto client = MqttClient();
+	auto manager = SubscribeManager();
 	auto data = pGenerate();
 	data.VariableHeader.TopicName = "test";
 
 	// Act
-	actual = converter.ValidatePackage(data, client);
+	actual = converter.ValidatePackage(data, client, manager);
 
 	// Assert
 	EXPECT_TRUE(expected == actual);

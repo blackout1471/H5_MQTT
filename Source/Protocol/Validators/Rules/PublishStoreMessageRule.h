@@ -19,8 +19,17 @@ namespace MQTT {
 				virtual bool Validate() override {
 					if (m_Package.HeaderFlag & PublishHeaderFlag::Retain)
 					{
-						// Todo :: Store messages
-						// Todo :: Store Qos in messages
+						std::vector<unsigned char> topic(m_Package.VariableHeader.TopicName.begin(), m_Package.VariableHeader.TopicName.end());
+
+						auto matchinTree = m_Manager.GetMatchingBTree(topic);
+
+
+						if (matchinTree != nullptr)
+						{
+							auto qos = (m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb) + (m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb);
+							matchinTree->AddSavedMessage(SubscribeSavedMessage(m_Package.Payload, qos));
+						}
+
 						return true;
 					}
 
