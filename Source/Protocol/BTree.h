@@ -24,6 +24,12 @@ namespace MQTT {
 			std::vector<SubscribeClient*>& GetSubClients() {
 				return m_SubClients;
 			}
+			void AddSavedMessage(SubscribeSavedMessage saveMessage) {
+				m_SubSavedMessages.push_back(saveMessage);
+			}
+			std::vector<SubscribeSavedMessage>& GetSavedMessages() {
+				return m_SubSavedMessages;
+			}
 
 			// Creates a new tree
 			static BTree* NewBTree(SubscribeClient* subClient, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
@@ -42,7 +48,7 @@ namespace MQTT {
 			BTree* m_Parent = nullptr;
 			std::vector<unsigned char> m_Topic;
 			std::vector<SubscribeClient*> m_SubClients;
-			std::vector<SubscribeSavedTopic> m_SubSavedTopics;
+			std::vector<SubscribeSavedMessage> m_SubSavedMessages;
 			SubscribeTopicWildcardType m_Wildcard = SubscribeTopicWildcardType::NoWildcard;
 		};
 	}

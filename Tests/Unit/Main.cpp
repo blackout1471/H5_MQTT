@@ -4,6 +4,8 @@
 #include "ConnectionAcknowledgementConverterShould.h"
 #include "MqttServiceShould.h"
 #include "ConnectionValidationShould.h"
+#include "PublishConverterShould.h"
+#include "PublishValidatorShould.h"
 
 
 

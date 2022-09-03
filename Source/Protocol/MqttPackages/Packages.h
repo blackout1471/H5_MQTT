@@ -2,8 +2,9 @@
 
 #include "ConnectPackage.h"
 #include "SubscribePackage.h"
-#include "SubscribeSavedTopic.h"
+#include "SubscribeSavedMessage.h"
 #include "SubscribeClient.h"
 #include "DisconnectPackage.h"
 #include "SubscribeAcknowledgementPackage.h"
+#include "PublishPackage.h"
 #include "PublishAckPackage.h"
