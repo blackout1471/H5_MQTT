@@ -6,3 +6,4 @@
 #include "SubscribeClient.h"
 #include "DisconnectPackage.h"
 #include "SubscribeAcknowledgementPackage.h"
+#include "PublishAckPackage.h"
