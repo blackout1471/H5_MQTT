@@ -4,6 +4,7 @@
 #include "MqttService.h"
 #include "Protocol/Converters/ConverterUtility.h"
 #include "Protocol/Validators/ConnectValidator.h"
+#include "Protocol/Validators/PublishValidator.h"
 #include "Protocol/Converters/DisconnectConverter.h"
 
 #include <algorithm>
@@ -41,6 +42,10 @@ namespace MQTT {
 			case MQTT::Protocol::ConnectAck:
 				break;
 			case MQTT::Protocol::Publish:
+				OnClientPublish(
+					client,
+					Protocol::Converters::PublishConverter().ToPackage(buffer)
+				);
 				break;
 			case MQTT::Protocol::PublAck:
 				break;
@@ -135,6 +140,30 @@ namespace MQTT {
 			DisconnectClientState(client);
 		}
 
+		void MqttService::OnClientPublish(const Client& client, const Protocol::PublishPackage& package)
+		{
+			auto copyPackage = package;
+			auto mqttClientState = GetClientStateFromIdentifier(client.GetIdentifier());
+
+			auto action = Protocol::Validators::PublishValidator()
+				.ValidatePackage(copyPackage, *mqttClientState, m_SubscribeManager);
+
+			switch (action)
+			{
+			case MQTT::Protocol::Validators::PublishValidator::RejectPublish:
+				// TODO :: Reject publish package.
+				break;
+			case MQTT::Protocol::Validators::PublishValidator::AcknowledgePublish:
+				// Todo :: Acknowledge publish package
+				break;
+			case MQTT::Protocol::Validators::PublishValidator::DisconnectClient:
+				DisconnectClientState(client);
+				break;
+			default:
+				break;
+			}
+		}
+
 		// If a client state with matching connection id exists, set is connected to false and remove will message.
 		void MqttService::DisconnectClientState(const Client& client)
 		{
@@ -149,10 +178,19 @@ namespace MQTT {
 			m_Server->Disconnect(client);
 		}
 
-		MqttClient* MqttService::GetClientState(const std::string& clientId)
+		MqttClient* MqttService::GetClientStateFromClientId(const std::string& clientId)
 		{
 			for (auto* clientState : m_ClientStates)
 				if (clientState->ClientId == clientId)
+					return clientState;
+
+			return nullptr;
+		}
+
+		MqttClient* MqttService::GetClientStateFromIdentifier(const std::string& identifier)
+		{
+			for (auto* clientState : m_ClientStates)
+				if (clientState->ConnectionIdentifier == identifier)
 					return clientState;
 
 			return nullptr;
