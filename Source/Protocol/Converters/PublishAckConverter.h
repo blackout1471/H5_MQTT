@@ -8,7 +8,7 @@ namespace MQTT {
 		namespace Converters {
 			class PublishAckConverter : public IPackageConverter<PublishAckPackage>
 			{
-				// Inherited via IPackageConverter
+			public:
 				virtual const PublishAckPackage ToPackage(const std::vector<unsigned char>& buffer) override;
 				virtual const std::vector<unsigned char> ToBuffer(const PublishAckPackage& to) override;
 			};

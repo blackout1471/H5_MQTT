@@ -6,7 +6,7 @@
 #include "Protocol/Validators/ConnectValidator.h"
 #include "Protocol/Validators/PublishValidator.h"
 #include "Protocol/Converters/DisconnectConverter.h"
-
+#include "Protocol/Converters/PublishAckConverter.h"
 #include <algorithm>
 
 namespace MQTT {
@@ -148,13 +148,22 @@ namespace MQTT {
 			auto action = Protocol::Validators::PublishValidator()
 				.ValidatePackage(copyPackage, *mqttClientState, m_SubscribeManager);
 
+			auto pulishAckConverter = Protocol::Converters::PublishAckConverter();
+			Protocol::PublishAckPackage publishAckPackage;
+			publishAckPackage.Header.PackageType = Protocol::ControlPackageType::PublAck;
+			publishAckPackage.PacketIdentifier = package.VariableHeader.PacketIdentifier;
 			switch (action)
 			{
-			case MQTT::Protocol::Validators::PublishValidator::RejectPublish:
-				// TODO :: Reject publish package.
+			case MQTT::Protocol::Validators::PublishValidator::RejectPublish:	
+				// TODO: Figure out how we handle publish reject. [3.3.5 Actions]
+				//If a Server implementation does not authorize a PUBLISH to be performed by a Client; 
+				//it has no way of informing that Client. It MUST either make a positive acknowledgement,
+				//according to the normal QoS rules, or close the Network Connection		
+				
+				DisconnectClientState(client);
 				break;
 			case MQTT::Protocol::Validators::PublishValidator::AcknowledgePublish:
-				// Todo :: Acknowledge publish package
+				m_Server->Send(client, pulishAckConverter.ToBuffer(publishAckPackage));
 				break;
 			case MQTT::Protocol::Validators::PublishValidator::DisconnectClient:
 				DisconnectClientState(client);

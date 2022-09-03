@@ -14,6 +14,7 @@ namespace MQTT {
 
 				packageBuffer.push_back(to.Header.PackageType << 4);
 				packageBuffer.push_back(0x2);
+				packageBuffer.push_back(to.PacketIdentifier);
 
 				return packageBuffer;
 			}
