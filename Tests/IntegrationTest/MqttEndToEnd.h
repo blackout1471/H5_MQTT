@@ -28,6 +28,7 @@ TEST(MqttEndToEnd, ClientCanConnect)
 	// Act
 	serverThread = std::thread([&]() { mqttService->Start(); });
 	while (!socketServer->IsRunning()) {}; // Wait for thread :/
+
 	socket = create_socket(1883);
 	actual = mqtt_init(&client, socket, sendbuf, sizeof(sendbuf), recvbuf, sizeof(recvbuf), [](void** unused, struct mqtt_response_publish* published) {});
 	actual = mqtt_connect(&client, client_id, NULL, NULL, 0, NULL, NULL, connect_flags, 400);
