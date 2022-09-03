@@ -26,6 +26,11 @@ namespace MQTT {
 			m_Server->Start();
 		}
 
+		void MqttService::Stop()
+		{
+			m_Server->Stop();
+		}
+
 		void MqttService::OnReceivedData(const Client& client, const std::vector<unsigned char>& buffer)
 		{
 			auto type = Protocol::Converters::ConverterUtility::GetPackageType(buffer[0]);

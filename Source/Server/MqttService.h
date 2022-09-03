@@ -15,6 +15,7 @@ namespace MQTT {
 
 			// Starts the server and begin goes in a loop to listen for incoming clients.
 			void Start();
+			void Stop();
 
 		private:
 			void InitialiseServer();

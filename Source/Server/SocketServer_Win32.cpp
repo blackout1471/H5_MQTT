@@ -5,6 +5,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <thread>
+
 namespace MQTT {
 	namespace Server {
 
@@ -15,27 +16,38 @@ namespace MQTT {
 		static struct addrinfo* result = NULL;
 
 		SocketServer::SocketServer(int port)
-			: m_Port(port), m_IsRunning(false), m_Socket(0) {};
-
-		SocketServer::~SocketServer()
-		{
-			for (auto client : m_Clients)
-				delete client;
-		}
-
-		void SocketServer::Start()
+			: m_Port(port), m_IsRunning(false), m_Socket(0) 
 		{
 			//Initialization of WSA
 			if (!s_Initialized)
 			{
 				int iResult = WSAStartup(MAKEWORD(2, 2), &s_WsaData);
 				if (iResult != 0) {
-					//Logging here
-					printf("WSAStartup failed with error: %d\n", iResult);
-					//throw error
+					if (ErrorEvent)
+						ErrorEvent("WSAStartup failed");
 				}
 				s_Initialized = true;
 			}
+		};
+
+		SocketServer::~SocketServer()
+		{
+			for (auto client : m_Clients)
+				delete client;
+
+			if (s_Initialized)
+			{
+				WSACleanup();
+				s_Initialized = false;
+			}
+		}
+
+		bool SocketServer::IsRunning() const {
+			return m_IsRunning;
+		}
+
+		void SocketServer::Start()
+		{	
 			//Configuration
 			ConfigureAddressInfo(m_Port);
 
@@ -62,9 +74,8 @@ namespace MQTT {
 			for (const auto& client : m_Clients)
 				Disconnect(*client);
 
-			freeaddrinfo(result);
+			//freeaddrinfo(result);
 			closesocket(m_Socket);
-			WSACleanup();
 			m_IsRunning = false;
 			s_Initialized = false;
 			
@@ -83,9 +94,9 @@ namespace MQTT {
 		{
 			int iSendResult = send(client.GetConnection(), (const char*)(data.data()), data.size(), 0);
 			if (iSendResult == SOCKET_ERROR) {
-				printf("send failed with error: %d\n", WSAGetLastError());
+				if (ErrorEvent)
+					ErrorEvent("WSA error: " + std::to_string(WSAGetLastError()));
 				closesocket(client.GetConnection());
-				//throw error
 			}
 		}
 
@@ -100,7 +111,8 @@ namespace MQTT {
 			int iResult = getaddrinfo(NULL, std::to_string(port).c_str(), &hints, &result);
 			if (iResult != 0) {
 				//Logging here
-				printf("getaddrinfo failed with error: %d\n", iResult);
+				if (ErrorEvent)
+					ErrorEvent("getaddinfo error: " + std::to_string(iResult));
 				WSACleanup();
 				s_Initialized = false;
 				//Throw error
@@ -113,12 +125,12 @@ namespace MQTT {
 			m_Socket = socket(AF_INET, SOCK_STREAM, 0);
 
 			if (m_Socket == INVALID_SOCKET) {
-				//Logging here instead of printf
-				printf("socket failed with error: %ld\n", WSAGetLastError());
+				if (ErrorEvent)
+					ErrorEvent("socket failed with error: " + std::to_string(WSAGetLastError()));
+
 				freeaddrinfo(result);
 				WSACleanup();
 				s_Initialized = false;
-				//throw error here
 			}
 		}
 
@@ -129,13 +141,12 @@ namespace MQTT {
 
 			if (iResult == SOCKET_ERROR) {
 
-				//Logging here
-				printf("bind failed with error: %d\n", WSAGetLastError());
+				if (ErrorEvent)
+					ErrorEvent("bind failed with error: " + std::to_string(WSAGetLastError()));
 				freeaddrinfo(result);
 				closesocket(m_Socket);
 				WSACleanup();
 				s_Initialized = false;
-				//Throw error here
 			}
 
 			freeaddrinfo(result);
@@ -145,7 +156,8 @@ namespace MQTT {
 			int iResult = listen(m_Socket, 10);
 			if (iResult == SOCKET_ERROR) {
 				//logging here
-				printf("listen failed with error: %d\n", WSAGetLastError());
+				if (ErrorEvent)
+					ErrorEvent("Listen failed with error: " + std::to_string(WSAGetLastError()));
 				closesocket(m_Socket);
 				WSACleanup();
 				s_Initialized = false;
@@ -155,7 +167,6 @@ namespace MQTT {
 
 		void SocketServer::Accept()
 		{
-
 			int clientSocket = accept(m_Socket, (struct sockaddr*)NULL, NULL);
 
 			if (clientSocket > 0) {
@@ -164,9 +175,8 @@ namespace MQTT {
 			}
 			else
 			{
-				//logging here
-				printf("accept failed with error: %d\n", WSAGetLastError());
-				//throw error
+				if (ErrorEvent)
+					ErrorEvent("Accept failed with error: " + std::to_string(WSAGetLastError()));
 			}
 
 		}
@@ -181,7 +191,9 @@ namespace MQTT {
 				{
 					if (amount < 0)
 					{
-						printf("error: %d\n", WSAGetLastError());
+						if (server.ErrorEvent)
+							server.ErrorEvent("failed with error: " + std::to_string(WSAGetLastError()));
+
 						return;
 					}
 

@@ -13,12 +13,15 @@ project "IntegrationTest"
 	files
 	{
 		projLoc .. "/**.h",	
-		projLoc .. "/**.cpp"
+		projLoc .. "/**.cpp",
+		"../vendor/MQTT-C/include/**.h",
+		"../vendor/MQTT-C/src/**.c"
 	}
 
 	IncludeDir = {}
 	IncludeDir["gtest"] = "../vendor/googletest/googletest/include/"
 	IncludeDir["gmock"] = "../vendor/googletest/googlemock/include/"
+	IncludeDir["mqttClient"] = "../vendor/MQTT-C/include/"
 	IncludeDir["Source"] = "../Source/"
 
 	includedirs
@@ -26,7 +29,8 @@ project "IntegrationTest"
 		projLoc,
 		"%{IncludeDir.gtest}",
 		"%{IncludeDir.Source}",
-		"%{IncludeDir.gmock}"
+		"%{IncludeDir.gmock}",
+		"%{IncludeDir.mqttClient}"
 	}
 
 	links

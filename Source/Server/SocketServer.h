@@ -20,6 +20,8 @@ namespace MQTT {
 			virtual void Disconnect(const Client& client) override;
 			// <inheritDoc />
 			virtual void Send(const Client& client, const std::vector<unsigned char>& data) override;
+			// <inheritDoc />
+			virtual bool IsRunning() const override;
 
 		private:
 			// Configures the socket servers port and address.
@@ -32,8 +34,6 @@ namespace MQTT {
 			void Listen();
 			// Accepts new clients and creates a thread for receiving data.
 			void Accept();
-			// Generates a unique id
-			std::string GenerateUniqueId();
 			static void ReadClientData(const Client& client, const SocketServer& server);
 		private:
 			bool m_IsRunning;
