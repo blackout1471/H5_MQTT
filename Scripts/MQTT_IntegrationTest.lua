@@ -39,7 +39,7 @@ project "IntegrationTest"
 		systemversion "latest"
 		excludes
 		{
-			projLoc .. "Source/**_Linux.cpp"
+			projLoc .. "/**_Linux.cpp"
 		}
 
 	filter "system:linux"
@@ -50,7 +50,7 @@ project "IntegrationTest"
 		}
 		excludes
 		{
-			projLoc .. "Source/**_Win32.cpp"
+			projLoc .. "/**_Win32.cpp"
 		}
 		
 	filter "configurations:Debug"
