@@ -13,15 +13,12 @@ project "IntegrationTest"
 	files
 	{
 		projLoc .. "/**.h",	
-		projLoc .. "/**.cpp",
-		"../vendor/MQTT-C/include/**.h",
-		"../vendor/MQTT-C/src/**.c"
+		projLoc .. "/**.cpp"
 	}
 
 	IncludeDir = {}
 	IncludeDir["gtest"] = "../vendor/googletest/googletest/include/"
 	IncludeDir["gmock"] = "../vendor/googletest/googlemock/include/"
-	IncludeDir["mqttClient"] = "../vendor/MQTT-C/include/"
 	IncludeDir["Source"] = "../Source/"
 
 	includedirs
@@ -29,8 +26,7 @@ project "IntegrationTest"
 		projLoc,
 		"%{IncludeDir.gtest}",
 		"%{IncludeDir.Source}",
-		"%{IncludeDir.gmock}",
-		"%{IncludeDir.mqttClient}"
+		"%{IncludeDir.gmock}"
 	}
 
 	links
@@ -41,12 +37,20 @@ project "IntegrationTest"
 
 	filter "system:windows"
 		systemversion "latest"
+		excludes
+		{
+			projLoc .. "Source/**_Linux.cpp"
+		}
 
 	filter "system:linux"
 		links
 		{
 			"pthread",
 			"uuid"
+		}
+		excludes
+		{
+			projLoc .. "Source/**_Win32.cpp"
 		}
 		
 	filter "configurations:Debug"

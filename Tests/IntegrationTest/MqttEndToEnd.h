@@ -2,7 +2,6 @@
 #include "SocketClient.h"
 
 #include <gtest/gtest.h>
-#include <mqtt.h>
 #include <Server/MqttService.h>
 #include <Server/SocketServer.h>
 #include <thread>
