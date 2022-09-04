@@ -154,7 +154,9 @@ namespace MQTT {
 				// TODO :: Reject publish package.
 				break;
 			case MQTT::Protocol::Validators::PublishValidator::AcknowledgePublish:
-				// Todo :: Acknowledge publish package
+				auto subscribedClients = m_SubscribeManager.GetSubscribedClients(package.VariableHeader.TopicName);
+
+
 				break;
 			case MQTT::Protocol::Validators::PublishValidator::DisconnectClient:
 				DisconnectClientState(client);
