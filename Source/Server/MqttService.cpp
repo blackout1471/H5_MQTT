@@ -6,7 +6,7 @@
 #include "Protocol/Validators/ConnectValidator.h"
 #include "Protocol/Validators/PublishValidator.h"
 #include "Protocol/Converters/DisconnectConverter.h"
-
+#include "Protocol/Converters/PublishAcknowledgeConverter.h"
 #include <algorithm>
 
 namespace MQTT {
@@ -25,6 +25,11 @@ namespace MQTT {
 		void MqttService::Start()
 		{
 			m_Server->Start();
+		}
+
+		void MqttService::Stop()
+		{
+			m_Server->Stop();
 		}
 
 		void MqttService::OnReceivedData(const Client& client, const std::vector<unsigned char>& buffer)
@@ -148,13 +153,18 @@ namespace MQTT {
 			auto action = Protocol::Validators::PublishValidator()
 				.ValidatePackage(copyPackage, *mqttClientState, m_SubscribeManager);
 
+			auto pulishAckConverter = Protocol::Converters::PublishAcknowledgeConverter();
+			Protocol::PublishAcknowledgePackage publishAckPackage;
+			publishAckPackage.Header.PackageType = Protocol::ControlPackageType::PublAck;
+			publishAckPackage.PacketIdentifier = package.VariableHeader.PacketIdentifier;
 			switch (action)
 			{
-			case MQTT::Protocol::Validators::PublishValidator::RejectPublish:
-				// TODO :: Reject publish package.
+			case MQTT::Protocol::Validators::PublishValidator::RejectPublish:	
+				DisconnectClientState(client);
 				break;
 			case MQTT::Protocol::Validators::PublishValidator::AcknowledgePublish:
 			{
+				m_Server->Send(client, pulishAckConverter.ToBuffer(publishAckPackage));
 
 				//TODO: Implement QoS 1 & 2
 				std::vector<unsigned char> topic(package.VariableHeader.TopicName.begin(), package.VariableHeader.TopicName.end());

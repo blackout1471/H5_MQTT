@@ -20,6 +20,7 @@ public:
 	MOCK_METHOD(void, Stop, (), (override));
 	MOCK_METHOD(void, Disconnect, (const Client& client), (override));
 	MOCK_METHOD(void, Send, (const Client& client, const std::vector<unsigned char>& data), (override));
+	MOCK_METHOD(bool, IsRunning, (), (const, override));
 
 };
 

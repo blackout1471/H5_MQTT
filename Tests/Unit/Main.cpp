@@ -6,7 +6,7 @@
 #include "ConnectionValidationShould.h"
 #include "PublishConverterShould.h"
 #include "PublishValidatorShould.h"
-
+#include "PublishAcknowledgeConverterShould.h"
 
 
 int main(int argc, char** argv) {
