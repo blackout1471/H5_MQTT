@@ -24,7 +24,7 @@ Then do ```make```
 options can be added to make for whichever config is wanted -hint:```make help```
 
 ### Linux x86
-Same steps as Linux arm, but to be able to generate solution, premake for x86 has to be donwloaded and moved into the Premake/ folder
+Same steps as Linux arm, but to be able to generate solution, premake for x86 has to be downloaded and moved into the Premake/ folder
 before doing any generate.
 https://premake.github.io/download/
 
