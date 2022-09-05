@@ -1,7 +1,7 @@
 #include "mqttpch.h"
 #include "Server/MqttService.h"
 #include "Server/SocketServer.h"
-
+#include <cstring>
 #include <iostream>
 
 using namespace MQTT::Server;
