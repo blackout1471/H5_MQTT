@@ -11,26 +11,64 @@ namespace MQTT {
 		class MqttService {
 
 		public:
+			/*
+			* Creates the service with the specified server.
+			*/
 			MqttService(IServer* server);
 			~MqttService();
 
 			// Starts the server and begin goes in a loop to listen for incoming clients.
 			void Start();
+
+			/*
+			* Stops the server and disconnects all clients.
+			*/
 			void Stop();
 
 		private:
+			/*
+			* Initialises the server and sets the required data and events.
+			*/
 			void InitialiseServer();
+
+			/*
+			* Called when the server recieves data.
+			*/
 			void OnReceivedData(const Client& client, const std::vector<unsigned char>& buffer);
+
 			//Sets mqtt client state to diconnected and diconnects socket client.
 			void DisconnectClientState(const Client& client);
 
+			/*
+			* Called when the recieved data has been identified as a connect package.
+			*/
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
+
+			/*
+			* Called when the recieved data has been identified as a Subscribe package.
+			*/
 			void OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package);
+
+			/*
+			* Called when the recieved data has been identified as a disconnect package.
+			*/
 			void OnClientDisconnect(const Client& client);
+
+			/*
+			* Called when the recieved data has been identified as a publish package.
+			*/
 			void OnClientPublish(const Client& client, const Protocol::PublishPackage& package);
 
-
+			/*
+			* Retrieves the client state from the given client id.
+			* returns: nullptr if not found.
+			*/
 			MqttClient* GetClientStateFromClientId(const std::string& clientId);
+
+			/*
+			* Retrieves the client state from the given identifier.
+			* Returns: clientstate or nullptr if not found.
+			*/
 			MqttClient* GetClientStateFromIdentifier(const std::string& identifier);
 		private:
 			IServer* m_Server;

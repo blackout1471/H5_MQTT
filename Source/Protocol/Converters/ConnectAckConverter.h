@@ -10,7 +10,10 @@ namespace MQTT {
 			class ConnectAckConverter : IPackageConverter<ConnectAckPackage>
 			{
 			public:
+				// <inheritDoc />
 				virtual const ConnectAckPackage ToPackage(const std::vector<unsigned char>& buffer) override;
+
+				// <inheritDoc />
 				virtual const std::vector<unsigned char> ToBuffer(const ConnectAckPackage& package) override;
 			};
 		}
