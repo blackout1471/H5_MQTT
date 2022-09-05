@@ -20,7 +20,7 @@ namespace MQTT {
 						return false;
 
 					return true;
-				}
+				};
 
 			private:
 				const PublishPackage& m_Package;

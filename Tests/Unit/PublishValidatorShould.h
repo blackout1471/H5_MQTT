@@ -60,6 +60,44 @@ TEST(PublishValidatorShould, ReturnDisconnect_WhenBothQoSBitsAreSet)
 	EXPECT_TRUE(expected == actual);
 }
 
+TEST(PublishValidatorShould, ReturnAcknowledge_WhenLsbQoSBitsAreSet)
+{
+	// Arrange
+	PublishValidator::Action actual;
+	auto expected = PublishValidator::AcknowledgePublish;
+
+	auto converter = PublishValidator();
+	auto client = MqttClient();
+	auto data = pGenerate();
+	auto manager = SubscribeManager();
+	data.HeaderFlag |= PublishHeaderFlag::QoSLsb;
+
+	// Act
+	actual = converter.ValidatePackage(data, client, manager);
+
+	// Assert
+	EXPECT_TRUE(expected == actual);
+}
+
+TEST(PublishValidatorShould, ReturnAcknowledge_WhenMsbQoSBitsAreSet)
+{
+	// Arrange
+	PublishValidator::Action actual;
+	auto expected = PublishValidator::AcknowledgePublish;
+
+	auto converter = PublishValidator();
+	auto client = MqttClient();
+	auto data = pGenerate();
+	auto manager = SubscribeManager();
+	data.HeaderFlag |= PublishHeaderFlag::QoSMsb;
+
+	// Act
+	actual = converter.ValidatePackage(data, client, manager);
+
+	// Assert
+	EXPECT_TRUE(expected == actual);
+}
+
 TEST(PublishValidatorShould, StoreQoSMessage_WhenQoSMsbBitIsSet)
 {
 	// Arrange
