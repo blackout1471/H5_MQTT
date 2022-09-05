@@ -75,6 +75,10 @@ namespace MQTT {
 			}
 		}
 
+		bool SocketServer::IsRunning() const {
+			return m_IsRunning;
+		}
+
 		void SocketServer::Start()
 		{
 			m_IsRunning = true;
