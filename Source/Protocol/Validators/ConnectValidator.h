@@ -25,7 +25,7 @@ namespace MQTT {
 				// Returns: The action to take.
 				Action ValidateClient(const Protocol::ConnectPackage& package, 
 					const std::vector<Server::MqttClient*>& clientStates,
-					Server::MqttClient* currentClient);
+					Server::MqttClient*& currentClient);
 
 			private:
 				void SetCurrentClientId(const std::string& packageClientId, MQTT::Server::MqttClient* currentClient);

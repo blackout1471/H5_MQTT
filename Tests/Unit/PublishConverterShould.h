@@ -98,3 +98,26 @@ TEST(PublishConverterShould, ReturnPackageWithIdentifier_WhenQoSIsLsb)
 	// Assert
 	EXPECT_TRUE(expected == actual);
 }
+
+TEST(PublishConverterShould, ReturnPackageWithPositiveIdentifier_WhenIdentifierIsOver)
+{
+	// Arrange
+	auto expected = pcGenerate();
+	expected.HeaderFlag = PublishHeaderFlag::QoSLsb;
+	expected.VariableHeader.PacketIdentifier = 62000;
+	PublishPackage actual;
+	auto converter = PublishConverter();
+	auto data = std::vector<unsigned char>{
+		(3 << 4) + 4,
+		0, 1, 97,
+		242,  48,
+		97
+	};
+	data.insert(data.begin() + 1, data.size() - 1);
+
+	// Act
+	actual = converter.ToPackage(data);
+
+	// Assert
+	EXPECT_TRUE(expected == actual);
+}

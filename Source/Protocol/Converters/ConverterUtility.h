@@ -23,6 +23,15 @@ namespace MQTT {
 				}
 
 				/*
+				* Converts byte1 as MSB and byte2 as LSB
+				* Returns: The result of the conversion.
+				*/
+				static unsigned short ByteToShort(unsigned char byte1, unsigned char byte2)
+				{
+					return static_cast<unsigned short>((byte1 << 8) | byte2);
+				}
+
+				/*
 				* Retrieves the package type from the given unsigned char
 				*/
 				static ControlPackageType GetPackageType(const unsigned char data) 
