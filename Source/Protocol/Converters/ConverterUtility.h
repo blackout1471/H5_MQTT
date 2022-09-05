@@ -21,7 +21,14 @@ namespace MQTT {
 				{
 					return (byte1 << 8) | byte2;
 				}
-
+				/*
+				* Converts a string into a vector of unsigned chars
+				* Returns the converted string as a vector of unsigned chars.
+				*/
+				static std::vector<unsigned char> StringToUCharVector(std::string str)
+				{
+					return std::vector<unsigned char>(str.begin(), str.end());
+				}
 				/*
 				* Retrieves the package type from the given unsigned char
 				*/

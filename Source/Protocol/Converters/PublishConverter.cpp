@@ -48,7 +48,31 @@ namespace MQTT {
 
 			const std::vector<unsigned char> PublishConverter::ToBuffer(const PublishPackage& to)
 			{
-				return std::vector<unsigned char>();
+				std::vector<unsigned char> publishBuffer;
+				std::vector<unsigned char> variableHeader = ConverterUtility::IntToBytes(to.VariableHeader.TopicName.length());
+
+				publishBuffer.push_back((to.Header.PackageType << 4) | to.HeaderFlag);
+				publishBuffer.push_back(variableHeader[0]);
+				publishBuffer.push_back(variableHeader[1]);
+
+				for (auto& i : to.VariableHeader.TopicName) publishBuffer.push_back(i);
+				if (to.VariableHeader.PacketIdentifier != 0)
+				{
+					std::vector<unsigned char> packetIdentifier = ConverterUtility::IntToBytes(to.VariableHeader.PacketIdentifier);
+					publishBuffer.push_back(packetIdentifier[0]);
+					publishBuffer.push_back(packetIdentifier[1]);
+				}
+
+				for (auto& payload : to.Payload)
+				{
+					publishBuffer.push_back(payload);
+				}
+
+				unsigned char remainLength = publishBuffer.size() - 1;
+
+				publishBuffer.insert(publishBuffer.begin() + 1, remainLength);
+
+				return publishBuffer;
 			}
 		}
 	}

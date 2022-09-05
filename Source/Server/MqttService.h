@@ -27,7 +27,7 @@ namespace MQTT {
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
 			void OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package);
 			void OnClientDisconnect(const Client& client);
-			void OnClientPublish(const Client& client, const Protocol::PublishPackage& package);
+			void OnClientPublish(const Client& client, const std::vector<unsigned char>& buffer);
 
 
 			MqttClient* GetClientStateFromClientId(const std::string& clientId);
