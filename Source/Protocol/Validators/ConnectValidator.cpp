@@ -15,7 +15,7 @@ namespace MQTT {
 			{
 			}
 
-			ConnectValidator::Action ConnectValidator::ValidateClient(const Protocol::ConnectPackage& package, const std::vector<Server::MqttClient*>& clientStates, Server::MqttClient* currentClient)
+			ConnectValidator::Action ConnectValidator::ValidateClient(const Protocol::ConnectPackage& package, const std::vector<Server::MqttClient*>& clientStates, Server::MqttClient*& currentClient)
 			{
 				auto& packageClientId = package.Payload.ClientId;
 				auto& protocolName = package.VariableHeader.ProtocolName;
