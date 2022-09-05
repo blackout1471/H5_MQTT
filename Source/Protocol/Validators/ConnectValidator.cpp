@@ -8,14 +8,10 @@
 namespace MQTT {
 	namespace Protocol {
 		namespace Validators {
-			ConnectValidator::ConnectValidator()
-			{
-			}
-			ConnectValidator::~ConnectValidator()
-			{
-			}
+			ConnectValidator::ConnectValidator() {}
+			ConnectValidator::~ConnectValidator() {}
 
-			ConnectValidator::Action ConnectValidator::ValidateClient(const Protocol::ConnectPackage& package, const std::vector<Server::MqttClient*>& clientStates, Server::MqttClient*& currentClient)
+			ConnectValidator::Action ConnectValidator::ValidateClient(const Protocol::ConnectPackage& package, std::vector<Server::MqttClient*>& clientStates, Server::MqttClient*& currentClient)
 			{
 				auto& packageClientId = package.Payload.ClientId;
 				auto& protocolName = package.VariableHeader.ProtocolName;
@@ -40,6 +36,10 @@ namespace MQTT {
 					return ContinueState;
 				}
 
+				auto shouldDeleteOldSession = OldSessionExistsAndCleanSession(package.VariableHeader.VariableLevel, packageClientId, clientStates).Validate();
+				if (shouldDeleteOldSession)
+					Server::DeleteClient(packageClientId, clientStates);
+
 				SetCurrentClientId(packageClientId, currentClient);
 
 				return CreateNewState;
@@ -63,9 +63,6 @@ namespace MQTT {
 					{ new ConnectWillRule(currentClient, package.VariableHeader.VariableLevel, package.Payload.WillMessage), true }
 				}).Run());
 			}
-
-
-
 		}
 	}
 }

@@ -12,6 +12,7 @@ namespace MQTT {
 
 				/*
 				* Validate whether the buffer is bigger than 2 bytes
+				* Returns: True if it is bigger, false otherwise.
 				*/
 				virtual bool Validate() override
 				{

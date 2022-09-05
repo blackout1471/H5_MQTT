@@ -22,5 +22,15 @@ namespace MQTT {
 
 			return nullptr;
 		}
+
+		static void DeleteClient(const std::string& clientId, std::vector<MqttClient*>& clients)
+		{
+			for (int i = 0; i < clients.size(); i++)
+				if (clients[i]->ClientId == clientId)
+				{
+					clients.erase(clients.begin() + i);
+					return;
+				}
+		}
 	}
 }
