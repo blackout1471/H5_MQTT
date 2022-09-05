@@ -20,7 +20,8 @@ namespace MQTT {
 			virtual void Disconnect(const Client& client) override;
 			// <inheritDoc />
 			virtual void Send(const Client& client, const std::vector<unsigned char>& data) override;
-
+			// Gets all clients
+			inline virtual const std::vector<Client*>& GetClients() const { return m_Clients; };
 		private:
 			// Configures the socket servers port and address.
 			void ConfigureAddressInfo(int port);

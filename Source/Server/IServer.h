@@ -14,6 +14,8 @@ namespace MQTT {
 			virtual void Disconnect(const Client& client) = 0;
 			/* Sends the byte data to the client */
 			virtual void Send(const Client& client, const std::vector<unsigned char>& data) = 0;
+			// Gets all clients
+			virtual const std::vector<Client*>& GetClients() const = 0;
 			/* Called when client recieves data */
 			std::function<void(const Client&, const std::vector<unsigned char>&)> OnReceivedData;
 		};

@@ -35,7 +35,7 @@ namespace MQTT {
 			{
 			case MQTT::Protocol::Connect:
 				OnClientConnect(
-					client, 
+					client,
 					Protocol::Converters::ConnectConverter().ToPackage(buffer)
 				);
 				break;
@@ -89,7 +89,7 @@ namespace MQTT {
 			auto& packageClientId = package.Payload.ClientId;
 			auto& protocolName = package.VariableHeader.ProtocolName;
 			auto* clientState = new MqttClient();
-			
+
 			clientState->ConnectionFlags = package.VariableHeader.VariableLevel;
 
 			auto action = Protocol::Validators::ConnectValidator()
@@ -154,10 +154,22 @@ namespace MQTT {
 				// TODO :: Reject publish package.
 				break;
 			case MQTT::Protocol::Validators::PublishValidator::AcknowledgePublish:
-				auto subscribedClients = m_SubscribeManager.GetSubscribedClients(package.VariableHeader.TopicName);
+			{
 
-
-				break;
+				//TODO: Implement QoS 1 & 2
+				std::vector<unsigned char> topic(package.VariableHeader.TopicName.begin(), package.VariableHeader.TopicName.end());
+				auto& subscribedClients = m_SubscribeManager.GetSubscribedClients(topic);
+				for (auto& subClient : subscribedClients)
+				{
+					auto c = GetClientFromIdentifier(subClient.GetClientID());
+					if (c != nullptr)
+					{
+						std::vector<unsigned char>message(package.Payload.begin(), package.Payload.end());
+						m_Server->Send(*c, message);
+					}
+				}
+			}
+			break;
 			case MQTT::Protocol::Validators::PublishValidator::DisconnectClient:
 				DisconnectClientState(client);
 				break;
@@ -197,6 +209,16 @@ namespace MQTT {
 
 			return nullptr;
 		}
+
+		Client* MqttService::GetClientFromIdentifier(const std::string& identifier)
+		{
+			for (auto* client : m_Server->GetClients())
+				if (client->GetIdentifier() == identifier)
+					return client;
+
+			return nullptr;
+		}
+
 
 		void MqttService::InitialiseServer()
 		{

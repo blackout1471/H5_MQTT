@@ -31,6 +31,7 @@ namespace MQTT {
 
 			MqttClient* GetClientStateFromClientId(const std::string& clientId);
 			MqttClient* GetClientStateFromIdentifier(const std::string& identifier);
+			Client* GetClientFromIdentifier(const std::string& identifier);
 		private:
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;
