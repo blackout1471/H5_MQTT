@@ -7,4 +7,4 @@
 #include "DisconnectPackage.h"
 #include "SubscribeAcknowledgementPackage.h"
 #include "PublishPackage.h"
-#include "PublishAckPackage.h"
+#include "PublishAcknowledgePackage.h"

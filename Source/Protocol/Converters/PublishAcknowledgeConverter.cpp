@@ -1,13 +1,13 @@
 #include "mqttpch.h"
-#include "PublishAckConverter.h"
+#include "PublishAcknowledgeConverter.h"
 namespace MQTT {
 	namespace Protocol {
 		namespace Converters {
-			const PublishAckPackage PublishAckConverter::ToPackage(const std::vector<unsigned char>& buffer)
+			const PublishAcknowledgePackage PublishAcknowledgeConverter::ToPackage(const std::vector<unsigned char>& buffer)
 			{
-				return PublishAckPackage();
+				return PublishAcknowledgePackage();
 			}
-			const std::vector<unsigned char> PublishAckConverter::ToBuffer(const PublishAckPackage& to)
+			const std::vector<unsigned char> PublishAcknowledgeConverter::ToBuffer(const PublishAcknowledgePackage& to)
 			{
 				std::vector<unsigned char> packageBuffer;
 				std::vector<unsigned char> variableHeader = ConverterUtility::IntToBytes(to.PacketIdentifier);

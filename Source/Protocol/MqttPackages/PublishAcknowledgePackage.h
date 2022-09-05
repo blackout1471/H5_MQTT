@@ -4,7 +4,7 @@
 
 namespace MQTT {
 	namespace Protocol {
-		struct PublishAckPackage {
+		struct PublishAcknowledgePackage {
 			ControlHeader Header;
 			int16_t PacketIdentifier;
 		};

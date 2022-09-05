@@ -1,10 +1,10 @@
 #pragma once
 #include <gtest/gtest.h>
-#include <Protocol/Converters/PublishAckConverter.h>
+#include <Protocol/Converters/PublishAcknowledgeConverter.h>
 
 
-MQTT::Protocol::PublishAckPackage PAckGenerate() {
-	MQTT::Protocol::PublishAckPackage package;
+MQTT::Protocol::PublishAcknowledgePackage PAckGenerate() {
+	MQTT::Protocol::PublishAcknowledgePackage package;
 	package.Header.PackageType = MQTT::Protocol::PublAck;
 	package.PacketIdentifier = 123;
 
@@ -23,9 +23,9 @@ std::vector<unsigned char> PAckBufferGenerate(unsigned char packetIdentifier) {
 TEST(PublishAckConverterShould, BeEqual_PacketIdentifier)
 {
 	// Arrange
-	MQTT::Protocol::PublishAckPackage package = PAckGenerate();
+	MQTT::Protocol::PublishAcknowledgePackage package = PAckGenerate();
 
-	auto converter = MQTT::Protocol::Converters::PublishAckConverter();
+	auto converter = MQTT::Protocol::Converters::PublishAcknowledgeConverter();
 
 	auto expected = PAckBufferGenerate(package.PacketIdentifier);
 
@@ -40,9 +40,9 @@ TEST(PublishAckConverterShould, BeEqual_PacketIdentifier)
 TEST(PublishAckConverterShould, BeEqual_PackageSize)
 {
 	// Arrange
-	MQTT::Protocol::PublishAckPackage package = PAckGenerate();
+	MQTT::Protocol::PublishAcknowledgePackage package = PAckGenerate();
 
-	auto converter = MQTT::Protocol::Converters::PublishAckConverter();
+	auto converter = MQTT::Protocol::Converters::PublishAcknowledgeConverter();
 
 	auto expected = PAckBufferGenerate(package.PacketIdentifier);
 
