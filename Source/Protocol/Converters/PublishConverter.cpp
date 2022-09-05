@@ -33,7 +33,7 @@ namespace MQTT {
 
 				if (package.HeaderFlag & PublishHeaderFlag::QoSLsb || package.HeaderFlag & PublishHeaderFlag::QoSMsb)
 				{
-					package.VariableHeader.PacketIdentifier = ConverterUtility::ByteToInt(*data, data[1]);
+					package.VariableHeader.PacketIdentifier = ConverterUtility::ByteToShort(*data, data[1]);
 					data += 2;
 				}
 

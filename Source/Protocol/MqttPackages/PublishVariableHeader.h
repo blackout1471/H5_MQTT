@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <cstdint>
 
 namespace MQTT {
 	namespace Protocol {
@@ -8,7 +7,7 @@ namespace MQTT {
 		{
 		public:
 			std::string TopicName;
-			int16_t PacketIdentifier;
+			unsigned short PacketIdentifier;
 		};
 	}
 }
