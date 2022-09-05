@@ -47,4 +47,6 @@ jobs:
         run: make
       - name: Run unit test
         run: ./bin/Debug-linux/UnitTest/UnitTest
+      - name: Run integration test
+        run: .bin/Debug-linux/IntegrationTest/IntegrationTest
         
