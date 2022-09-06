@@ -1,10 +1,11 @@
 #include "mqttpch.h"
-#include "Server/MqttService.h"
+#include "MqttService.h"
 #include "Server/SocketServer.h"
 #include <cstring>
 #include <iostream>
 
 using namespace MQTT::Server;
+using namespace MQTT;
 
 const int SOCKET_PORT = 1883;
 

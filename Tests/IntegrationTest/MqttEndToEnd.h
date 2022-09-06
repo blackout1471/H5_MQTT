@@ -2,12 +2,12 @@
 #include "SocketClient.h"
 
 #include <gtest/gtest.h>
-#include <Server/MqttService.h>
+#include <MqttService.h>
 #include <Server/SocketServer.h>
 #include <thread>
 
-
 using namespace MQTT::Server;
+using namespace MQTT;
 
 static bool operator==(const std::vector<unsigned char>& v1, const std::vector<unsigned char>& v2)
 {

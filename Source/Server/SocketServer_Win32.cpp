@@ -1,6 +1,6 @@
 #include "mqttpch.h"
 #include "SocketServer.h"
-#include "Server/MqttService.h"
+#include "MqttService.h"
 #include "ClientUtility.h"
 #include <winsock2.h>
 #include <ws2tcpip.h>
