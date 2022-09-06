@@ -25,6 +25,8 @@ int main(int argc, char** argv) {
 	{
 		std::cout << "Started on port: " << getPort(argc, argv) << std::endl;
 		auto socketServer = SocketServer(getPort(argc, argv));
+		socketServer.ErrorEvent = [](std::string errorMessage) { std::cout << errorMessage << std::endl; };
+
 		auto protocolHandler = Protocol::Mqtt311Handler();
 		MqttService mqttService = MqttService(&socketServer, &protocolHandler);
 		mqttService.Start();
