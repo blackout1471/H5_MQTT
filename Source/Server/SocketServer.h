@@ -23,6 +23,8 @@ namespace MQTT {
 			// <inheritDoc />
 			virtual bool IsRunning() const override;
 
+			// Gets all clients
+			inline virtual const std::vector<Client*>& GetClients() const { return m_Clients; };
 		private:
 			// Configures the socket servers port and address.
 			void ConfigureAddressInfo(int port);

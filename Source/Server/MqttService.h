@@ -53,12 +53,12 @@ namespace MQTT {
 			* Called when the recieved data has been identified as a disconnect package.
 			*/
 			void OnClientDisconnect(const Client& client);
-
-			/*
+      
+      /*
 			* Called when the recieved data has been identified as a publish package.
 			*/
-			void OnClientPublish(const Client& client, const Protocol::PublishPackage& package);
-
+			void OnClientPublish(const Client& client, const std::vector<unsigned char>& buffer);
+      
 			/*
 			* Retrieves the client state from the given client id.
 			* returns: nullptr if not found.
@@ -70,6 +70,7 @@ namespace MQTT {
 			* Returns: clientstate or nullptr if not found.
 			*/
 			MqttClient* GetClientStateFromIdentifier(const std::string& identifier);
+			Client* GetClientFromIdentifier(const std::string& identifier);
 		private:
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;
