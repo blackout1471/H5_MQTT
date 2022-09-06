@@ -20,7 +20,7 @@ int getPort(int argc, char** argv)
 int main(int argc, char** argv) {
 	try
 	{
-		std::cout << "Started pon port: " << getPort(argc, argv) << std::endl;
+		std::cout << "Started on port: " << getPort(argc, argv) << std::endl;
 		auto socketServer = SocketServer(getPort(argc, argv));
 		MqttService mqttService = MqttService(&socketServer);
 		mqttService.Start();
