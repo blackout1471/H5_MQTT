@@ -29,8 +29,8 @@ TEST(MqttEndToEnd, ClientCanConnect)
 	auto expected = std::vector<unsigned char>{32, 2, 1, 0};
 	std::vector<unsigned char> actual;
 	auto socketServer = new SocketServer(1883);
-	auto protocolHandler = Protocol::Mqtt311Handler();
-	auto mqttService = new MqttService(socketServer, &protocolHandler);
+	auto protocolHandler = new Protocol::Mqtt311Handler();
+	auto mqttService = new MqttService(socketServer, protocolHandler);
 	std::vector<unsigned char> connectPackage = { 16,26,0,4,77,81,84,84,4,194,0,60,0,4,109,113,116,116,0,3,104,101,106,0,3,104,101,106 };
 	std::thread serverThread;
 
@@ -56,8 +56,8 @@ TEST(MqttEndToEnd, ClientCanDisconnect)
 	auto expected = true;
 	bool actual = true;
 	auto socketServer = new SocketServer(1883);
-	auto protocolHandler = Protocol::Mqtt311Handler();
-	auto mqttService = new MqttService(socketServer, &protocolHandler);
+	auto protocolHandler = new Protocol::Mqtt311Handler();
+	auto mqttService = new MqttService(socketServer, protocolHandler);
 	std::vector<unsigned char> connectPackage = { 16,26,0,4,77,81,84,84,4,194,0,60,0,4,109,113,116,116,0,3,104,101,106,0,3,104,101,106 };
 	std::vector<unsigned char> disconnectPackage = { 224, 0 };
 	std::thread serverThread;
@@ -86,8 +86,8 @@ TEST(MqttEndToEnd, ClientCanSubscribe)
 	auto expected = std::vector<unsigned char> {144, 3, 251, 126, 0};
 	std::vector<unsigned char> actual;
 	auto socketServer = new SocketServer(1883);
-	auto protocolHandler = Protocol::Mqtt311Handler();
-	auto mqttService = new MqttService(socketServer, &protocolHandler);
+	auto protocolHandler = new Protocol::Mqtt311Handler();
+	auto mqttService = new MqttService(socketServer, protocolHandler);
 	std::vector<unsigned char> connectPackage = { 16,26,0,4,77,81,84,84,4,194,0,60,0,4,109,113,116,116,0,3,104,101,106,0,3,104,101,106 };
 	std::vector<unsigned char> subscribePackage = { 130, 16, 251, 126, 0, 11, 116, 101, 115, 116, 116, 111, 112, 105, 99, 47, 35, 0};
 	std::thread serverThread;
