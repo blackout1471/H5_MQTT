@@ -1,7 +1,7 @@
 #pragma once
 #include <gtest/gtest.h>
 #include <Converters/ConnectAckConverter.h>
-#include <MqttPackages/packages.h>
+#include <MqttPackages/Packages.h>
 
 #pragma region Utility
 static bool Equal(const std::vector<unsigned char>& b1, const std::vector<unsigned char>& b2)
