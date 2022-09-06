@@ -6,6 +6,9 @@
 #include "Protocol/MqttClient.h"
 #include "Protocol/Managers/SubscribeManager.h"
 #include "MqttPackages/Packages.h"
+
+#include "Protocol/IProtocolHandler.h"
+
 namespace MQTT {
 	class MqttService {
 
@@ -13,7 +16,7 @@ namespace MQTT {
 		/*
 		* Creates the service with the specified server.
 		*/
-		MqttService(Server::IServer* server);
+		MqttService(Server::IServer* server, Protocol::IProtocolHandler* handler);
 		~MqttService();
 
 		// Starts the server and begin goes in a loop to listen for incoming clients.
@@ -73,6 +76,7 @@ namespace MQTT {
 	private:
 		Server::IServer* m_Server;
 		Protocol::MqttManager m_Manager;
+		Protocol::IProtocolHandler* m_ProtocolHandler;
 		std::vector<Protocol::MqttClient*> m_ClientStates;
 		Protocol::SubscribeManager m_SubscribeManager;
 	};

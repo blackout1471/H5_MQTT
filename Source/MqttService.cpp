@@ -10,7 +10,8 @@
 #include <algorithm>
 
 namespace MQTT {
-	MqttService::MqttService(Server::IServer* server) : m_Server(server), m_ClientStates(), m_Manager()
+	MqttService::MqttService(Server::IServer* server, Protocol::IProtocolHandler* protocolHandler) 
+		: m_Server(server), m_ClientStates(), m_Manager(), m_ProtocolHandler(protocolHandler)
 	{
 		InitialiseServer();
 	}

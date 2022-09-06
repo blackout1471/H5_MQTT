@@ -1,6 +1,8 @@
 #include "mqttpch.h"
 #include "MqttService.h"
 #include "Server/SocketServer.h"
+#include "Protocol/Mqtt311Handler.h"
+
 #include <cstring>
 #include <iostream>
 
@@ -23,7 +25,8 @@ int main(int argc, char** argv) {
 	{
 		std::cout << "Started on port: " << getPort(argc, argv) << std::endl;
 		auto socketServer = SocketServer(getPort(argc, argv));
-		MqttService mqttService = MqttService(&socketServer);
+		auto protocolHandler = Protocol::Mqtt311Handler();
+		MqttService mqttService = MqttService(&socketServer, &protocolHandler);
 		mqttService.Start();
 	}
 	catch (const std::exception& e) {
