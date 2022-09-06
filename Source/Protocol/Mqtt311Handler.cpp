@@ -12,12 +12,14 @@
 
 namespace MQTT {
 	namespace Protocol {
-		Mqtt311Handler::Mqtt311Handler()
+		Mqtt311Handler::Mqtt311Handler() : m_ClientStates(), m_Manager(), m_SubscribeManager()
 		{
 		}
 
 		Mqtt311Handler::~Mqtt311Handler()
 		{
+			for (auto& clientState : m_ClientStates)
+				delete clientState;
 		}
 
 		void Mqtt311Handler::OnClientConnected(Server::IServer* server, const Server::Client& client, const std::vector<unsigned char> buffer)

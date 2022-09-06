@@ -1,4 +1,3 @@
-#pragma once
 #include "IProtocolHandler.h"
 #include "MqttClient.h"
 #include "Server/IServer.h"
