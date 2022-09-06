@@ -7,8 +7,10 @@ namespace MQTT {
 			class DisconnectConverter final : public IPackageConverter<DisconnectPackage>
 			{
 			public:
-				// Inherited via IPackageConverter
+				// <inheritDoc />
 				virtual const DisconnectPackage ToPackage(const std::vector<unsigned char>& buffer) override;
+
+				// <inheritDoc />
 				virtual const std::vector<unsigned char> ToBuffer(const DisconnectPackage& to) override;
 			};
 		}

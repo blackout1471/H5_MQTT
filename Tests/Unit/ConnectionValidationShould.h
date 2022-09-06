@@ -233,3 +233,24 @@ TEST(ConnectionValidationShould, ReturnNewSession_WhenPackageIsFulfilling)
 	// Assert
 	EXPECT_TRUE(expected == actual);
 }
+
+TEST(ConnectionValidationShould, DeleteOldClientState_WhenCleanSessionIsOneAndOldExists)
+{
+	// Arrange
+	auto expected = 0;
+	int actual = -1;
+	auto package = GeneratePackage();
+	package.VariableHeader.VariableLevel |= ConnectFlagType::Clean_Session;
+	auto clientState = new MqttClient{ "", false, package.Payload.ClientId, "" };
+	auto clientStates = std::vector<MqttClient*>{
+		clientState
+	};
+	auto validator = ConnectValidator();
+
+	// Act
+	validator.ValidateClient(package, clientStates, clientState);
+	actual = clientStates.size();
+
+	// Assert
+	EXPECT_EQ(expected, actual);
+}

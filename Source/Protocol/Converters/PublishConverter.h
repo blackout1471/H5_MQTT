@@ -12,7 +12,10 @@ namespace MQTT {
 				PublishConverter();
 				~PublishConverter();
 
+				// <inheritDoc />
 				virtual const PublishPackage ToPackage(const std::vector<unsigned char>& buffer) override;
+
+				// <inheritDoc />
 				virtual const std::vector<unsigned char> ToBuffer(const PublishPackage& to) override;
 			};
 		}

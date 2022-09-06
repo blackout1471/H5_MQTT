@@ -9,7 +9,10 @@ namespace MQTT {
 			class PublishAcknowledgeConverter : public IPackageConverter<PublishAcknowledgePackage>
 			{
 			public:
+				// <inheritDoc />
 				virtual const PublishAcknowledgePackage ToPackage(const std::vector<unsigned char>& buffer) override;
+
+				// <inheritDoc />
 				virtual const std::vector<unsigned char> ToBuffer(const PublishAcknowledgePackage& to) override;
 			};
 		}

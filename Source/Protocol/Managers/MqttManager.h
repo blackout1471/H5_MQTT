@@ -10,6 +10,9 @@ namespace MQTT {
 		class MqttManager {
 
 		public:
+			/*
+			* Generates the appropriate message based upon the given return code wanted.
+			*/
 			std::vector<unsigned char> GenerateConnectAckMessage(Protocol::ConnectAckReturnCodeType _returnCode);
 		};
 	}

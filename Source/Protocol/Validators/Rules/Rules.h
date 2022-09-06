@@ -19,3 +19,4 @@
 #include "ConnectClientIdentifierValidRule.h"
 #include "SubscribeWildcardRule.h"
 #include "SubscribeTopicLength.h"
+#include "OldSessionExistsAndCleanSession.h"
