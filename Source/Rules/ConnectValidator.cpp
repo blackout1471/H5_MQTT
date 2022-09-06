@@ -11,7 +11,7 @@ namespace MQTT {
 		ConnectValidator::ConnectValidator() {}
 		ConnectValidator::~ConnectValidator() {}
 
-		ConnectValidator::Action ConnectValidator::ValidateClient(const MqttPackages::ConnectPackage& package, std::vector<Server::MqttClient*>& clientStates, Server::MqttClient*& currentClient)
+		ConnectValidator::Action ConnectValidator::ValidateClient(const MqttPackages::ConnectPackage& package, std::vector<Protocol::MqttClient*>& clientStates, Protocol::MqttClient*& currentClient)
 		{
 			auto& packageClientId = package.Payload.ClientId;
 			auto& protocolName = package.VariableHeader.ProtocolName;
@@ -32,20 +32,20 @@ namespace MQTT {
 			if (shouldContinueSession)
 			{
 				delete currentClient;
-				currentClient = Server::FindClient(packageClientId, clientStates);
+				currentClient = Protocol::FindClient(packageClientId, clientStates);
 				return ContinueState;
 			}
 
 			auto shouldDeleteOldSession = OldSessionExistsAndCleanSession(package.VariableHeader.VariableLevel, packageClientId, clientStates).Validate();
 			if (shouldDeleteOldSession)
-				Server::DeleteClient(packageClientId, clientStates);
+				Protocol::DeleteClient(packageClientId, clientStates);
 
 			SetCurrentClientId(packageClientId, currentClient);
 
 			return CreateNewState;
 		}
 
-		void ConnectValidator::SetCurrentClientId(const std::string& packageClientId, Server::MqttClient* currentClient)
+		void ConnectValidator::SetCurrentClientId(const std::string& packageClientId, Protocol::MqttClient* currentClient)
 		{
 			if (packageClientId.size() == 0)
 				currentClient->ClientId = Server::ClientUtility::GenerateUniqueId();
@@ -53,7 +53,7 @@ namespace MQTT {
 				currentClient->ClientId = packageClientId;
 		}
 
-		bool ConnectValidator::ShouldDisconnectClient(const std::string& packageClientId, const std::vector<Server::MqttClient*>& clientStates, const std::string& protocolName, const MqttPackages::ConnectPackage& package, Server::MqttClient* currentClient)
+		bool ConnectValidator::ShouldDisconnectClient(const std::string& packageClientId, const std::vector<Protocol::MqttClient*>& clientStates, const std::string& protocolName, const MqttPackages::ConnectPackage& package, Protocol::MqttClient* currentClient)
 		{
 			return !(RuleEngine({
 				{ new ClientConnectedRule(packageClientId, clientStates), false },

@@ -3,7 +3,7 @@
 #include "Converters/ConnectConverter.h"
 #include "Converters/PublishConverter.h"
 #include "IServer.h"
-#include "MqttClient.h"
+#include "Protocol/MqttClient.h"
 #include "Protocol/Managers/SubscribeManager.h"
 #include "MqttPackages/Packages.h"
 namespace MQTT {
@@ -63,18 +63,18 @@ namespace MQTT {
 			* Retrieves the client state from the given client id.
 			* returns: nullptr if not found.
 			*/
-			MqttClient* GetClientStateFromClientId(const std::string& clientId);
+			Protocol::MqttClient* GetClientStateFromClientId(const std::string& clientId);
 
 			/*
 			* Retrieves the client state from the given identifier.
 			* Returns: clientstate or nullptr if not found.
 			*/
-			MqttClient* GetClientStateFromIdentifier(const std::string& identifier);
+			Protocol::MqttClient* GetClientStateFromIdentifier(const std::string& identifier);
 			Client* GetClientFromIdentifier(const std::string& identifier);
 		private:
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;
-			std::vector<MqttClient*> m_ClientStates;
+			std::vector<Protocol::MqttClient*> m_ClientStates;
 			Protocol::SubscribeManager m_SubscribeManager;
 		};
 	}

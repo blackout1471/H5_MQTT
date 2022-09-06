@@ -3,7 +3,7 @@
 #include "MqttPackages/packages.h"
 
 namespace MQTT {
-	namespace Server {
+	namespace Protocol {
 
 		struct MqttClient
 		{

@@ -1,13 +1,13 @@
 #pragma once
 #include "IRule.h"
 #include "MqttPackages/Packages.h"
-#include "Server/MqttClient.h"
+#include "Protocol/MqttClient.h"
 
 namespace MQTT {
 	namespace Rules {
 		class ConnectWillRule : public IRule {
 		public:
-			ConnectWillRule(Server::MqttClient* client, const MqttPackages::ConnectFlagType& flag, const std::string& willMessage)
+			ConnectWillRule(Protocol::MqttClient* client, const MqttPackages::ConnectFlagType& flag, const std::string& willMessage)
 				: m_Client(client), m_Flag(flag), m_WillMessage(willMessage) {};
 			virtual ~ConnectWillRule() {};
 
@@ -35,7 +35,7 @@ namespace MQTT {
 			}
 
 		private:
-			Server::MqttClient* m_Client;
+			Protocol::MqttClient* m_Client;
 			const MqttPackages::ConnectFlagType& m_Flag;
 			const std::string& m_WillMessage;
 		};

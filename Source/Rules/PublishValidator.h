@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MqttPackages/Packages.h"
-#include "Server/MqttClient.h"
+#include "Protocol/MqttClient.h"
 #include "Protocol/Managers/SubscribeManager.h"
 
 namespace MQTT {
@@ -22,7 +22,7 @@ namespace MQTT {
 			* Validates the given package for the specific rules in 3.1.1.
 			* Returns: The action which should be done.
 			*/
-			Action ValidatePackage(MqttPackages::PublishPackage& package, const Server::MqttClient& client, Protocol::SubscribeManager& subscribeManager);
+			Action ValidatePackage(MqttPackages::PublishPackage& package, const Protocol::MqttClient& client, Protocol::SubscribeManager& subscribeManager);
 		};
 	}
 }

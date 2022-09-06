@@ -8,7 +8,7 @@ namespace MQTT {
 		PublishValidator::PublishValidator() {};
 		PublishValidator::~PublishValidator() {};
 
-		PublishValidator::Action PublishValidator::ValidatePackage(MqttPackages::PublishPackage& package, const Server::MqttClient& client, Protocol::SubscribeManager& subscribeManager)
+		PublishValidator::Action PublishValidator::ValidatePackage(MqttPackages::PublishPackage& package, const Protocol::MqttClient& client, Protocol::SubscribeManager& subscribeManager)
 		{
 			// First check whether the current client has broken any rules which should make the server disconnect the client.
 			auto shouldDisconnect = !RuleEngine({

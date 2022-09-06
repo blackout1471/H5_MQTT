@@ -1,6 +1,6 @@
 #pragma once
 #include "IRule.h"
-#include "Server/MqttClient.h"
+#include "Protocol/MqttClient.h"
 
 #include <string>
 #include <vector>

@@ -1,6 +1,6 @@
 #pragma once
 #include "IRule.h"
-#include "Server/MqttClient.h"
+#include "Protocol/MqttClient.h"
 #include "MqttPackages/ConnectFlagType.h"
 
 #include <vector>
@@ -10,7 +10,7 @@ namespace MQTT {
 	namespace Rules {
 		class ContinueSessionRule : public IRule {
 		public:
-			ContinueSessionRule(const MqttPackages::ConnectFlagType ConnectFlag, const std::string& clientId, const std::vector<Server::MqttClient*>& clients)
+			ContinueSessionRule(const MqttPackages::ConnectFlagType ConnectFlag, const std::string& clientId, const std::vector<Protocol::MqttClient*>& clients)
 				: m_Flag(ConnectFlag), m_Clients(clients), m_ClientId(clientId) {};
 			virtual ~ContinueSessionRule() {};
 
@@ -30,7 +30,7 @@ namespace MQTT {
 		private:
 			const std::string& m_ClientId;
 			const MqttPackages::ConnectFlagType m_Flag;
-			const std::vector<Server::MqttClient*>& m_Clients;
+			const std::vector<Protocol::MqttClient*>& m_Clients;
 		};
 	}
 }

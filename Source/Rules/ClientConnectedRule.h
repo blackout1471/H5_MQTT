@@ -1,6 +1,6 @@
 #pragma once
 #include "IRule.h"
-#include "Server/MqttClient.h"
+#include "Protocol/MqttClient.h"
 
 #include <string>
 #include <vector>
@@ -10,7 +10,7 @@ namespace MQTT {
 		class ClientConnectedRule : public IRule
 		{
 		public:
-			ClientConnectedRule(const std::string& clientId, const std::vector<Server::MqttClient*>& clientStates)
+			ClientConnectedRule(const std::string& clientId, const std::vector<Protocol::MqttClient*>& clientStates)
 				: m_ClientId(clientId), m_ClientStates(clientStates) {};
 
 			/*
@@ -27,7 +27,7 @@ namespace MQTT {
 
 		private:
 			const std::string m_ClientId;
-			const std::vector<Server::MqttClient*>& m_ClientStates;
+			const std::vector<Protocol::MqttClient*>& m_ClientStates;
 		};
 	}
 }

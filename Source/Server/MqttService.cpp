@@ -73,7 +73,7 @@ namespace MQTT {
 		{
 			auto& packageClientId = package.Payload.ClientId;
 			auto& protocolName = package.VariableHeader.ProtocolName;
-			auto* clientState = new MqttClient();
+			auto* clientState = new Protocol::MqttClient();
 
 			clientState->ConnectionFlags = package.VariableHeader.VariableLevel;
 
@@ -186,7 +186,7 @@ namespace MQTT {
 			m_Server->Disconnect(client);
 		}
 
-		MqttClient* MqttService::GetClientStateFromClientId(const std::string& clientId)
+		Protocol::MqttClient* MqttService::GetClientStateFromClientId(const std::string& clientId)
 		{
 			for (auto* clientState : m_ClientStates)
 				if (clientState->ClientId == clientId)
@@ -195,7 +195,7 @@ namespace MQTT {
 			return nullptr;
 		}
 
-		MqttClient* MqttService::GetClientStateFromIdentifier(const std::string& identifier)
+		Protocol::MqttClient* MqttService::GetClientStateFromIdentifier(const std::string& identifier)
 		{
 			for (auto* clientState : m_ClientStates)
 				if (clientState->ConnectionIdentifier == identifier)
