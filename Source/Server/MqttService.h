@@ -27,11 +27,12 @@ namespace MQTT {
 			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
 			void OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package);
 			void OnClientDisconnect(const Client& client);
-			void OnClientPublish(const Client& client, const Protocol::PublishPackage& package);
+			void OnClientPublish(const Client& client, const std::vector<unsigned char>& buffer);
 
 
 			MqttClient* GetClientStateFromClientId(const std::string& clientId);
 			MqttClient* GetClientStateFromIdentifier(const std::string& identifier);
+			Client* GetClientFromIdentifier(const std::string& identifier);
 		private:
 			IServer* m_Server;
 			Protocol::MqttManager m_Manager;
