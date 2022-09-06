@@ -18,7 +18,7 @@ namespace MQTT {
 
 			MqttPackages::ConnectAckPackage ackPackage(controlHeader, ackVariableHeader);
 
-			Protocol::Converters::ConnectAckConverter ackConverter;
+			Converters::ConnectAckConverter ackConverter;
 
 			return ackConverter.ToBuffer(ackPackage);
 		}

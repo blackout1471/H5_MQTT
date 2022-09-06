@@ -1,9 +1,10 @@
 #pragma once
 #include <gtest/gtest.h>
-#include <Protocol/Converters/PublishAcknowledgeConverter.h>
+#include <Converters/PublishAcknowledgeConverter.h>
 
 
 using namespace MQTT::MqttPackages;
+using namespace MQTT::Converters;
 
 PublishAcknowledgePackage PAckGenerate() {
 	PublishAcknowledgePackage package;
@@ -27,7 +28,7 @@ TEST(PublishAckConverterShould, BeEqual_PacketIdentifier)
 	// Arrange
 	PublishAcknowledgePackage package = PAckGenerate();
 
-	auto converter = MQTT::Protocol::Converters::PublishAcknowledgeConverter();
+	auto converter = PublishAcknowledgeConverter();
 
 	auto expected = PAckBufferGenerate();
 
@@ -46,7 +47,7 @@ TEST(PublishAckConverterShould, BeEqual_PackageSize)
 	// Arrange
 	PublishAcknowledgePackage package = PAckGenerate();
 
-	auto converter = MQTT::Protocol::Converters::PublishAcknowledgeConverter();
+	auto converter = PublishAcknowledgeConverter();
 
 	auto expected = PAckBufferGenerate();
 

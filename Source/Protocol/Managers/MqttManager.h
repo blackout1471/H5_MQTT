@@ -1,7 +1,7 @@
 #pragma once
 #include "mqttpch.h"
 #include "MqttPackages/packages.h"
-#include "Protocol/Converters/ConnectAckConverter.h"
+#include "Converters/ConnectAckConverter.h"
 
 #include <vector>
 

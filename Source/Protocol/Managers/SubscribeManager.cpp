@@ -133,7 +133,7 @@ namespace MQTT {
 
 		std::vector<unsigned char> SubscribeManager::CreateSubAckBuffer(const MqttPackages::SubscribePackage& subPackage)
 		{
-			Protocol::Converters::SubscribeAcknowledgementConverter converter;
+			Converters::SubscribeAcknowledgementConverter converter;
 
 			MqttPackages::SubscribeAcknowledgementPackage ackPackage = MqttPackages::SubscribeAcknowledgementPackage();
 			ackPackage.Header.PackageType = MqttPackages::ControlPackageType::SubAck;

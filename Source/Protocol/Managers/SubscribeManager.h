@@ -1,7 +1,7 @@
 #pragma once
 #include "Protocol/BTree.h"
-#include "Protocol/Converters/SubscribeConverter.h"
-#include "Protocol/Converters/SubscribeAcknowledgementConverter.h"
+#include "Converters/SubscribeConverter.h"
+#include "Converters/SubscribeAcknowledgementConverter.h"
 #include "Rules/RuleEngine.h"
 #include "Rules/IRule.h"
 

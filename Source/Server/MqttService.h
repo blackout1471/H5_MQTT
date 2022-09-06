@@ -1,7 +1,7 @@
 #pragma once
 #include "Protocol/Managers/MqttManager.h"
-#include "Protocol/Converters/ConnectConverter.h"
-#include "Protocol/Converters/PublishConverter.h"
+#include "Converters/ConnectConverter.h"
+#include "Converters/PublishConverter.h"
 #include "IServer.h"
 #include "MqttClient.h"
 #include "Protocol/Managers/SubscribeManager.h"

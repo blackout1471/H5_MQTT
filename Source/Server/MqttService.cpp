@@ -2,11 +2,11 @@
 
 #include "mqttpch.h"
 #include "MqttService.h"
-#include "Protocol/Converters/ConverterUtility.h"
+#include "Converters/ConverterUtility.h"
 #include "Rules/ConnectValidator.h"
 #include "Rules/PublishValidator.h"
-#include "Protocol/Converters/DisconnectConverter.h"
-#include "Protocol/Converters/PublishAcknowledgeConverter.h"
+#include "Converters/DisconnectConverter.h"
+#include "Converters/PublishAcknowledgeConverter.h"
 #include <algorithm>
 
 namespace MQTT {
@@ -34,14 +34,14 @@ namespace MQTT {
 
 		void MqttService::OnReceivedData(const Client& client, const std::vector<unsigned char>& buffer)
 		{
-			auto type = Protocol::Converters::ConverterUtility::GetPackageType(buffer[0]);
+			auto type = Converters::ConverterUtility::GetPackageType(buffer[0]);
 
 			switch (type)
 			{
 			case MqttPackages::Connect:
 				OnClientConnect(
 					client,
-					Protocol::Converters::ConnectConverter().ToPackage(buffer)
+					Converters::ConnectConverter().ToPackage(buffer)
 				);
 				break;
 			case MqttPackages::Publish:
@@ -53,7 +53,7 @@ namespace MQTT {
 			case MqttPackages::Subscribe:
 				OnClientSubscribed(
 					client,
-					Protocol::Converters::SubscribeConverter().ToPackage(buffer)
+					Converters::SubscribeConverter().ToPackage(buffer)
 				);
 				break;
 			case MqttPackages::Disconnect:
@@ -127,14 +127,14 @@ namespace MQTT {
 
 		void MqttService::OnClientPublish(const Client& client, const std::vector<unsigned char>& buffer)
 		{
-			auto package = Protocol::Converters::PublishConverter().ToPackage(buffer);
+			auto package = Converters::PublishConverter().ToPackage(buffer);
 			auto copyPackage = package;
 			auto mqttClientState = GetClientStateFromIdentifier(client.GetIdentifier());
 
 			auto action = Rules::PublishValidator()
 				.ValidatePackage(copyPackage, *mqttClientState, m_SubscribeManager);
 
-			auto pulishAckConverter = Protocol::Converters::PublishAcknowledgeConverter();
+			auto pulishAckConverter = Converters::PublishAcknowledgeConverter();
 			MqttPackages::PublishAcknowledgePackage publishAckPackage;
 			publishAckPackage.Header.PackageType = MqttPackages::ControlPackageType::PublAck;
 			publishAckPackage.PacketIdentifier = package.VariableHeader.PacketIdentifier;
