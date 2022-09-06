@@ -20,14 +20,45 @@ int getPort(int argc, char** argv)
 	return SOCKET_PORT;
 }
 
+void OnSocketErrorPrint(std::string errorMessage) {
+	std::cout << errorMessage << std::endl;
+}
+
+void OnRequestPrint(MqttPackages::ControlPackageType type, const Server::Client& client, const void* package) {
+	
+	std::string message;
+	
+	switch (type)
+	{
+	case MQTT::MqttPackages::Connect:
+		message = "Client connected: ClientId->" + ((MqttPackages::ConnectPackage*)package)->Payload.ClientId + " ClientIdentifier-> " + client.GetIdentifier();
+		break;
+	case MQTT::MqttPackages::Publish:
+		message = "Client publish: ClientId-> " + client.GetIdentifier() + " Payload-> " + ((MqttPackages::PublishPackage*)package)->Payload;
+		break;
+	case MQTT::MqttPackages::Subscribe:
+		message = "Client subscribed: ClientIdentifier->" + client.GetIdentifier();
+		break;
+	case MQTT::MqttPackages::Disconnect:
+		message = "Client disconnected: ClientIdentifier->" + client.GetIdentifier();
+		break;
+	default:
+		break;
+	}
+
+	std::cout << message << std::endl;
+}
+
 int main(int argc, char** argv) {
 	try
 	{
 		std::cout << "Started on port: " << getPort(argc, argv) << std::endl;
 		auto socketServer = SocketServer(getPort(argc, argv));
-		socketServer.ErrorEvent = [](std::string errorMessage) { std::cout << errorMessage << std::endl; };
+		socketServer.ErrorEvent = OnSocketErrorPrint;
 
 		auto protocolHandler = Protocol::Mqtt311Handler();
+		protocolHandler.OnRequestEvent = OnRequestPrint;
+
 		MqttService mqttService = MqttService(&socketServer, &protocolHandler);
 		mqttService.Start();
 	}

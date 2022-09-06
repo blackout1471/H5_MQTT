@@ -25,6 +25,7 @@ namespace MQTT {
 		void Mqtt311Handler::OnClientConnected(Server::IServer* server, const Server::Client& client, const std::vector<unsigned char> buffer)
 		{
 			auto package = Converters::ConnectConverter().ToPackage(buffer);
+			if (OnRequestEvent) OnRequestEvent(MqttPackages::Connect, client, &package);
 
 			auto& packageClientId = package.Payload.ClientId;
 			auto& protocolName = package.VariableHeader.ProtocolName;
@@ -62,12 +63,16 @@ namespace MQTT {
 
 		void Mqtt311Handler::OnClientDisconnected(Server::IServer* server, const Server::Client& client, const std::vector<unsigned char> buffer)
 		{
+			if (OnRequestEvent) OnRequestEvent(MqttPackages::Disconnect, client, nullptr);
+
 			DisconnectClientState(client, server);
 		}
 
 		void Mqtt311Handler::OnClientPublished(Server::IServer* server, const Server::Client& client, const std::vector<unsigned char> buffer)
 		{
 			auto package = Converters::PublishConverter().ToPackage(buffer);
+			if (OnRequestEvent) OnRequestEvent(MqttPackages::Publish, client, &package);
+
 			auto copyPackage = package;
 			auto mqttClientState = GetClientStateFromIdentifier(client.GetIdentifier());
 
@@ -115,6 +120,8 @@ namespace MQTT {
 		void Mqtt311Handler::OnClientSubscribed(Server::IServer* server, const Server::Client& client, const std::vector<unsigned char> buffer)
 		{
 			auto package = Converters::SubscribeConverter().ToPackage(buffer);
+			if (OnRequestEvent) OnRequestEvent(MqttPackages::Subscribe, client, &package);
+
 			bool validPackage = m_SubscribeManager.ValidPackage(package);
 			if (!validPackage) {
 				DisconnectClientState(client, server);
