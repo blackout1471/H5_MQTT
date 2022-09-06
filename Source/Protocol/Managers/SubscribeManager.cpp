@@ -1,6 +1,6 @@
 #include "mqttpch.h"
 #include "SubscribeManager.h"
-#include "Protocol/Validators/Rules/Rules.h"
+#include "Rules/Rules.h"
 
 namespace MQTT {
 	namespace Protocol {
@@ -87,9 +87,9 @@ namespace MQTT {
 
 		bool SubscribeManager::ValidPackage(const MqttPackages::SubscribePackage& subscribePackage)
 		{
-			return !(Validators::RuleEngine({
-				{ new Validators::SubscribeWildcardRule({ MqttPackages::Dollar, MqttPackages::Plus }, subscribePackage.Payload.Topics), false },
-				{ new Validators::SubscribeTopicLength(subscribePackage.Payload.Topics), false }
+			return !(Rules::RuleEngine({
+				{ new Rules::SubscribeWildcardRule({ MqttPackages::Dollar, MqttPackages::Plus }, subscribePackage.Payload.Topics), false },
+				{ new Rules::SubscribeTopicLength(subscribePackage.Payload.Topics), false }
 				}).Run());
 		}
 

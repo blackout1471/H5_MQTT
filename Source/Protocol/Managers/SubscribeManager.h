@@ -2,8 +2,8 @@
 #include "Protocol/BTree.h"
 #include "Protocol/Converters/SubscribeConverter.h"
 #include "Protocol/Converters/SubscribeAcknowledgementConverter.h"
-#include "Protocol/Validators/RuleEngine.h"
-#include "Protocol/Validators/Rules/IRule.h"
+#include "Rules/RuleEngine.h"
+#include "Rules/IRule.h"
 
 namespace MQTT {
 	namespace Protocol {

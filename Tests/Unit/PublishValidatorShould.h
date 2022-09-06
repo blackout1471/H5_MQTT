@@ -1,8 +1,8 @@
 #pragma once
 #include <gtest/gtest.h>
-#include <Protocol/Validators/PublishValidator.h>
+#include <Rules/PublishValidator.h>
 using namespace MQTT::Protocol;
-using namespace MQTT::Protocol::Validators;
+using namespace MQTT::Rules;
 using namespace MQTT::Server;
 
 #pragma region Utility

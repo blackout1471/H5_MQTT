@@ -3,8 +3,8 @@
 #include "mqttpch.h"
 #include "MqttService.h"
 #include "Protocol/Converters/ConverterUtility.h"
-#include "Protocol/Validators/ConnectValidator.h"
-#include "Protocol/Validators/PublishValidator.h"
+#include "Rules/ConnectValidator.h"
+#include "Rules/PublishValidator.h"
 #include "Protocol/Converters/DisconnectConverter.h"
 #include "Protocol/Converters/PublishAcknowledgeConverter.h"
 #include <algorithm>
@@ -77,27 +77,27 @@ namespace MQTT {
 
 			clientState->ConnectionFlags = package.VariableHeader.VariableLevel;
 
-			auto action = Protocol::Validators::ConnectValidator()
+			auto action = Rules::ConnectValidator()
 				.ValidateClient(package, m_ClientStates, clientState);
 
 			clientState->ConnectionIdentifier = client.GetIdentifier();
 
 			switch (action)
 			{
-			case MQTT::Protocol::Validators::ConnectValidator::Disconnect:
+			case Rules::ConnectValidator::Disconnect:
 				m_Server->Disconnect(client);
 				break;
-			case MQTT::Protocol::Validators::ConnectValidator::RejectUserIdentifier:
+			case Rules::ConnectValidator::RejectUserIdentifier:
 				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(MqttPackages::Refused_Identifier_Rejected));
 				break;
-			case MQTT::Protocol::Validators::ConnectValidator::RejectProtocolLevel:
+			case Rules::ConnectValidator::RejectProtocolLevel:
 				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(MqttPackages::Refused_Unacceptable_Protocol_Version));
 				break;
-			case MQTT::Protocol::Validators::ConnectValidator::ContinueState:
+			case Rules::ConnectValidator::ContinueState:
 				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(MqttPackages::Accepted));
 				clientState->IsConnected = true;
 				break;
-			case MQTT::Protocol::Validators::ConnectValidator::CreateNewState:
+			case Rules::ConnectValidator::CreateNewState:
 				m_ClientStates.push_back(clientState);
 				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(MqttPackages::Accepted));
 				clientState->IsConnected = true;
@@ -131,7 +131,7 @@ namespace MQTT {
 			auto copyPackage = package;
 			auto mqttClientState = GetClientStateFromIdentifier(client.GetIdentifier());
 
-			auto action = Protocol::Validators::PublishValidator()
+			auto action = Rules::PublishValidator()
 				.ValidatePackage(copyPackage, *mqttClientState, m_SubscribeManager);
 
 			auto pulishAckConverter = Protocol::Converters::PublishAcknowledgeConverter();
@@ -141,10 +141,10 @@ namespace MQTT {
 
 			switch (action)
 			{
-			case MQTT::Protocol::Validators::PublishValidator::RejectPublish:
+			case Rules::PublishValidator::RejectPublish:
 				DisconnectClientState(client);
 				break;
-			case MQTT::Protocol::Validators::PublishValidator::AcknowledgePublish:
+			case Rules::PublishValidator::AcknowledgePublish:
 			{
 				if (package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSLsb)
 					m_Server->Send(client, pulishAckConverter.ToBuffer(publishAckPackage));
@@ -164,7 +164,7 @@ namespace MQTT {
 				}
 			}
 			break;
-			case MQTT::Protocol::Validators::PublishValidator::DisconnectClient:
+			case Rules::PublishValidator::DisconnectClient:
 				DisconnectClientState(client);
 				break;
 			default:
