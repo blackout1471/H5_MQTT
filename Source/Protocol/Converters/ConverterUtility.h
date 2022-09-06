@@ -1,5 +1,5 @@
 #pragma once
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 
 #include <cstdint>
 
@@ -41,9 +41,9 @@ namespace MQTT {
 				/*
 				* Retrieves the package type from the given unsigned char
 				*/
-				static ControlPackageType GetPackageType(const unsigned char data) 
+				static MqttPackages::ControlPackageType GetPackageType(const unsigned char data)
 				{
-					return ControlPackageType((data >> 4) & 0xff);
+					return MqttPackages::ControlPackageType((data >> 4) & 0xff);
 				}
 				/*
 				* Converts a int to 2 bytes splitting the value at the 8th bit.

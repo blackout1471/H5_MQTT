@@ -1,13 +1,13 @@
 #pragma once
 #include "IRule.h"
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 #include <vector>
 namespace MQTT {
 	namespace Protocol {
 		namespace Validators {
 			class SubscribeWildcardRule : public IRule {
 			public:
-				SubscribeWildcardRule(std::vector<SubscribeTopicWildcardType> notSupportedWildcards, std::vector<Protocol::SubscribeTopic> topics) : m_NotSupportedWildcards(notSupportedWildcards), m_Topics(topics) {};
+				SubscribeWildcardRule(std::vector<MqttPackages::SubscribeTopicWildcardType> notSupportedWildcards, std::vector<MqttPackages::SubscribeTopic> topics) : m_NotSupportedWildcards(notSupportedWildcards), m_Topics(topics) {};
 
 				/*
 				* Checks whether the payload topics have a wildcard that is not supported
@@ -29,8 +29,8 @@ namespace MQTT {
 				}
 
 			private:
-				std::vector<SubscribeTopicWildcardType> m_NotSupportedWildcards;
-				std::vector<Protocol::SubscribeTopic> m_Topics;
+				std::vector<MqttPackages::SubscribeTopicWildcardType> m_NotSupportedWildcards;
+				std::vector<MqttPackages::SubscribeTopic> m_Topics;
 
 			};
 		}

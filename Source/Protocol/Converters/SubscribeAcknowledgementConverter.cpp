@@ -4,11 +4,11 @@
 namespace MQTT {
 	namespace Protocol {
 		namespace Converters {
-			const SubscribeAcknowledgementPackage SubscribeAcknowledgementConverter::ToPackage(const std::vector<unsigned char>& buffer)
+			const MqttPackages::SubscribeAcknowledgementPackage SubscribeAcknowledgementConverter::ToPackage(const std::vector<unsigned char>& buffer)
 			{
-				return SubscribeAcknowledgementPackage();
+				return MqttPackages::SubscribeAcknowledgementPackage();
 			}
-			const std::vector<unsigned char> SubscribeAcknowledgementConverter::ToBuffer(const SubscribeAcknowledgementPackage& to)
+			const std::vector<unsigned char> SubscribeAcknowledgementConverter::ToBuffer(const MqttPackages::SubscribeAcknowledgementPackage& to)
 			{
 				std::vector<unsigned char> packageBuffer;
 				std::vector<unsigned char> variableHeader = ConverterUtility::IntToBytes(to.VariableHeader.PacketIdentifier);

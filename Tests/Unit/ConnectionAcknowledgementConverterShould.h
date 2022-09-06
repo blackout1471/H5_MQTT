@@ -1,7 +1,7 @@
 #pragma once
 #include <gtest/gtest.h>
 #include <Protocol/Converters/ConnectAckConverter.h>
-#include <Protocol/MqttPackages/ConnectAckPackage.h>
+#include <MqttPackages/packages.h>
 
 using namespace MQTT::Protocol;
 

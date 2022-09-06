@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct ConnectVariableHeader
 		{
 			std::string ProtocolName;

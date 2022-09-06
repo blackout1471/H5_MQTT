@@ -38,45 +38,25 @@ namespace MQTT {
 
 			switch (type)
 			{
-			case MQTT::Protocol::Connect:
+			case MqttPackages::Connect:
 				OnClientConnect(
 					client,
 					Protocol::Converters::ConnectConverter().ToPackage(buffer)
 				);
 				break;
-			case MQTT::Protocol::ConnectAck:
-				break;
-			case MQTT::Protocol::Publish:
+			case MqttPackages::Publish:
 				OnClientPublish(
 					client,
 					buffer
 				);
 				break;
-			case MQTT::Protocol::PublAck:
-				break;
-			case MQTT::Protocol::PubRec:
-				break;
-			case MQTT::Protocol::PubRel:
-				break;
-			case MQTT::Protocol::PubComp:
-				break;
-			case MQTT::Protocol::Subscribe:
+			case MqttPackages::Subscribe:
 				OnClientSubscribed(
 					client,
 					Protocol::Converters::SubscribeConverter().ToPackage(buffer)
 				);
 				break;
-			case MQTT::Protocol::SubAck:
-				break;
-			case MQTT::Protocol::Unsubscribe:
-				break;
-			case MQTT::Protocol::UnsubAck:
-				break;
-			case MQTT::Protocol::PingReq:
-				break;
-			case MQTT::Protocol::PingResp:
-				break;
-			case MQTT::Protocol::Disconnect:
+			case MqttPackages::Disconnect:
 				OnClientDisconnect(
 					client
 				);
@@ -89,7 +69,7 @@ namespace MQTT {
 			}
 		}
 
-		void MqttService::OnClientConnect(const Client& client, const Protocol::ConnectPackage& package)
+		void MqttService::OnClientConnect(const Client& client, const MqttPackages::ConnectPackage& package)
 		{
 			auto& packageClientId = package.Payload.ClientId;
 			auto& protocolName = package.VariableHeader.ProtocolName;
@@ -108,23 +88,23 @@ namespace MQTT {
 				m_Server->Disconnect(client);
 				break;
 			case MQTT::Protocol::Validators::ConnectValidator::RejectUserIdentifier:
-				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Refused_Identifier_Rejected));
+				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(MqttPackages::Refused_Identifier_Rejected));
 				break;
 			case MQTT::Protocol::Validators::ConnectValidator::RejectProtocolLevel:
-				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Refused_Unacceptable_Protocol_Version));
+				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(MqttPackages::Refused_Unacceptable_Protocol_Version));
 				break;
 			case MQTT::Protocol::Validators::ConnectValidator::ContinueState:
-				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Accepted));
+				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(MqttPackages::Accepted));
 				clientState->IsConnected = true;
 				break;
 			case MQTT::Protocol::Validators::ConnectValidator::CreateNewState:
 				m_ClientStates.push_back(clientState);
-				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(Protocol::Accepted));
+				m_Server->Send(client, m_Manager.GenerateConnectAckMessage(MqttPackages::Accepted));
 				clientState->IsConnected = true;
 				break;
 			}
 		}
-		void MqttService::OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package)
+		void MqttService::OnClientSubscribed(const Client& client, const MqttPackages::SubscribePackage& package)
 		{
 			bool validPackage = m_SubscribeManager.ValidPackage(package);
 			if (!validPackage) {
@@ -155,8 +135,8 @@ namespace MQTT {
 				.ValidatePackage(copyPackage, *mqttClientState, m_SubscribeManager);
 
 			auto pulishAckConverter = Protocol::Converters::PublishAcknowledgeConverter();
-			Protocol::PublishAcknowledgePackage publishAckPackage;
-			publishAckPackage.Header.PackageType = Protocol::ControlPackageType::PublAck;
+			MqttPackages::PublishAcknowledgePackage publishAckPackage;
+			publishAckPackage.Header.PackageType = MqttPackages::ControlPackageType::PublAck;
 			publishAckPackage.PacketIdentifier = package.VariableHeader.PacketIdentifier;
 
 			switch (action)
@@ -166,7 +146,7 @@ namespace MQTT {
 				break;
 			case MQTT::Protocol::Validators::PublishValidator::AcknowledgePublish:
 			{
-				if (package.HeaderFlag & Protocol::PublishHeaderFlag::QoSLsb)
+				if (package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSLsb)
 					m_Server->Send(client, pulishAckConverter.ToBuffer(publishAckPackage));
 
 				//TODO: Implement QoS 1 & 2

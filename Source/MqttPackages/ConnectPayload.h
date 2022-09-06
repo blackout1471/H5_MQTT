@@ -3,7 +3,7 @@
 #include <vector>
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 
 		struct ConnectPayload
 		{

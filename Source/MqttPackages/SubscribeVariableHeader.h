@@ -1,6 +1,6 @@
 #pragma once
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct SubscribeVariableHeader {
 		public:
 			int PacketIdentifier;

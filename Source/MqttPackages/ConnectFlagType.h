@@ -2,7 +2,7 @@
 
 namespace MQTT
 {
-	namespace Protocol
+	namespace MqttPackages
 	{
 		enum ConnectFlagType : unsigned char
 		{

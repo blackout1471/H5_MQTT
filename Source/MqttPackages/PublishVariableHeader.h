@@ -2,7 +2,7 @@
 #include <string>
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct PublishVariableHeader
 		{
 		public:

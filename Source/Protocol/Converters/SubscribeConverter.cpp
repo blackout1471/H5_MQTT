@@ -5,22 +5,22 @@ namespace MQTT {
 	namespace Protocol {
 		namespace Converters
 		{
-			const SubscribePackage SubscribeConverter::ToPackage(const std::vector<unsigned char>& buffer)
+			const MqttPackages::SubscribePackage SubscribeConverter::ToPackage(const std::vector<unsigned char>& buffer)
 			{
 
-				ControlHeader ch;
+				MqttPackages::ControlHeader ch;
 				ch.PackageType = ConverterUtility::GetPackageType(buffer[0]);
 				int packageSize = buffer[1];
 
-				SubscribeVariableHeader vh;
+				MqttPackages::SubscribeVariableHeader vh;
 				vh.PacketIdentifier = ConverterUtility::ByteToInt(buffer[2], buffer[3]);
 
 				// offset already read bytes
 				int offset = 4;
 
-				SubscribePayload sp = ConvertPayload(buffer, packageSize, offset);
+				MqttPackages::SubscribePayload sp = ConvertPayload(buffer, packageSize, offset);
 
-				SubscribePackage subPackage;
+				MqttPackages::SubscribePackage subPackage;
 				subPackage.Header = ch;
 				subPackage.Payload = sp;
 				subPackage.VariableHeader = vh;
@@ -28,14 +28,14 @@ namespace MQTT {
 				return subPackage;
 			}
 
-			const std::vector<unsigned char> SubscribeConverter::ToBuffer(const SubscribePackage& to)
+			const std::vector<unsigned char> SubscribeConverter::ToBuffer(const MqttPackages::SubscribePackage& to)
 			{
 				return std::vector<unsigned char>();
 			}
 
-			const SubscribePayload SubscribeConverter::ConvertPayload(const std::vector<unsigned char>& buffer, int packageSize, int offset)
+			const MqttPackages::SubscribePayload SubscribeConverter::ConvertPayload(const std::vector<unsigned char>& buffer, int packageSize, int offset)
 			{
-				SubscribePayload sp;
+				MqttPackages::SubscribePayload sp;
 				do
 				{
 					// Get size of the topic
@@ -44,14 +44,14 @@ namespace MQTT {
 					// offset the length of the topic bytes
 					offset += 2;
 
-					SubscribeTopic st;
+					MqttPackages::SubscribeTopic st;
 					std::vector<unsigned char> currentPath;
 
 					for (int i = 0; i < topicLength; i++)
 					{
 						if (buffer[i + offset] == '#' || buffer[i + offset] == '+' || buffer[i + offset] == '$')
 						{
-							st.Wildcard = (SubscribeTopicWildcardType)buffer[i + offset];
+							st.Wildcard = (MqttPackages::SubscribeTopicWildcardType)buffer[i + offset];
 						}
 						else if (buffer[i + offset] == '/')
 						{

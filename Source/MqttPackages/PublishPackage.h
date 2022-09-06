@@ -4,7 +4,7 @@
 #include "PublishVariableHeader.h"
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct PublishPackage
 		{
 		public:

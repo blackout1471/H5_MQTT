@@ -14,7 +14,7 @@ namespace MQTT {
 		}
 
 		// Creates a new tree
-		BTree* BTree::NewBTree(SubscribeClient* subClient, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard) {
+		BTree* BTree::NewBTree(MqttPackages::SubscribeClient* subClient, std::vector<unsigned char> topic, MqttPackages::SubscribeTopicWildcardType wildcard) {
 			BTree* btree = new BTree();
 			btree->AddClient(subClient);
 			btree->m_Topic = topic;
@@ -23,7 +23,7 @@ namespace MQTT {
 		}
 
 		// Creates a new tree
-		BTree* BTree::NewBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard) {
+		BTree* BTree::NewBTree(std::vector<unsigned char> topic, MqttPackages::SubscribeTopicWildcardType wildcard) {
 			BTree* btree = new BTree();
 			btree->m_Topic = topic;
 			btree->m_Wildcard = wildcard;
@@ -31,7 +31,7 @@ namespace MQTT {
 		}
 
 		// Creates a new tree
-		BTree* BTree::NewBTree(BTree* parent, SubscribeClient* subClient, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard) {
+		BTree* BTree::NewBTree(BTree* parent, MqttPackages::SubscribeClient* subClient, std::vector<unsigned char> topic, MqttPackages::SubscribeTopicWildcardType wildcard) {
 			BTree* btree = new BTree();
 			btree->m_Parent = parent;
 			btree->AddClient(subClient);
@@ -54,7 +54,7 @@ namespace MQTT {
 			return btree;
 		}
 
-		void BTree::AddClient(SubscribeClient* subClient)
+		void BTree::AddClient(MqttPackages::SubscribeClient* subClient)
 		{
 			bool foundSubClient = false;
 
@@ -70,7 +70,7 @@ namespace MQTT {
 			if (!foundSubClient)
 				m_SubClients.push_back(subClient);
 		}
-		BTree* BTree::GetFullMatch(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard)
+		BTree* BTree::GetFullMatch(std::vector<unsigned char> topic, MqttPackages::SubscribeTopicWildcardType wildcard)
 		{
 			if (topic == m_Topic && m_Wildcard == wildcard)
 				return this;

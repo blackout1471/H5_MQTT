@@ -1,6 +1,6 @@
 #pragma once
 #include "IRule.h"
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 
 namespace MQTT {
 	namespace Protocol {
@@ -8,7 +8,7 @@ namespace MQTT {
 			class PublishQosRule : public IRule
 			{
 			public:
-				PublishQosRule(PublishPackage& package) : m_Package(package) {};
+				PublishQosRule(MqttPackages::PublishPackage& package) : m_Package(package) {};
 				~PublishQosRule() {};
 
 				/*
@@ -16,16 +16,16 @@ namespace MQTT {
 				* Returns: true if they are not set, false if any are.
 				*/
 				virtual bool Validate() override {
-					if ((m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb + m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb) == 0)
+					if ((m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSLsb + m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSMsb) == 0)
 					{
-						m_Package.HeaderFlag = m_Package.HeaderFlag & ~PublishHeaderFlag::Dup;
+						m_Package.HeaderFlag = m_Package.HeaderFlag & ~MqttPackages::PublishHeaderFlag::Dup;
 						return false;
 					}
 
 					return true;
 				}
 			private:
-				PublishPackage& m_Package;
+				MqttPackages::PublishPackage& m_Package;
 			};
 		}
 	}

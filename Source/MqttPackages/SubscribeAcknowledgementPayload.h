@@ -2,7 +2,7 @@
 #include <vector>
 #include "SubscribeAcknowledgementPayloadQoS.h"
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct SubscribeAcknowledgementPayload {
 			std::vector<SubscribeAcknowledgementQoS> Payload;
 		};

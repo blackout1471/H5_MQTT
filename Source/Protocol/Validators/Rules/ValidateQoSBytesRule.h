@@ -1,6 +1,6 @@
 #pragma once
 #include "IRule.h"
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 
 namespace MQTT {
 	namespace Protocol {
@@ -8,7 +8,7 @@ namespace MQTT {
 			class ValidateQoSBytesRule : public IRule
 			{
 			public:
-				ValidateQoSBytesRule(const PublishPackage& package) : m_Package(package) {};
+				ValidateQoSBytesRule(const MqttPackages::PublishPackage& package) : m_Package(package) {};
 				~ValidateQoSBytesRule() {};
 
 				/*
@@ -16,14 +16,14 @@ namespace MQTT {
 				* Returns: true if not, false if it is.
 				*/
 				virtual bool Validate() override {
-					if (m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb && m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb)
+					if (m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSLsb && m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSMsb)
 						return false;
 
 					return true;
 				};
 
 			private:
-				const PublishPackage& m_Package;
+				const MqttPackages::PublishPackage& m_Package;
 			};
 		}
 	}

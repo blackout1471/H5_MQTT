@@ -3,11 +3,11 @@
 namespace MQTT {
 	namespace Protocol {
 		namespace Converters {
-			const PublishAcknowledgePackage PublishAcknowledgeConverter::ToPackage(const std::vector<unsigned char>& buffer)
+			const MqttPackages::PublishAcknowledgePackage PublishAcknowledgeConverter::ToPackage(const std::vector<unsigned char>& buffer)
 			{
-				return PublishAcknowledgePackage();
+				return MqttPackages::PublishAcknowledgePackage();
 			}
-			const std::vector<unsigned char> PublishAcknowledgeConverter::ToBuffer(const PublishAcknowledgePackage& to)
+			const std::vector<unsigned char> PublishAcknowledgeConverter::ToBuffer(const MqttPackages::PublishAcknowledgePackage& to)
 			{
 				std::vector<unsigned char> packageBuffer;
 				packageBuffer.push_back(to.Header.PackageType << 4);

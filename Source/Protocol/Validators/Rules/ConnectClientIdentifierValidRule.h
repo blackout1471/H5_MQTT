@@ -11,7 +11,7 @@ namespace MQTT {
 			class ConnectClientIdentifierValidRule : public IRule
 			{
 			public:
-				ConnectClientIdentifierValidRule(const std::string& clientId, ConnectFlagType flag)
+				ConnectClientIdentifierValidRule(const std::string& clientId, MqttPackages::ConnectFlagType flag)
 					: m_ClientId(clientId), m_Flags(flag) {};
 
 				/*
@@ -19,7 +19,7 @@ namespace MQTT {
 				* Returns false if thet are as described, true else.
 				*/
 				inline virtual bool Validate() override {
-					if (m_ClientId.size() == 0 && !(m_Flags & ConnectFlagType::Clean_Session))
+					if (m_ClientId.size() == 0 && !(m_Flags & MqttPackages::ConnectFlagType::Clean_Session))
 						return false;
 
 					return true;
@@ -27,7 +27,7 @@ namespace MQTT {
 
 			private:
 				const std::string m_ClientId;
-				const ConnectFlagType m_Flags;
+				const MqttPackages::ConnectFlagType m_Flags;
 			};
 
 		}

@@ -6,26 +6,26 @@ namespace MQTT {
 	namespace Protocol {
 		namespace Converters
 		{
-			const ConnectAckPackage ConnectAckConverter::ToPackage(const std::vector<unsigned char>& buffer)
+			const MqttPackages::ConnectAckPackage ConnectAckConverter::ToPackage(const std::vector<unsigned char>& buffer)
 			{
-				ConnectAckVariableHeader connnectAckVariableHeader;
-				ControlHeader controlHeader;
+				MqttPackages::ConnectAckVariableHeader connnectAckVariableHeader;
+				MqttPackages::ControlHeader controlHeader;
 
-				controlHeader.PackageType = (ControlPackageType)buffer[0];
+				controlHeader.PackageType = (MqttPackages::ControlPackageType)buffer[0];
 				int packageSize = buffer[1];
 
 				if (packageSize > 0)
 				{
 					connnectAckVariableHeader.SessionPresentFlag = buffer[2];
-					connnectAckVariableHeader.ConnectAckReturnCode = (ConnectAckReturnCodeType)buffer[3];
+					connnectAckVariableHeader.ConnectAckReturnCode = (MqttPackages::ConnectAckReturnCodeType)buffer[3];
 				}
 
-				ConnectAckPackage connectAckPackage(controlHeader, connnectAckVariableHeader);
+				MqttPackages::ConnectAckPackage connectAckPackage(controlHeader, connnectAckVariableHeader);
 
 				return connectAckPackage;
 			}
 
-			const std::vector<unsigned char> ConnectAckConverter::ToBuffer(const ConnectAckPackage& package)
+			const std::vector<unsigned char> ConnectAckConverter::ToBuffer(const MqttPackages::ConnectAckPackage& package)
 			{
 				std::vector<unsigned char> message;
 

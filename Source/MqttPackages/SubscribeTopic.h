@@ -2,7 +2,7 @@
 #include <vector>
 #include "SubscribeTopicWildcard.h"
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct SubscribeTopic {
 			std::vector<std::vector<unsigned char>> Paths;
 			SubscribeTopicWildcardType Wildcard = SubscribeTopicWildcardType::NoWildcard;

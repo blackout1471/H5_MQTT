@@ -2,7 +2,7 @@
 #include <string>
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct SubscribeClient {
 		public:
 			SubscribeClient(std::string clientID, unsigned char qos) {

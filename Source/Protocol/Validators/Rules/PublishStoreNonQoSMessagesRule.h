@@ -1,6 +1,6 @@
 #pragma once
 #include "IRule.h"
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 
 namespace MQTT {
 	namespace Protocol {
@@ -8,7 +8,7 @@ namespace MQTT {
 			class PublishStoreNonQoSMessagesRule : public IRule
 			{
 			public:
-				PublishStoreNonQoSMessagesRule(const PublishPackage& package, SubscribeManager& manager) : m_Package(package), m_Manager(manager) {};
+				PublishStoreNonQoSMessagesRule(const MqttPackages::PublishPackage& package, SubscribeManager& manager) : m_Package(package), m_Manager(manager) {};
 				~PublishStoreNonQoSMessagesRule() {};
 
 				/*
@@ -18,8 +18,8 @@ namespace MQTT {
 				*/
 				virtual bool Validate() override {
 					
-					if (m_Package.HeaderFlag & PublishHeaderFlag::Retain &&
-						(m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb) + (m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb) == 0)
+					if (m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::Retain &&
+						(m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSLsb) + (m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSMsb) == 0)
 					{
 						std::vector<unsigned char> topic(m_Package.VariableHeader.TopicName.begin(), m_Package.VariableHeader.TopicName.end());
 
@@ -30,8 +30,8 @@ namespace MQTT {
 						{
 							matchinTree->GetSavedMessages().clear();							
 
-							auto qos = (m_Package.HeaderFlag & PublishHeaderFlag::QoSLsb) + (m_Package.HeaderFlag & PublishHeaderFlag::QoSMsb);
-							matchinTree->AddSavedMessage(SubscribeSavedMessage(m_Package.Payload, qos));
+							auto qos = (m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSLsb) + (m_Package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSMsb);
+							matchinTree->AddSavedMessage(MqttPackages::SubscribeSavedMessage(m_Package.Payload, qos));
 						}
 
 						return true;
@@ -41,7 +41,7 @@ namespace MQTT {
 				}
 
 			private:
-				const PublishPackage& m_Package;
+				const MqttPackages::PublishPackage& m_Package;
 				SubscribeManager& m_Manager;
 			};
 		}

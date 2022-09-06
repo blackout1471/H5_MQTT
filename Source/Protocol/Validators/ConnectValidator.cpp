@@ -4,6 +4,7 @@
 #include "Protocol/Validators/RuleEngine.h"
 #include "Protocol/Validators/Rules/Rules.h"
 #include "Server/ClientUtility.h"
+#include "MqttPackages/Packages.h"
 
 namespace MQTT {
 	namespace Protocol {
@@ -11,7 +12,7 @@ namespace MQTT {
 			ConnectValidator::ConnectValidator() {}
 			ConnectValidator::~ConnectValidator() {}
 
-			ConnectValidator::Action ConnectValidator::ValidateClient(const Protocol::ConnectPackage& package, std::vector<Server::MqttClient*>& clientStates, Server::MqttClient*& currentClient)
+			ConnectValidator::Action ConnectValidator::ValidateClient(const MqttPackages::ConnectPackage& package, std::vector<Server::MqttClient*>& clientStates, Server::MqttClient*& currentClient)
 			{
 				auto& packageClientId = package.Payload.ClientId;
 				auto& protocolName = package.VariableHeader.ProtocolName;
@@ -53,7 +54,7 @@ namespace MQTT {
 					currentClient->ClientId = packageClientId;
 			}
 
-			bool ConnectValidator::ShouldDisconnectClient(const std::string& packageClientId, const std::vector<Server::MqttClient*>& clientStates, const std::string& protocolName, const ConnectPackage& package, Server::MqttClient* currentClient)
+			bool ConnectValidator::ShouldDisconnectClient(const std::string& packageClientId, const std::vector<Server::MqttClient*>& clientStates, const std::string& protocolName, const MqttPackages::ConnectPackage& package, Server::MqttClient* currentClient)
 			{
 				return !(RuleEngine({
 					{ new ClientConnectedRule(packageClientId, clientStates), false },

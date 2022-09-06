@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Protocol/MqttPackages/ConnectFlagType.h"
+#include "MqttPackages/packages.h"
 
 namespace MQTT {
 	namespace Server {
@@ -30,7 +30,7 @@ namespace MQTT {
 			/*
 			* The connection flags which the client connected with.
 			*/
-			Protocol::ConnectFlagType ConnectionFlags;
+			MqttPackages::ConnectFlagType ConnectionFlags;
 		};
 
 		/*

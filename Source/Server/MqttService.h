@@ -5,7 +5,7 @@
 #include "IServer.h"
 #include "MqttClient.h"
 #include "Protocol/Managers/SubscribeManager.h"
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 namespace MQTT {
 	namespace Server {
 		class MqttService {
@@ -42,12 +42,12 @@ namespace MQTT {
 			/*
 			* Called when the recieved data has been identified as a connect package.
 			*/
-			void OnClientConnect(const Client& client, const Protocol::ConnectPackage& package);
+			void OnClientConnect(const Client& client, const MqttPackages::ConnectPackage& package);
 
 			/*
 			* Called when the recieved data has been identified as a Subscribe package.
 			*/
-			void OnClientSubscribed(const Client& client, const Protocol::SubscribePackage& package);
+			void OnClientSubscribed(const Client& client, const MqttPackages::SubscribePackage& package);
 
 			/*
 			* Called when the recieved data has been identified as a disconnect package.

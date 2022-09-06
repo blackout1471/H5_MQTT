@@ -1,19 +1,19 @@
 #pragma once
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 #include "IPackageConverter.h"
 #include "ConverterUtility.h"
 
 namespace MQTT {
 	namespace Protocol {
 		namespace Converters {
-			class PublishAcknowledgeConverter : public IPackageConverter<PublishAcknowledgePackage>
+			class PublishAcknowledgeConverter : public IPackageConverter<MqttPackages::PublishAcknowledgePackage>
 			{
 			public:
 				// <inheritDoc />
-				virtual const PublishAcknowledgePackage ToPackage(const std::vector<unsigned char>& buffer) override;
+				virtual const MqttPackages::PublishAcknowledgePackage ToPackage(const std::vector<unsigned char>& buffer) override;
 
 				// <inheritDoc />
-				virtual const std::vector<unsigned char> ToBuffer(const PublishAcknowledgePackage& to) override;
+				virtual const std::vector<unsigned char> ToBuffer(const MqttPackages::PublishAcknowledgePackage& to) override;
 			};
 		}
 	}

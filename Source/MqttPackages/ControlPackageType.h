@@ -1,7 +1,7 @@
 #pragma once
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		enum ControlPackageType : unsigned char
 		{
 			Connect = 1,

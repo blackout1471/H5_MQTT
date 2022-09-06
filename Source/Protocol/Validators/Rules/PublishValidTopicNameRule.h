@@ -1,6 +1,6 @@
 #pragma once
 #include "IRule.h"
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 
 namespace MQTT {
 	namespace Protocol {
@@ -8,7 +8,7 @@ namespace MQTT {
 			class PublishValidTopicNameRule : public IRule
 			{
 			public:
-				PublishValidTopicNameRule(const PublishPackage& package) : m_Package(package) {};
+				PublishValidTopicNameRule(const MqttPackages::PublishPackage& package) : m_Package(package) {};
 				~PublishValidTopicNameRule() {};
 
 				/*
@@ -24,7 +24,7 @@ namespace MQTT {
 				}
 
 			private:
-				const PublishPackage& m_Package;
+				const MqttPackages::PublishPackage& m_Package;
 			};
 		}
 	}

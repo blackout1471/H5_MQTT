@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 #include "Server/MqttClient.h"
 
 namespace MQTT {
@@ -23,7 +23,7 @@ namespace MQTT {
 
 				// Validates the current connect package and the current client, which action is the most properiate to take
 				// Returns: The action to take.
-				Action ValidateClient(const Protocol::ConnectPackage& package, 
+				Action ValidateClient(const MqttPackages::ConnectPackage& package,
 					std::vector<Server::MqttClient*>& clientStates,
 					Server::MqttClient*& currentClient);
 
@@ -40,7 +40,7 @@ namespace MQTT {
 				bool ShouldDisconnectClient(const std::string& packageClientId, 
 					const std::vector<Server::MqttClient*>& clientStates, 
 					const std::string& protocolName, 
-					const ConnectPackage& package, 
+					const MqttPackages::ConnectPackage& package,
 					Server::MqttClient* currentClient);
 			};
 		}

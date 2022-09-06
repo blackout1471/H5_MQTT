@@ -2,7 +2,7 @@
 #include "ConnectAckReturnCodeType.h"
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct ConnectAckVariableHeader {
 			unsigned char SessionPresentFlag;
 			ConnectAckReturnCodeType ConnectAckReturnCode;

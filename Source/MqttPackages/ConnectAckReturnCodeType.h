@@ -1,6 +1,6 @@
 #pragma once
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 	
 		enum ConnectAckReturnCodeType : unsigned char
 		{

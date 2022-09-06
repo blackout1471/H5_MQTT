@@ -1,13 +1,13 @@
 #pragma once
 #include "IRule.h"
-#include "Protocol/MqttPackages/Packages.h"
+#include "MqttPackages/Packages.h"
 #include <vector>
 namespace MQTT {
 	namespace Protocol {
 		namespace Validators {
 			class SubscribeTopicLength : public IRule {
 			public:
-				SubscribeTopicLength(std::vector<Protocol::SubscribeTopic> topics) : m_Topics(topics) {};
+				SubscribeTopicLength(std::vector<MqttPackages::SubscribeTopic> topics) : m_Topics(topics) {};
 
 				/*
 				* Checks whether the payload topic is longer then 1 character
@@ -27,7 +27,7 @@ namespace MQTT {
 				}
 
 			private:
-				std::vector<Protocol::SubscribeTopic> m_Topics;
+				std::vector<MqttPackages::SubscribeTopic> m_Topics;
 			};
 		}
 	}

@@ -12,9 +12,9 @@ namespace MQTT {
 
             ConnectConverter::~ConnectConverter() {}
 
-            const ConnectPackage ConnectConverter::ToPackage(const std::vector<unsigned char>& buffer)
+            const MqttPackages::ConnectPackage ConnectConverter::ToPackage(const std::vector<unsigned char>& buffer)
             {
-                auto package = ConnectPackage();
+                auto package = MqttPackages::ConnectPackage();
 
                 // Check if the buffer has the minimum requirements
                 if (buffer.size() < 3)
@@ -42,12 +42,12 @@ namespace MQTT {
                 return package;
             }
 
-            const std::vector<unsigned char> ConnectConverter::ToBuffer(const ConnectPackage& to)
+            const std::vector<unsigned char> ConnectConverter::ToBuffer(const MqttPackages::ConnectPackage& to)
             {
                 throw std::logic_error("Not implemented yet");
             }
 
-            int ConnectConverter::ConvertToVariableHeader(const unsigned char* dataPtr, ConnectVariableHeader& package)
+            int ConnectConverter::ConvertToVariableHeader(const unsigned char* dataPtr, MqttPackages::ConnectVariableHeader& package)
             {
                 const unsigned char* data = dataPtr;
 
@@ -60,7 +60,7 @@ namespace MQTT {
                 package.Level = *data;
                 data++;
 
-                package.VariableLevel = ConnectFlagType(*data);
+                package.VariableLevel = MqttPackages::ConnectFlagType(*data);
                 data++;
 
                 package.KeepAlive = ConverterUtility::ByteToInt(*data, data[1]);
@@ -69,7 +69,7 @@ namespace MQTT {
                 return data - dataPtr;
             }
 
-            int ConnectConverter::ConvertToPayload(const unsigned char* dataPtr, const ConnectVariableHeader& headerPackage, ConnectPayload& package)
+            int ConnectConverter::ConvertToPayload(const unsigned char* dataPtr, const MqttPackages::ConnectVariableHeader& headerPackage, MqttPackages::ConnectPayload& package)
             {
                 const unsigned char* data = dataPtr;
 
@@ -80,7 +80,7 @@ namespace MQTT {
                 data += clientIdLength;
 
 
-                if (headerPackage.VariableLevel & ConnectFlagType::Will_Flag)
+                if (headerPackage.VariableLevel & MqttPackages::ConnectFlagType::Will_Flag)
                 {
                     auto willLength = ConverterUtility::ByteToInt(*data, data[1]);
                     data += 2;
@@ -95,7 +95,7 @@ namespace MQTT {
                     data += willMessageLength;
                 }
 
-                if (headerPackage.VariableLevel & ConnectFlagType::Username)
+                if (headerPackage.VariableLevel & MqttPackages::ConnectFlagType::Username)
                 {
                     auto usernameLength = ConverterUtility::ByteToInt(*data, data[1]);
                     data += 2;
@@ -105,7 +105,7 @@ namespace MQTT {
                 }
 
 
-                if (headerPackage.VariableLevel & ConnectFlagType::Password)
+                if (headerPackage.VariableLevel & MqttPackages::ConnectFlagType::Password)
                 {
                     auto passwordLength = ConverterUtility::ByteToInt(*data, data[1]);
                     data += 2;

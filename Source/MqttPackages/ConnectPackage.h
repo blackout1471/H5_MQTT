@@ -4,7 +4,7 @@
 #include "ControlHeader.h"
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct ConnectPackage
 		{
 		public:

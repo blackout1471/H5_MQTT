@@ -1,7 +1,7 @@
 #pragma once
 #include "IRule.h"
 #include "Server/MqttClient.h"
-#include "Protocol/MqttPackages/ConnectFlagType.h"
+#include "MqttPackages/ConnectFlagType.h"
 
 #include <vector>
 #include <string>
@@ -11,7 +11,7 @@ namespace MQTT {
 		namespace Validators {
 			class ContinueSessionRule : public IRule {
 			public:
-				ContinueSessionRule(const ConnectFlagType ConnectFlag, const std::string& clientId, const std::vector<Server::MqttClient*>& clients)
+				ContinueSessionRule(const MqttPackages::ConnectFlagType ConnectFlag, const std::string& clientId, const std::vector<Server::MqttClient*>& clients)
 				 : m_Flag(ConnectFlag), m_Clients(clients), m_ClientId(clientId) {};
 				virtual ~ContinueSessionRule() {};
 
@@ -20,7 +20,7 @@ namespace MQTT {
 				* Returns: true if session should be continued false if not.
 				*/
 				virtual bool Validate() {
-					if (!(m_Flag & ConnectFlagType::Clean_Session))
+					if (!(m_Flag & MqttPackages::ConnectFlagType::Clean_Session))
 						for (auto* client : m_Clients)
 							if (client->ClientId == m_ClientId)
 								return true;
@@ -30,7 +30,7 @@ namespace MQTT {
 
 			private:
 				const std::string& m_ClientId;
-				const ConnectFlagType m_Flag;
+				const MqttPackages::ConnectFlagType m_Flag;
 				const std::vector<Server::MqttClient*>& m_Clients;
 			};
 		}

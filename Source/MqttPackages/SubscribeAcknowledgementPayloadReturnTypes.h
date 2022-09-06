@@ -1,6 +1,6 @@
 #pragma once
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		enum SubscribeAcknowledgementQoS : unsigned char {
 			MaximumQoS0 = 0,
 			MaximumQoS1 = 1,

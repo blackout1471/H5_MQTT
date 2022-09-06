@@ -3,7 +3,7 @@
 #include "SubscribeVariableHeader.h"
 #include "ControlHeader.h"
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct SubscribePackage {
 		public:
 			ControlHeader Header;

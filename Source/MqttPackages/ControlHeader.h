@@ -3,7 +3,7 @@
 
 namespace MQTT
 {
-	namespace Protocol
+	namespace MqttPackages
 	{
 		struct ControlHeader {
 			ControlPackageType PackageType;

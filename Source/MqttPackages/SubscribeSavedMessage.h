@@ -2,7 +2,7 @@
 #include <string>
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct SubscribeSavedMessage {
 		public:
 			SubscribeSavedMessage(std::string message, unsigned char qos) {

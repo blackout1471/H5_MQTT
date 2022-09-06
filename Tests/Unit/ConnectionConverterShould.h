@@ -1,9 +1,10 @@
 #pragma once
 
 #include "gtest/gtest.h"
-#include <Protocol/MqttPackages/ConnectPackage.h>
+#include <MqttPackages/Packages.h>
 #include <Protocol/Converters/ConnectConverter.h>
 
+using namespace MQTT::MqttPackages;
 using namespace MQTT::Protocol;
 
 #pragma region Utility

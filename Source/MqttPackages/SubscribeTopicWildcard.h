@@ -1,6 +1,6 @@
 #pragma once
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		enum SubscribeTopicWildcardType : unsigned char {
 			NoWildcard = 0,
 			Hashtag = 35,

@@ -3,7 +3,7 @@
 #include <cstdint>
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct PublishAcknowledgePackage {
 			ControlHeader Header;
 			int16_t PacketIdentifier;

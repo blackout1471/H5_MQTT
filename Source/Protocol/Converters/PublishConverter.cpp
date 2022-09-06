@@ -9,9 +9,9 @@ namespace MQTT {
 			PublishConverter::PublishConverter() {}
 			PublishConverter::~PublishConverter() {}
 
-			const PublishPackage PublishConverter::ToPackage(const std::vector<unsigned char>& buffer)
+			const MqttPackages::PublishPackage PublishConverter::ToPackage(const std::vector<unsigned char>& buffer)
 			{
-				auto package = PublishPackage();
+				auto package = MqttPackages::PublishPackage();
 
 				if (buffer.size() < 3)
 					return package;
@@ -19,7 +19,7 @@ namespace MQTT {
 				const unsigned char* data = buffer.data();
 
 				package.Header.PackageType = ConverterUtility::GetPackageType(*data);
-				package.HeaderFlag = PublishHeaderFlag(*data & 0xf);
+				package.HeaderFlag = MqttPackages::PublishHeaderFlag(*data & 0xf);
 				data++;
 
 				unsigned char remainLength = *data;
@@ -31,7 +31,7 @@ namespace MQTT {
 				package.VariableHeader.TopicName = std::string(data, data + topicLength);
 				data += topicLength;
 
-				if (package.HeaderFlag & PublishHeaderFlag::QoSLsb || package.HeaderFlag & PublishHeaderFlag::QoSMsb)
+				if (package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSLsb || package.HeaderFlag & MqttPackages::PublishHeaderFlag::QoSMsb)
 				{
 					package.VariableHeader.PacketIdentifier = ConverterUtility::ByteToShort(*data, data[1]);
 					data += 2;
@@ -46,7 +46,7 @@ namespace MQTT {
 				return package;
 			}
 
-			const std::vector<unsigned char> PublishConverter::ToBuffer(const PublishPackage& to)
+			const std::vector<unsigned char> PublishConverter::ToBuffer(const MqttPackages::PublishPackage& to)
 			{
 				std::vector<unsigned char> publishBuffer;
 				std::vector<unsigned char> variableHeader = ConverterUtility::IntToBytes(to.VariableHeader.TopicName.length());

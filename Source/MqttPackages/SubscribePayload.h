@@ -3,7 +3,7 @@
 #include "SubscribeTopicWildcard.h"
 #include "SubscribeTopic.h"
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 		struct SubscribePayload {
 		public:
 			std::vector<SubscribeTopic> Topics;

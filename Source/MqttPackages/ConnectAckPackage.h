@@ -3,7 +3,7 @@
 #include "ConnectAckVariableHeader.h"
 
 namespace MQTT {
-	namespace Protocol {
+	namespace MqttPackages {
 	
 		class ConnectAckPackage {
 		public:
