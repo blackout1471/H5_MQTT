@@ -171,7 +171,7 @@ namespace MQTT {
 
 				//TODO: Implement QoS 1 & 2
 				std::vector<unsigned char> topic(package.VariableHeader.TopicName.begin(), package.VariableHeader.TopicName.end());
-				auto& subscribedClients = m_SubscribeManager.GetSubscribedClients(topic);
+				auto subscribedClients = m_SubscribeManager.GetSubscribedClients(topic);
 				for (auto& subClient : subscribedClients)
 				{
 					auto mqttClient = GetClientStateFromClientId(subClient.GetClientID());
