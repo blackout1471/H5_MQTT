@@ -12,13 +12,11 @@
 
 namespace MQTT {
 	namespace Protocol {
-		Mqtt311Handler::Mqtt311Handler() : m_ClientStates(), m_Manager(), m_SubscribeManager()
-		{
-		}
+		Mqtt311Handler::Mqtt311Handler() : m_ClientStates(), m_Manager(), m_SubscribeManager() {}
 
 		Mqtt311Handler::~Mqtt311Handler()
 		{
-			for (auto& clientState : m_ClientStates)
+			for (auto* clientState : m_ClientStates)
 				delete clientState;
 		}
 
