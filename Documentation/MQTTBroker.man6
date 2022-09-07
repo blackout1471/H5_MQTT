@@ -1,0 +1,18 @@
+./ " This is the manpage of the MQTT Broker
+.TH MQTTBroker "2022-09-03" "V1.0" "MQTT Broker page"
+
+.SH NAME
+MQTTBroker
+
+.SH DESCRIPTION
+This is a simple MQTT broker using socket connection
+
+.SH OPTIONS
+-p  
+   Select which port socket server should start on, default 1883 
+
+.SH SYOPSIS
+MQTTBroker it just works
+
+.SH AUTHOR
+Rene Lorentzen, Peter Cholub, Emil Andersen
