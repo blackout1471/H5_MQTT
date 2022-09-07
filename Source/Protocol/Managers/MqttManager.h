@@ -1,7 +1,7 @@
 #pragma once
 #include "mqttpch.h"
-#include "Protocol/MqttPackages/ConnectAckPackage.h"
-#include "Protocol/Converters/ConnectAckConverter.h"
+#include "MqttPackages/Packages.h"
+#include "Converters/ConnectAckConverter.h"
 
 #include <vector>
 
@@ -13,7 +13,7 @@ namespace MQTT {
 			/*
 			* Generates the appropriate message based upon the given return code wanted.
 			*/
-			std::vector<unsigned char> GenerateConnectAckMessage(Protocol::ConnectAckReturnCodeType _returnCode);
+			std::vector<unsigned char> GenerateConnectAckMessage(MqttPackages::ConnectAckReturnCodeType _returnCode);
 		};
 	}
 }

@@ -10,35 +10,35 @@ namespace MQTT {
 		public:
 			~BTree();
 
-			void AddClient(SubscribeClient* subClient);
-			BTree* GetFullMatch(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
+			void AddClient(MqttPackages::SubscribeClient* subClient);
+			BTree* GetFullMatch(std::vector<unsigned char> topic, MqttPackages::SubscribeTopicWildcardType wildcard);
 			BTree* GetTopicMatch(std::vector<unsigned char> topic);
 
 			const std::vector<unsigned char>& GetTopic() {
 				return m_Topic;
 			}
 
-			const SubscribeTopicWildcardType& GetWildcard() {
+			const MqttPackages::SubscribeTopicWildcardType& GetWildcard() {
 				return m_Wildcard;
 			}
-			std::vector<SubscribeClient*>& GetSubClients() {
+			std::vector<MqttPackages::SubscribeClient*>& GetSubClients() {
 				return m_SubClients;
 			}
-			void AddSavedMessage(SubscribeSavedMessage saveMessage) {
+			void AddSavedMessage(MqttPackages::SubscribeSavedMessage saveMessage) {
 				m_SubSavedMessages.push_back(saveMessage);
 			}
-			std::vector<SubscribeSavedMessage>& GetSavedMessages() {
+			std::vector<MqttPackages::SubscribeSavedMessage>& GetSavedMessages() {
 				return m_SubSavedMessages;
 			}
 
 			// Creates a new tree
-			static BTree* NewBTree(SubscribeClient* subClient, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
+			static BTree* NewBTree(MqttPackages::SubscribeClient* subClient, std::vector<unsigned char> topic, MqttPackages::SubscribeTopicWildcardType wildcard);
 
 			// Creates a new tree
-			static BTree* NewBTree(std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
+			static BTree* NewBTree(std::vector<unsigned char> topic, MqttPackages::SubscribeTopicWildcardType wildcard);
 
 			// Creates a new tree
-			static BTree* NewBTree(BTree* parent, SubscribeClient* subClient, std::vector<unsigned char> topic, SubscribeTopicWildcardType wildcard);
+			static BTree* NewBTree(BTree* parent, MqttPackages::SubscribeClient* subClient, std::vector<unsigned char> topic, MqttPackages::SubscribeTopicWildcardType wildcard);
 
 			// Creates a new tree
 			static BTree* NewBTree(BTree* parent, std::vector<unsigned char> topic);
@@ -47,9 +47,9 @@ namespace MQTT {
 			std::vector<BTree*> m_Children;
 			BTree* m_Parent = nullptr;
 			std::vector<unsigned char> m_Topic;
-			std::vector<SubscribeClient*> m_SubClients;
-			std::vector<SubscribeSavedMessage> m_SubSavedMessages;
-			SubscribeTopicWildcardType m_Wildcard = SubscribeTopicWildcardType::NoWildcard;
+			std::vector<MqttPackages::SubscribeClient*> m_SubClients;
+			std::vector<MqttPackages::SubscribeSavedMessage> m_SubSavedMessages;
+			MqttPackages::SubscribeTopicWildcardType m_Wildcard = MqttPackages::SubscribeTopicWildcardType::NoWildcard;
 		};
 	}
 }

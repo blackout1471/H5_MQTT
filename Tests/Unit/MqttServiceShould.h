@@ -4,10 +4,13 @@
 
 #include <Server/IServer.h>
 #include <Server/Client.h>
+#include <Protocol/Mqtt311Handler.h>
 
-#include <Server/MqttService.h>
+#include <MqttService.h>
 
 using namespace MQTT::Server;
+using namespace MQTT;
+using namespace MQTT::Protocol;
 using ::testing::AtLeast;
 
 class MockServer : public IServer
@@ -28,9 +31,10 @@ public:
 TEST(MqttServiceShould, CallServerStart_WhenServiceCallsStart)
 {
 	// Arrange
+	Mqtt311Handler b = Mqtt311Handler();
 	MockServer a;
 	EXPECT_CALL(a, Start());
-	auto service = MqttService(&a);
+	auto service = MqttService(&a, &b);
 
 	// Act & Assert
 	service.Start();

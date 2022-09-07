@@ -1,9 +1,7 @@
 #pragma once
 #include <gtest/gtest.h>
-#include <Protocol/Converters/ConnectAckConverter.h>
-#include <Protocol/MqttPackages/ConnectAckPackage.h>
-
-using namespace MQTT::Protocol;
+#include <Converters/ConnectAckConverter.h>
+#include <MqttPackages/Packages.h>
 
 #pragma region Utility
 static bool Equal(const std::vector<unsigned char>& b1, const std::vector<unsigned char>& b2)
@@ -26,7 +24,7 @@ TEST(ConnectionAcknowledgementConverterShould, BeEqual_WhenPackageIsAcknowledged
 {
 	// Arrange
 	auto package = ConnectAckPackage({ ControlPackageType::ConnectAck }, {0x01, ConnectAckReturnCodeType::Accepted});
-	auto converter = Converters::ConnectAckConverter();
+	auto converter = ConnectAckConverter();
 	std::vector<unsigned char> actual;
 	auto expected = std::vector<unsigned char> {
 		0x02 << 4, 0x02, 0x01, 0x0
@@ -43,7 +41,7 @@ TEST(ConnectionAcknowledgementConverterShould, BeEqual_WhenPackageIsRefusedBadUs
 {
 	// Arrange
 	auto package = ConnectAckPackage({ ControlPackageType::ConnectAck }, { 0x01, ConnectAckReturnCodeType::Refused_Bad_Username_Or_Password });
-	auto converter = Converters::ConnectAckConverter();
+	auto converter = ConnectAckConverter();
 	std::vector<unsigned char> actual;
 	auto expected = std::vector<unsigned char>{
 		0x02 << 4, 0x02, 0x01, 0x4
@@ -60,7 +58,7 @@ TEST(ConnectionAcknowledgementConverterShould, BeEqual_WhenPackageIsRefusedIdent
 {
 	// Arrange
 	auto package = ConnectAckPackage({ ControlPackageType::ConnectAck }, { 0x01, ConnectAckReturnCodeType::Refused_Identifier_Rejected });
-	auto converter = Converters::ConnectAckConverter();
+	auto converter = ConnectAckConverter();
 	std::vector<unsigned char> actual;
 	auto expected = std::vector<unsigned char>{
 		0x02 << 4, 0x02, 0x01, 0x2
@@ -77,7 +75,7 @@ TEST(ConnectionAcknowledgementConverterShould, BeEqual_WhenPackageIsRefusedNotAu
 {
 	// Arrange
 	auto package = ConnectAckPackage({ ControlPackageType::ConnectAck }, { 0x01, ConnectAckReturnCodeType::Refused_Not_Authorized });
-	auto converter = Converters::ConnectAckConverter();
+	auto converter = ConnectAckConverter();
 	std::vector<unsigned char> actual;
 	auto expected = std::vector<unsigned char>{
 		0x02 << 4, 0x02, 0x01, 0x5
@@ -94,7 +92,7 @@ TEST(ConnectionAcknowledgementConverterShould, BeEqual_WhenPackageIsRefusedServe
 {
 	// Arrange
 	auto package = ConnectAckPackage({ ControlPackageType::ConnectAck }, { 0x01, ConnectAckReturnCodeType::Refused_Server_Unavailable });
-	auto converter = Converters::ConnectAckConverter();
+	auto converter = ConnectAckConverter();
 	std::vector<unsigned char> actual;
 	auto expected = std::vector<unsigned char>{
 		0x02 << 4, 0x02, 0x01, 0x3
@@ -111,7 +109,7 @@ TEST(ConnectionAcknowledgementConverterShould, BeEqual_WhenPackageIsRefusedUnacc
 {
 	// Arrange
 	auto package = ConnectAckPackage({ ControlPackageType::ConnectAck }, { 0x01, ConnectAckReturnCodeType::Refused_Unacceptable_Protocol_Version });
-	auto converter = Converters::ConnectAckConverter();
+	auto converter = ConnectAckConverter();
 	std::vector<unsigned char> actual;
 	auto expected = std::vector<unsigned char>{
 		0x02 << 4, 0x02, 0x01, 0x1

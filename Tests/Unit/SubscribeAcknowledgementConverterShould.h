@@ -1,7 +1,6 @@
 #pragma once
 #include <gtest/gtest.h>
-#include <Protocol/Converters/SubscribeAcknowledgementConverter.h>
-using namespace MQTT::Protocol;
+#include <Converters/SubscribeAcknowledgementConverter.h>
 
 static SubscribeAcknowledgementPackage Generate() {
 
@@ -42,7 +41,7 @@ TEST(SubscribeAcknowledgementPackageShould, ReturnExpected_WhenEveryFieldIsSet)
 		128
 	};
 	std::vector<unsigned char> actual;
-	auto converter = Converters::SubscribeAcknowledgementConverter();
+	auto converter = SubscribeAcknowledgementConverter();
 	auto data = Generate();
 
 	// Act

@@ -1,10 +1,11 @@
 #pragma once
 
 #include "gtest/gtest.h"
-#include <Protocol/MqttPackages/ConnectPackage.h>
-#include <Protocol/Converters/ConnectConverter.h>
+#include <MqttPackages/Packages.h>
+#include <Converters/ConnectConverter.h>
 
-using namespace MQTT::Protocol;
+using namespace MQTT::MqttPackages;
+using namespace MQTT::Converters;
 
 #pragma region Utility
 static ConnectPackage Generate(ConnectFlagType flags)
@@ -134,7 +135,7 @@ TEST(ConnectionPackageConverterShould, BeEqual_WhenUsernameAndPasswordIsDefined)
 	// Arrange
 	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password));
 	ConnectPackage actual;
-	auto converter = Converters::ConnectConverter();
+	auto converter = ConnectConverter();
 
 	// Act
 	auto byffer = ToBuffer(expected);
@@ -150,7 +151,7 @@ TEST(ConnectionPackageConverterShould, BeEqual_WhenClientIdIsNotGiven)
 	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password));
 	expected.Payload.ClientId = "";
 	ConnectPackage actual;
-	auto converter = Converters::ConnectConverter();
+	auto converter = ConnectConverter();
 
 	// Act
 	auto byffer = ToBuffer(expected);
@@ -165,7 +166,7 @@ TEST(ConnectionPackageConverterShould, BeEqual_WhenWillFlagIsSet)
 	// Arrange
 	auto expected = Generate(ConnectFlagType(ConnectFlagType::Username | ConnectFlagType::Password | ConnectFlagType::Will_Flag));
 	ConnectPackage actual;
-	auto converter = Converters::ConnectConverter();
+	auto converter = ConnectConverter();
 
 	// Act
 	auto byffer = ToBuffer(expected);

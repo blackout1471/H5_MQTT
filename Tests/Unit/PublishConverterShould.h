@@ -1,8 +1,8 @@
 #pragma once
 #include <gtest/gtest.h>
-#include <Protocol/Converters/PublishConverter.h>
+#include <Converters/PublishConverter.h>
 
-using namespace MQTT::Protocol::Converters;
+using namespace MQTT::Converters;
 using namespace MQTT::Protocol;
 
 
